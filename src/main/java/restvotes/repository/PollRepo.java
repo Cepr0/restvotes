@@ -9,6 +9,6 @@ import java.time.LocalDate;
 /**
  * @author Cepro, 2017-01-01
  */
-@RepositoryRestResource//(excerptProjection = Poll.Brief.class)
+@RepositoryRestResource(excerptProjection = Poll.Brief.class)
 public interface PollRepo extends JpaRepository<Poll, LocalDate> {
 }

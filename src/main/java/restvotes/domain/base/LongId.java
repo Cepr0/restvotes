@@ -22,6 +22,5 @@ public class LongId extends BaseEntity<Long> {
 
     @Id
     @GeneratedValue
-    // @JsonIgnore
     private final Long id;
 }

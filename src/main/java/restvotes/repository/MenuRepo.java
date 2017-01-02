@@ -7,6 +7,6 @@ import restvotes.domain.entity.Menu;
 /**
  * @author Cepro, 2017-01-01
  */
-@RepositoryRestResource//(excerptProjection = Menu.Detailed.class)
+@RepositoryRestResource(excerptProjection = Menu.Detailed.class)
 public interface MenuRepo extends JpaRepository<Menu, Long> {
 }

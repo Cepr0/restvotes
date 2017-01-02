@@ -46,10 +46,6 @@ public class Poll extends DateId {
         return this;
     }
     
-    // public LocalDate getDate() {
-    //     return getId();
-    // }
-    
     @Projection(name = "brief", types = Poll.class)
     public interface Brief {
         LocalDate getDate();
