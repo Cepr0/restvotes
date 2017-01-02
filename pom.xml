@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <name>RESTVotes</name>
-    <description>REST sample application that implements the restaurant voting system to decide where to have lunch</description>
+    <description>The sample of REST application that implements the restaurant voting system to decide where to have lunch</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

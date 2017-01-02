@@ -23,7 +23,6 @@ import static javax.persistence.CascadeType.ALL;
  */
 @NoArgsConstructor
 @Entity
-// @Access(PROPERTY)
 @Table(name = "menus")
 public class Menu extends LongId {
     
