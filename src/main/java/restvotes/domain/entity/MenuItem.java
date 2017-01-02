@@ -12,6 +12,9 @@ import restvotes.domain.base.LongId;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
+
+import static java.math.BigDecimal.ZERO;
 
 /**
  * @author Cepro, 2017-01-01
@@ -28,13 +31,14 @@ public class MenuItem extends LongId {
 
     @NonNull
     @NotEmpty
-    private String title;
-    
     private String description;
     
-    public MenuItem(String title, String description) {
-        this.title = title;
+    @NonNull
+    private BigDecimal cost = ZERO;
+    
+    public MenuItem(@NonNull String description, @NonNull BigDecimal cost) {
         this.description = description;
+        this.cost = cost;
     }
 
     @RestResource(exported = false)
