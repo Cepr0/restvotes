@@ -1,6 +1,6 @@
 package restvotes.domain.base;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -24,15 +24,19 @@ public class DateId extends BaseEntity<LocalDate> {
     @Id
     @Column(columnDefinition = "date default now()", unique = true, nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonProperty("date")
-    private final LocalDate id;
+    private final LocalDate date;
     
     public DateId() {
-        id = LocalDate.now();
+        date = LocalDate.now();
     }
     
+    @JsonIgnore
     @Override
     public LocalDate getId() {
-        return id;
+        return date;
+    }
+    
+    public LocalDate getDate() {
+        return date;
     }
 }
