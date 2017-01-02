@@ -7,6 +7,6 @@ import restvotes.domain.entity.Vote;
 /**
  * @author Cepro, 2017-01-02
  */
-@RepositoryRestResource
+@RepositoryRestResource(excerptProjection = Vote.Brief.class)
 public interface VoteRepo extends JpaRepository<Vote, Long> {
 }

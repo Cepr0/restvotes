@@ -5,9 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.data.rest.core.config.Projection;
 import restvotes.domain.base.LongId;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -26,20 +30,16 @@ public class Vote extends LongId {
 
     @ManyToOne(optional = false)
     @NaturalId
-    @JoinColumn(nullable = false)
     private final Poll poll;
     
     @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
     private final Menu menu;
     
     @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
     private Restaurant restaurant;
     
     @ManyToOne(optional = false)
     @NaturalId
-    @JoinColumn(nullable = false)
     private final User user;
     
     @Column(columnDefinition = "timestamp default now()", nullable = false)
@@ -53,5 +53,12 @@ public class Vote extends LongId {
     
     public Vote(Poll poll, Menu menu, Restaurant restaurant, User user) {
         this(poll, menu, restaurant, user, LocalDateTime.now());
+    }
+    
+    @Projection(name = "brief", types = Vote.class)
+    public interface Brief {
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        LocalDateTime getRegistered();
+        User getUser();
     }
 }
