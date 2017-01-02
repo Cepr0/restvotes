@@ -42,7 +42,6 @@ public class Poll extends DateId {
     }
     
     public Poll setMenus(@NonNull List<Menu> menus) {
-        menus.forEach(menu -> menu.getPolls().add(this));
         this.menus = menus;
         return this;
     }

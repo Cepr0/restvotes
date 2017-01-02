@@ -23,8 +23,6 @@ import static javax.persistence.CascadeType.ALL;
 @Table(name = "menus")
 public class Menu extends LongId {
     
-    private List<Poll> polls = new ArrayList<>();
-    
     private Restaurant restaurant;
     
     private BigDecimal price = ZERO;
@@ -35,15 +33,6 @@ public class Menu extends LongId {
         this.restaurant = restaurant;
         this.price = price;
         setItems(items);
-    }
-    
-    @ManyToMany(mappedBy = "menus")
-    public List<Poll> getPolls() {
-        return polls;
-    }
-    
-    public void setPolls(List<Poll> polls) {
-        this.polls = polls;
     }
     
     @ManyToOne(optional = false)
