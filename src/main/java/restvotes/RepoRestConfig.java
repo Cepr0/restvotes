@@ -31,6 +31,18 @@ public class RepoRestConfig extends RepositoryRestConfigurerAdapter {
     @Override
     public void configureJacksonObjectMapper(ObjectMapper objectMapper) {
         // objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+
+        // objectMapper.registerModule(new SimpleModule().addSerializer(Vote.class, new JsonSerializer<Vote>() {
+        //     @Override
+        //     public void serialize(Vote vote, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+        //         gen.writeStartObject(vote);
+        //         gen.writeObjectField("registered", vote.getRegistered());
+        //         gen.writeEndObject();
+        //     }
+        // }));
+
+        // objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+
         super.configureJacksonObjectMapper(objectMapper);
     }
     

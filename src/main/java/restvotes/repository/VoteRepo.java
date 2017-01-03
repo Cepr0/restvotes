@@ -7,6 +7,8 @@ import restvotes.domain.entity.Vote;
 /**
  * @author Cepro, 2017-01-02
  */
-@RepositoryRestResource(excerptProjection = Vote.Brief.class)
+@RepositoryRestResource(exported = false)
 public interface VoteRepo extends CrudRepository<Vote, Long> {
+    
+    
 }

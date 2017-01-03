@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
-import org.springframework.data.rest.core.config.Projection;
 import restvotes.domain.base.DateId;
 
 import javax.persistence.Entity;
@@ -46,7 +45,6 @@ public class Poll extends DateId {
         return this;
     }
     
-    @Projection(name = "brief", types = Poll.class)
     public interface Brief {
         LocalDate getDate();
         Boolean getFinished();

@@ -62,7 +62,7 @@ public class DemoData {
         
         menuRepo.save(asList(m1, m2, m3));
         
-        Poll p1 = new Poll(asList(m1, m2, m3));
+        Poll p1 = new Poll(asList(m1, m2, m3)).setFinished(true);
         
         pollRepo.save(p1);
     
