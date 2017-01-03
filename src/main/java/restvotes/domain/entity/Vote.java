@@ -1,6 +1,7 @@
 package restvotes.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
+
 /**
  * Defines Vote entity.
  * <p>The object is persisted when a user votes for the chosen restaurant menu.
@@ -28,16 +31,20 @@ import java.time.LocalDateTime;
 @Table(name = "votes")
 public class Vote extends LongId {
 
+    @JsonProperty(access = WRITE_ONLY)
     @ManyToOne(optional = false)
     @NaturalId
     private final Poll poll;
-    
+
+    @JsonProperty(access = WRITE_ONLY)
     @ManyToOne(optional = false)
     private final Menu menu;
-    
+
+    @JsonProperty(access = WRITE_ONLY)
     @ManyToOne(optional = false)
-    private Restaurant restaurant;
-    
+    private final Restaurant restaurant;
+
+    @JsonProperty(access = WRITE_ONLY)
     @ManyToOne(optional = false)
     @NaturalId
     private final User user;
@@ -54,11 +61,10 @@ public class Vote extends LongId {
     public Vote(Poll poll, Menu menu, Restaurant restaurant, User user) {
         this(poll, menu, restaurant, user, LocalDateTime.now());
     }
-    
+
     @Projection(name = "brief", types = Vote.class)
     public interface Brief {
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime getRegistered();
-        User getUser();
     }
 }
