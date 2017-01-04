@@ -2,9 +2,7 @@ package restvotes.web;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.hateoas.*;
-import org.springframework.stereotype.Component;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.domain.entity.Restaurant;
@@ -13,13 +11,13 @@ import restvotes.domain.entity.User;
 /**
  * @author Cepro, 2016-12-21
  */
-@Component
+//@Component
 @RequiredArgsConstructor
 public class ResourceProcessors {
 
     private final @NonNull EntityLinks entityLinks;
     
-    @Component
+//    @Component
     public class PollResourceProcessor implements ResourceProcessor<Resource<Poll>> {
         
         @Override
@@ -29,7 +27,7 @@ public class ResourceProcessors {
         }
     }
     
-    // @Component
+//    @Component
     public class MenuResourceProcessor implements ResourceProcessor<Resource<Menu>> {
         
         @Override
@@ -41,37 +39,17 @@ public class ResourceProcessors {
             return resource;
         }
     }
-    
-    
-    
-    @Bean
-    public ResourceProcessor<Resource<Menu>> menuProcessor() {
-        
-        return new ResourceProcessor<Resource<Menu>>() {
-            
-            @Override
-            public Resource<Menu> process(Resource<Menu> resource) {
-                // resource.getLinks().remove(resource.getLink("menu"));
-                //
-                // Menu menu = resource.getContent();
-                // resource.add(entityLinks.linkForSingleResource(menu).slash("vote").withRel("vote"));
-                return resource;
-            }
-        };
-    }
-    
-    
-    
-    @Component
+
+//    @Component
     public class MenuPageResourceProcessor implements ResourceProcessor<PagedResources<Resource<Menu>>> {
-    
+
         @Override
         public PagedResources<Resource<Menu>> process(PagedResources<Resource<Menu>> resource) {
             return resource;
         }
     }
     
-    @Component
+    // @Component
     public class MenuResourcesProcessor implements ResourceProcessor<Resources<Menu>> {
     
         @Override
@@ -80,7 +58,7 @@ public class ResourceProcessors {
         }
     }
     
-    @Component
+//    @Component
     public class RestaurantResourceProcessor implements ResourceProcessor<Resource<Restaurant>> {
     
         @Override
@@ -90,7 +68,7 @@ public class ResourceProcessors {
         }
     }
     
-    @Component
+//    @Component
     public class UserResourceProcessor implements ResourceProcessor<Resource<User>> {
         
         @Override
