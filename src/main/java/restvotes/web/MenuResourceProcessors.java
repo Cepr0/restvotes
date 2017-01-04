@@ -15,7 +15,7 @@ import restvotes.domain.entity.Menu;
 @RequiredArgsConstructor
 public class MenuResourceProcessors {
     // https://github.com/kylecordes/spring-data-rest-example/blob/master/src/main/java/com/oasisdigital/sdre/engine/web/EngineController.java
-
+    // http://www.programcreek.com/java-api-examples/index.php?source_dir=spring-data-rest-master/spring-data-rest-webmvc/src/main/java/org/springframework/data/rest/webmvc/support/PersistentEntityResourceProcessor.java
     private final @NonNull EntityLinks entityLinks;
 
     @Bean
