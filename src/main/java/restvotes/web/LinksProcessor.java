@@ -7,9 +7,6 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
 import restvotes.domain.entity.Menu;
-import restvotes.domain.entity.Poll;
-import restvotes.domain.entity.Restaurant;
-import restvotes.domain.entity.User;
 
 /**
  * @author Cepro, 2017-01-04
@@ -19,9 +16,8 @@ public class LinksProcessor implements ResourceProcessor<Resource<?>> {
     
     @Override
     public Resource<?> process(Resource<?> resource) {
-    
-        ClassTypeInformation<?> typeInfo = ClassTypeInformation.from(((PersistentEntityResource) resource).getPersistentEntity().getType());
-        Class<?> type = typeInfo.getRawTypeInformation().getType();
+
+        Class<?> type = getResourceType(resource);
     
         if (type == Menu.class) {
             resource.getLinks().remove(resource.getLink("menu"));
@@ -29,19 +25,24 @@ public class LinksProcessor implements ResourceProcessor<Resource<?>> {
             // resource.add(entityLinks.linkForSingleResource(menu).slash("vote").withRel("vote"));
             resource.add(new Link(resource.getId().getHref() + "/vote", "vote"));
         }
-    
-        if (type == Poll.class) {
-            resource.getLinks().remove(resource.getLink("poll"));
-        }
-    
-        if (type == Restaurant.class) {
-            resource.getLinks().remove(resource.getLink("restaurant"));
-        }
-    
-        if (type == User.class) {
-            resource.getLinks().remove(resource.getLink("user"));
-        }
-    
+
+        removeEntityLink(resource, type);
+
         return resource;
+    }
+
+    private Class<?> getResourceType(Resource<?> r) {
+        PersistentEntityResource resource = (PersistentEntityResource) r;
+        ClassTypeInformation<?> typeInfo = ClassTypeInformation.from(resource.getPersistentEntity().getType());
+        return typeInfo.getRawTypeInformation().getType();
+    }
+
+    private void removeEntityLink(Resource<?> resource, Class<?> type) {
+        try {
+            String typeString = type.toString();
+            String entityName = typeString.substring(typeString.lastIndexOf(".") + 1).toLowerCase();
+            resource.getLinks().remove(resource.getLink(entityName));
+        } catch (Exception ignored) {
+        }
     }
 }
