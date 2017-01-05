@@ -2,11 +2,9 @@ package restvotes.web;
 
 import org.springframework.data.rest.webmvc.PersistentEntityResource;
 import org.springframework.data.util.ClassTypeInformation;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
-import restvotes.domain.entity.Menu;
 
 /**
  * @author Cepro, 2017-01-04
@@ -17,16 +15,16 @@ public class LinksProcessor implements ResourceProcessor<Resource<?>> {
     @Override
     public Resource<?> process(Resource<?> resource) {
 
-        Class<?> type = getResourceType(resource);
+        // Class<?> type = getResourceType(resource);
     
-        if (type == Menu.class) {
-            resource.getLinks().remove(resource.getLink("menu"));
-            // Menu menu = (Menu) resource.getContent();
-            // resource.add(entityLinks.linkForSingleResource(menu).slash("vote").withRel("vote"));
-            resource.add(new Link(resource.getId().getHref() + "/vote", "vote"));
-        }
-
-        removeEntityLink(resource, type);
+        //removeEntityLink(resource, type);
+        
+        // if (type == Menu.class) {
+        //     resource.getLinks().remove(resource.getLink("menu"));
+        //     // Menu menu = (Menu) resource.getContent();
+        //     // resource.add(entityLinks.linkForSingleResource(menu).slash("vote").withRel("vote"));
+        //     resource.add(new Link(resource.getId().getHref() + "/vote", "vote"));
+        // }
 
         return resource;
     }
