@@ -9,6 +9,4 @@ import restvotes.domain.entity.Vote;
  */
 @RepositoryRestResource(exported = false)
 public interface VoteRepo extends CrudRepository<Vote, Long> {
-    
-    
 }

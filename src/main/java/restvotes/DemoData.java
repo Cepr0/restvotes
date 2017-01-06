@@ -101,8 +101,8 @@ public class DemoData {
     
         userRepo.save(asList(u1, u2, u3, u4, u5, u6, u7, u8));
     
-        Vote v1 = new Vote(p1, p1.getMenus().get(0), p1.getMenus().get(0).getRestaurant(), u1);
-        Vote v2 = new Vote(p1, p1.getMenus().get(0), p1.getMenus().get(0).getRestaurant(), u2);
+        // Vote v1 = new Vote(p1, p1.getMenus().get(0), p1.getMenus().get(0).getRestaurant(), u1);
+        // Vote v2 = new Vote(p1, p1.getMenus().get(0), p1.getMenus().get(0).getRestaurant(), u2);
         Vote v3 = new Vote(p1, p1.getMenus().get(0), p1.getMenus().get(0).getRestaurant(), u3);
         Vote v4 = new Vote(p1, p1.getMenus().get(0), p1.getMenus().get(0).getRestaurant(), u4);
         Vote v5 = new Vote(p1, p1.getMenus().get(1), p1.getMenus().get(1).getRestaurant(), u5);
@@ -110,7 +110,7 @@ public class DemoData {
         Vote v7 = new Vote(p1, p1.getMenus().get(1), p1.getMenus().get(1).getRestaurant(), u7);
         Vote v8 = new Vote(p1, p1.getMenus().get(2), p1.getMenus().get(2).getRestaurant(), u8);
         
-        voteRepo.save(asList(v1, v2, v3, v4, v5, v6, v7, v8));
+        voteRepo.save(asList(/*v1, v2, */v3, v4, v5, v6, v7, v8));
     
         // Vote v9 = new Vote(p2, p2.getMenus().get(0), p2.getMenus().get(0).getRestaurant(), u1);
         // Vote v10 = new Vote(p2, p2.getMenus().get(0), p2.getMenus().get(0).getRestaurant(), u2);

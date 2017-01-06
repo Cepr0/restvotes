@@ -53,4 +53,8 @@ public class Vote extends LongId {
     public Vote(Poll poll, Menu menu, Restaurant restaurant, User user) {
         this(poll, menu, restaurant, user, LocalDateTime.now());
     }
+    
+    public interface Registered {
+        LocalDateTime getRegistered();
+    }
 }

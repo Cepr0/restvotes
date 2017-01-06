@@ -5,12 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.data.rest.core.config.Projection;
 import restvotes.domain.base.LongId;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +16,7 @@ import java.util.List;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 import static java.math.BigDecimal.ZERO;
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.*;
 
 /**
  * @author Cepro, 2017-01-01
@@ -29,7 +28,7 @@ import static javax.persistence.CascadeType.ALL;
 @Table(name = "menus")
 public class Menu extends LongId {
     
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = EAGER)
     private Restaurant restaurant;
     
     @OneToMany(mappedBy = "menu", cascade = ALL, orphanRemoval = true)
@@ -54,6 +53,7 @@ public class Menu extends LongId {
         return this;
     }
     
+    @Projection(name = "detailed", types = {Menu.class})
     public interface Detailed {
         Restaurant getRestaurant();
         BigDecimal getPrice();
