@@ -8,6 +8,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import restvotes.domain.entity.Poll;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * @author Cepro, 2017-01-01
@@ -17,4 +18,7 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     
     @Query("select p from Poll p order by p.date desc")
     Page<Poll.Brief> getAll(Pageable pageable);
+    
+    @Query("select p from Poll p where p.date = current_date")
+    Optional<Poll> getCurrent();
 }
