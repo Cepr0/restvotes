@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.*;
 import org.springframework.http.HttpEntity;
@@ -11,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import restvotes.domain.entity.Poll;
 import restvotes.repository.PollRepo;
 
@@ -19,26 +19,27 @@ import restvotes.repository.PollRepo;
  * @author Cepro, 2017-01-07
  */
 @RequiredArgsConstructor
-@RestController
-@RequestMapping("/api/polls")
+@RepositoryRestController
+@RequestMapping("/polls")
 @ExposesResourceFor(Poll.class)
-// TODO Change to @RepositoryRestController: http://stackoverflow.com/questions/33571920/
 public class PollController {
+    
     private final @NonNull EntityLinks entityLinks;
     
     private final @NonNull PollRepo pollRepo;
     
+    private final @NonNull PagedResourcesAssembler<Poll.Brief> pagedResourcesAssembler;
+    
     @GetMapping
     @SuppressWarnings("unchecked")
-    HttpEntity<PagedResources<Poll.Brief>> getPolls(Pageable pageable, PagedResourcesAssembler assembler) {
+    HttpEntity<PagedResources<Resource<Poll.Brief>>> getPolls(Pageable pageable) {
         
         Page<Poll.Brief> pollPages = pollRepo.getAll(pageable);
-        
-        PagedResources<Poll.Brief> pagedResources = assembler.toResource(pollPages);
-        
-        for (Object r : pagedResources) {
-            Resource resource = ((Resource) r);
-            Poll.Brief poll = (Poll.Brief) resource.getContent();
+    
+        PagedResources<Resource<Poll.Brief>> pagedResources = pagedResourcesAssembler.toResource(pollPages);
+    
+        for (Resource<Poll.Brief> resource : pagedResources) {
+            Poll.Brief poll = resource.getContent();
             resource.add(entityLinks.linkForSingleResource(Poll.class, poll.getDate()).withSelfRel());
         }
         
