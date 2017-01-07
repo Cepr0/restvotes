@@ -1,12 +1,11 @@
 package restvotes.web;
 
-import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.auditing.AuditableBeanWrapperFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mapping.PersistentEntity;
-import org.springframework.data.rest.webmvc.*;
+import org.springframework.data.rest.webmvc.PersistentEntityResource;
+import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
+import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.ExposesResourceFor;
@@ -14,7 +13,6 @@ import org.springframework.hateoas.LinkBuilder;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +25,7 @@ import java.util.Optional;
 /**
  * @author Cepro, 2017-01-07
  */
+@RequiredArgsConstructor
 @RepositoryRestController
 @RequestMapping("/polls")
 @ExposesResourceFor(Poll.class)
@@ -39,21 +38,6 @@ public class PollController {
     private final PagedResourcesAssembler<Poll.Brief> pagedResourcesAssembler;
     
     private final PollResourceAssembler assembler;
-    
-    private final HttpHeadersPreparer headersPreparer;
-    
-    @Autowired
-    public PollController(RepositoryEntityLinks entityLinks,
-                          PollRepo pollRepo,
-                          PagedResourcesAssembler<Poll.Brief> pagedResourcesAssembler,
-                          PollResourceAssembler assembler,
-                          AuditableBeanWrapperFactory auditableBeanWrapperFactory) {
-        this.entityLinks = entityLinks;
-        this.pollRepo = pollRepo;
-        this.pagedResourcesAssembler = pagedResourcesAssembler;
-        this.assembler = assembler;
-        this.headersPreparer = new HttpHeadersPreparer(auditableBeanWrapperFactory);
-    }
     
     @GetMapping
     @SuppressWarnings("unchecked")
@@ -74,10 +58,7 @@ public class PollController {
     }
 
     @GetMapping("/current")
-    public ResponseEntity<Resource<?>> getCurrentPoll(PersistentEntityResourceAssembler assembler) {
-    // }
-    //
-    // HttpEntity<Resource<Poll>> getCurrent() {
+    public ResponseEntity<Resource<?>> getCurrent(PersistentEntityResourceAssembler assembler) {
         Optional<Poll> pollOptional = pollRepo.getCurrent();
 
         if (pollOptional.isPresent()) {
@@ -85,9 +66,8 @@ public class PollController {
             PersistentEntityResource resource = assembler.toFullResource(poll);
             // Resource<Poll> resource = new Resource<>(poll);
             // resource.add(entityLinks.linkForSingleResource(poll).withSelfRel());
-            HttpHeaders responseHeaders = headersPreparer.prepareHeaders(resource);
     
-            return new ResponseEntity<>(resource, responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(resource, HttpStatus.OK);
         } else {
             return ResponseEntity.notFound().build(); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
