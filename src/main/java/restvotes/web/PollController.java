@@ -40,7 +40,7 @@ public class PollController {
     private final PollResourceAssembler assembler;
     
     @GetMapping
-    @SuppressWarnings("unchecked")
+    // @SuppressWarnings("unchecked")
     HttpEntity<PagedResources<Resource<Poll.Brief>>> getPolls(Pageable pageable) {
         
         Page<Poll.Brief> pollPages = pollRepo.getAll(pageable);
@@ -56,7 +56,8 @@ public class PollController {
         pagedResources.add(linkBuilder.slash("current").withRel("current"));
         return new ResponseEntity<>(pagedResources, HttpStatus.OK);
     }
-
+    
+    @SuppressWarnings("unchecked")
     @GetMapping("/current")
     public ResponseEntity<Resource<?>> getCurrent(PersistentEntityResourceAssembler assembler) {
         Optional<Poll> pollOptional = pollRepo.getCurrent();
@@ -67,7 +68,7 @@ public class PollController {
             // Resource<Poll> resource = new Resource<>(poll);
             // resource.add(entityLinks.linkForSingleResource(poll).withSelfRel());
     
-            return new ResponseEntity<>(resource, HttpStatus.OK);
+            return ResponseEntity.ok(resource);
         } else {
             return ResponseEntity.notFound().build(); //new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
