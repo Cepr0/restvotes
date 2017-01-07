@@ -3,11 +3,13 @@ package restvotes.web;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
+import restvotes.repository.PollRepo;
 import restvotes.repository.UserRepo;
 
 /**
@@ -15,9 +17,13 @@ import restvotes.repository.UserRepo;
  */
 @RequiredArgsConstructor
 @RepositoryRestController
-public class RequestController {
+public class RestVotesController {
     
+    private final @NonNull EntityLinks entityLinks;
+        
     private final @NonNull UserRepo userRepo;
+    
+    private final @NonNull PollRepo pollRepo;
     
     @GetMapping("/users/{id}/hasVotedToday")
     public @ResponseBody ResponseEntity<?> hasVotedToDayById(@PathVariable("id") Long id) {
