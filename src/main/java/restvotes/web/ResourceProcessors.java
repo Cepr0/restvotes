@@ -9,6 +9,7 @@ import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Component;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
+import restvotes.domain.entity.User;
 
 import java.util.Collection;
 
@@ -29,6 +30,7 @@ public class ResourceProcessors {
             Poll poll = resource.getContent();
             if (!poll.isFinished()) {
                 poll.getMenus().forEach(menu -> resource.add(entityLinks.linkForSingleResource(menu).slash("vote").withRel("vote")));
+                resource.add(entityLinks.linkFor(User.class).slash("choice").withRel("choice"));
             }
             return resource;
         }

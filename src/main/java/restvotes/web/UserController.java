@@ -26,7 +26,7 @@ public class UserController {
     
     private final @NonNull VoteRepo voteRepo;
     
-    @GetMapping("/hasVoted")
+    @GetMapping("/choice")
     public ResponseEntity<?> hasVoted() {
         
         return voteRepo.getByUserInCurrentPoll(AuthorizedUser.get())
