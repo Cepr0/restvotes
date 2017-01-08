@@ -32,13 +32,17 @@ public class Vote extends LongId {
     @ManyToOne(optional = false)
     @NaturalId
     private final Poll poll;
+    
+    @ManyToOne(optional = false)
+    private Menu menu;
+    
+    @ManyToOne(optional = false)
+    private Restaurant restaurant;
+
     @ManyToOne(optional = false)
     @NaturalId
     private final User user;
-    @ManyToOne(optional = false)
-    private Menu menu;
-    @ManyToOne(optional = false)
-    private Restaurant restaurant;
+    
     @Column(columnDefinition = "timestamp default now()", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @NotNull
