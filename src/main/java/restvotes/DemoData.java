@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import restvotes.domain.entity.*;
 import restvotes.repository.*;
 
+import java.time.LocalDate;
+
 import static java.math.BigDecimal.valueOf;
 import static java.util.Arrays.asList;
 import static restvotes.domain.entity.User.Role.ROLE_ADMIN;
@@ -61,8 +63,8 @@ public class DemoData {
         ));
         
         menuRepo.save(asList(m1, m2, m3));
-        
-        Poll p1 = new Poll(asList(m1, m2, m3)).setFinished(true);
+    
+        Poll p1 = new Poll(LocalDate.now().minusDays(1), asList(m1, m2, m3)).setFinished(true);
         
         pollRepo.save(p1);
     
@@ -86,7 +88,7 @@ public class DemoData {
     
         menuRepo.save(asList(m4, m5, m6));
     
-        Poll p2 = new Poll(p1.getDate().plusDays(1), asList(m4, m5, m6));
+        Poll p2 = new Poll(asList(m4, m5, m6));
     
         pollRepo.save(p2);
     

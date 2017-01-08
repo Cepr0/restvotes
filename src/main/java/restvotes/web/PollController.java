@@ -8,11 +8,9 @@ import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.LinkBuilder;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RepositoryRestController
 @RequestMapping("/polls")
-@ExposesResourceFor(Poll.class)
+// @ExposesResourceFor(Poll.class)
 public class PollController {
     
     private final RepositoryEntityLinks entityLinks;
@@ -37,11 +35,8 @@ public class PollController {
     
     private final PagedResourcesAssembler<Poll.Brief> pagedResourcesAssembler;
     
-    private final PollResourceAssembler assembler;
-    
     @GetMapping
-    // @SuppressWarnings("unchecked")
-    HttpEntity<PagedResources<Resource<Poll.Brief>>> getPolls(Pageable pageable) {
+    ResponseEntity<PagedResources<Resource<Poll.Brief>>> getPolls(Pageable pageable) {
         
         Page<Poll.Brief> pollPages = pollRepo.getAll(pageable);
     
@@ -57,17 +52,20 @@ public class PollController {
         return new ResponseEntity<>(pagedResources, HttpStatus.OK);
     }
     
+    // http://stackoverflow.com/a/29924387/5380322
+    // http://stackoverflow.com/a/31782016/5380322
+    // http://stackoverflow.com/a/21362291/5380322
     @SuppressWarnings("unchecked")
     @GetMapping("/current")
     public ResponseEntity<Resource<?>> getCurrent(PersistentEntityResourceAssembler assembler) {
         Optional<Poll> pollOptional = pollRepo.getCurrent();
-
+        
         if (pollOptional.isPresent()) {
             Poll poll = pollOptional.get();
             PersistentEntityResource resource = assembler.toFullResource(poll);
             // Resource<Poll> resource = new Resource<>(poll);
             // resource.add(entityLinks.linkForSingleResource(poll).withSelfRel());
-    
+            
             return ResponseEntity.ok(resource);
         } else {
             return ResponseEntity.notFound().build(); //new ResponseEntity<>(HttpStatus.NOT_FOUND);

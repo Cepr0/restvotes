@@ -16,6 +16,10 @@ import java.time.LocalDate;
 @Configuration
 public class RepoRestConfig extends RepositoryRestConfigurerAdapter {
     
+    // To user non-HAL format:
+    // http://stackoverflow.com/a/23287265/5380322
+    // config.setDefaultMediaType(…)
+    
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         config.exposeIdsFor(Poll.class);
