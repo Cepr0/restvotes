@@ -1,5 +1,6 @@
 package restvotes.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,8 +59,20 @@ public class Menu extends LongId {
     
     @Projection(name = "detailed", types = {Menu.class})
     public interface Detailed {
+        @JsonIgnore
+        Long getId();
+    
+        Boolean chosen = false;
+    
+        @JsonProperty(value = "chosen", access = READ_ONLY)
+        default Boolean getChosen() {
+            return chosen;
+        }
+        
         Restaurant getRestaurant();
+    
         BigDecimal getPrice();
+    
         List<MenuItem> getItems();
     }
     

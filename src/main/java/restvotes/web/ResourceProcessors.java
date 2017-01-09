@@ -3,13 +3,20 @@ package restvotes.web;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
-import org.springframework.hateoas.*;
+import org.springframework.hateoas.PagedResources;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.ResourceProcessor;
+import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Component;
+import restvotes.AuthorizedUser;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.domain.entity.User;
+import restvotes.domain.entity.Vote;
+import restvotes.repository.VoteRepo;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 
@@ -21,6 +28,8 @@ import static java.time.format.DateTimeFormatter.ISO_DATE;
 public class ResourceProcessors {
     
     private final @NonNull RepositoryEntityLinks entityLinks;
+    
+    private final @NonNull VoteRepo voteRepo;
     
     @Component
     public class PollBriefPagedResourceProcessor implements ResourceProcessor<PagedResources<Resource<Poll.Brief>>> {
@@ -46,8 +55,20 @@ public class ResourceProcessors {
         public Resources<Resource<Menu.Detailed>> process(Resources<Resource<Menu.Detailed>> resources) {
     
             Collection<Resource<Menu.Detailed>> menus = resources.getContent();
+    
+            Optional<Vote.Brief> voteOptional = voteRepo.getByUserInCurrentPoll(AuthorizedUser.get());
+            long voteMenuId = 0;
+            if (voteOptional.isPresent()) {
+                voteMenuId = voteOptional.get().getMenu().getId();
+            }
+    
             for (Resource<Menu.Detailed> resource : menus) {
-                resource.add(new Link(resource.getId().getHref() + "/vote").withRel("vote"));
+                Menu.Detailed menu = resource.getContent();
+                Long menuId = menu.getId();
+                resource.add(entityLinks.linkForSingleResource(Menu.class, menuId).slash("vote").withRel("vote"));
+    
+                if (voteMenuId == menuId) {
+                }
             }
     
             resources.add(entityLinks.linkFor(User.class).slash("choice").withRel("choice"));
