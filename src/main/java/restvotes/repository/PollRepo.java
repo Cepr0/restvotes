@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * @author Cepro, 2017-01-01
  */
-@RepositoryRestResource//(excerptProjection = Poll.Brief.class)
+@RepositoryRestResource(excerptProjection = Poll.Brief.class)
 public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     
     @RestResource(exported = false)
@@ -24,4 +24,8 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     @RestResource(exported = false)
     @Query("select p from Poll p where p.finished = false")
     Optional<Poll> getCurrent();
+    
+    @RestResource(exported = false)
+    @Query("select p from Poll p where p.finished = false")
+    Optional<Poll.Detailed> getCurrentDetailed();
 }

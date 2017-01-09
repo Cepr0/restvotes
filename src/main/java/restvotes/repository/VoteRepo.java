@@ -19,6 +19,7 @@ public interface VoteRepo extends CrudRepository<Vote, Long> {
     @RestResource(exported = false)
     Optional<Vote> findByPollAndUser(Poll poll, User user);
     
+    @SuppressWarnings("SpringDataJpaMethodInconsistencyInspection")
     @RestResource(exported = false)
     @Query("select v from Vote v join v.user u where u = ?1 and v.poll.finished = false")
     Optional<Vote.Brief> getByUserInCurrentPoll(User user);

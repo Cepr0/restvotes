@@ -8,7 +8,10 @@ import lombok.Setter;
 import org.springframework.data.rest.core.config.Projection;
 import restvotes.domain.base.LongId;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +19,7 @@ import java.util.List;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 import static java.math.BigDecimal.ZERO;
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.EAGER;
 
 /**
  * @author Cepro, 2017-01-01
@@ -57,6 +60,19 @@ public class Menu extends LongId {
     public interface Detailed {
         Restaurant getRestaurant();
         BigDecimal getPrice();
+        List<MenuItem> getItems();
+    }
+    
+    public interface Voted {
+        
+        Restaurant getRestaurant();
+        
+        BigDecimal getPrice();
+        
+        default Boolean isChosen() {
+            return false;
+        }
+        
         List<MenuItem> getItems();
     }
 }

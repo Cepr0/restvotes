@@ -3,15 +3,15 @@ package restvotes.web;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.ResourceProcessor;
-import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.*;
 import org.springframework.stereotype.Component;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.domain.entity.User;
 
 import java.util.Collection;
+
+import static java.time.format.DateTimeFormatter.ISO_DATE;
 
 /**
  * @author Cepro, 2016-12-21
@@ -23,16 +23,19 @@ public class ResourceProcessors {
     private final @NonNull RepositoryEntityLinks entityLinks;
     
     @Component
-    public class PollResourceProcessor implements ResourceProcessor<Resource<Poll>> {
-        
+    public class PollBriefPagedResourceProcessor implements ResourceProcessor<PagedResources<Resource<Poll.Brief>>> {
+    
         @Override
-        public Resource<Poll> process(Resource<Poll> resource) {
-            Poll poll = resource.getContent();
-            if (!poll.isFinished()) {
-                poll.getMenus().forEach(menu -> resource.add(entityLinks.linkForSingleResource(menu).slash("vote").withRel("vote")));
-                resource.add(entityLinks.linkFor(User.class).slash("choice").withRel("choice"));
+        public PagedResources<Resource<Poll.Brief>> process(PagedResources<Resource<Poll.Brief>> pagedResources) {
+            Collection<Resource<Poll.Brief>> polls = pagedResources.getContent();
+            for (Resource<Poll.Brief> resource : polls) {
+                Poll.Brief poll = resource.getContent();
+                if (!poll.getFinished()) {
+                    pagedResources.add(entityLinks.linkFor(Poll.class).slash(poll.getDate().format(ISO_DATE)).slash("menus").withRel("current"));
+                    pagedResources.add(entityLinks.linkFor(Poll.class).slash("current").withRel("current"));
+                }
             }
-            return resource;
+            return pagedResources;
         }
     }
     
@@ -40,19 +43,15 @@ public class ResourceProcessors {
     public class MenuDetailedResourcesProcessor implements ResourceProcessor<Resources<Resource<Menu.Detailed>>> {
         
         @Override
-        public Resources<Resource<Menu.Detailed>> process(Resources<Resource<Menu.Detailed>> resource) {
-            Collection<Resource<Menu.Detailed>> detaileds = resource.getContent();
-            return resource;
-        }
-    }
+        public Resources<Resource<Menu.Detailed>> process(Resources<Resource<Menu.Detailed>> resources) {
     
-    @Component
-    public class MenuResourcesProcessor implements ResourceProcessor<Resources<Resource<Menu>>> {
-        
-        @Override
-        public Resources<Resource<Menu>> process(Resources<Resource<Menu>> resource) {
-            Collection<Resource<Menu>> detaileds = resource.getContent();
-            return resource;
+            Collection<Resource<Menu.Detailed>> menus = resources.getContent();
+            for (Resource<Menu.Detailed> resource : menus) {
+                resource.add(new Link(resource.getId().getHref() + "/vote").withRel("vote"));
+            }
+    
+            resources.add(entityLinks.linkFor(User.class).slash("choice").withRel("choice"));
+            return resources;
         }
     }
 }
