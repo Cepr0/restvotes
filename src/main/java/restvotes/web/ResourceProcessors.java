@@ -9,13 +9,13 @@ import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Component;
 import restvotes.AuthorizedUser;
-import restvotes.domain.entity.Menu;
-import restvotes.domain.entity.Poll;
-import restvotes.domain.entity.User;
-import restvotes.domain.entity.Vote;
+import restvotes.domain.entity.*;
 import restvotes.repository.VoteRepo;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static java.time.format.DateTimeFormatter.ISO_DATE;
@@ -54,25 +54,65 @@ public class ResourceProcessors {
         @Override
         public Resources<Resource<Menu.Detailed>> process(Resources<Resource<Menu.Detailed>> resources) {
     
-            Collection<Resource<Menu.Detailed>> menus = resources.getContent();
+            Collection<Resource<Menu.Detailed>> content = resources.getContent();
     
             Optional<Vote.Brief> voteOptional = voteRepo.getByUserInCurrentPoll(AuthorizedUser.get());
-            long voteMenuId = 0;
-            if (voteOptional.isPresent()) {
-                voteMenuId = voteOptional.get().getMenu().getId();
+    
+            final long voteMenuId = voteOptional.isPresent() ? voteOptional.get().getMenu().getId() : 0;
+    
+            Collection<Resource<Menu.Detailed>> resultContent = new ArrayList<>();
+    
+            for (Resource<Menu.Detailed> resource : content) {
+                resultContent.add(fillResource(resource, voteMenuId));
             }
     
-            for (Resource<Menu.Detailed> resource : menus) {
-                Menu.Detailed menu = resource.getContent();
-                Long menuId = menu.getId();
-                resource.add(entityLinks.linkForSingleResource(Menu.class, menuId).slash("vote").withRel("vote"));
+            Resources<Resource<Menu.Detailed>> resultResources = new Resources<>(resultContent, resources.getLinks());
+            resultResources.add(entityLinks.linkFor(User.class).slash("choice").withRel("choice"));
+            return resultResources;
+        }
     
-                if (voteMenuId == menuId) {
+        private Resource<Menu.Detailed> fillResource(Resource<Menu.Detailed> resource, final long voteMenuId) {
+        
+            Menu.Detailed menu = resource.getContent();
+            long menuId = menu.getId();
+        
+            Resource<Menu.Detailed> result = new Resource<>(new Menu.Detailed() {
+            
+                @Override
+                public Long getId() {
+                    return menuId;
                 }
-            }
-    
-            resources.add(entityLinks.linkFor(User.class).slash("choice").withRel("choice"));
-            return resources;
+            
+                @Override
+                public Restaurant getRestaurant() {
+                    return menu.getRestaurant();
+                }
+            
+                @Override
+                public BigDecimal getPrice() {
+                    return menu.getPrice();
+                }
+            
+                @Override
+                public Boolean isChosen() {
+                    return voteMenuId == menuId;
+                }
+            
+                @Override
+                public Integer getRank() {
+                    return null;
+                }
+            
+                @Override
+                public List<MenuItem> getItems() {
+                    return menu.getItems();
+                }
+            
+            }, resource.getLinks());
+        
+            result.add(entityLinks.linkForSingleResource(Menu.class, menuId).slash("vote").withRel("vote"));
+        
+            return result;
         }
     }
 }

@@ -1,12 +1,14 @@
 package restvotes.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.data.rest.core.config.Projection;
+import org.springframework.hateoas.core.Relation;
 import restvotes.domain.base.LongId;
 
 import javax.persistence.Entity;
@@ -17,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 import static java.math.BigDecimal.ZERO;
 import static javax.persistence.CascadeType.ALL;
@@ -58,20 +61,23 @@ public class Menu extends LongId {
     }
     
     @Projection(name = "detailed", types = {Menu.class})
+    @Relation(collectionRelation = "menus")
+    @JsonInclude(NON_NULL)
     public interface Detailed {
         @JsonIgnore
         Long getId();
     
-        Boolean chosen = false;
-    
-        @JsonProperty(value = "chosen", access = READ_ONLY)
-        default Boolean getChosen() {
-            return chosen;
-        }
-        
         Restaurant getRestaurant();
     
         BigDecimal getPrice();
+    
+        default Boolean isChosen() {
+            return null;
+        }
+    
+        default Integer getRank() {
+            return null;
+        }
     
         List<MenuItem> getItems();
     }
@@ -81,10 +87,8 @@ public class Menu extends LongId {
         Restaurant getRestaurant();
         
         BigDecimal getPrice();
-        
-        default Boolean isChosen() {
-            return false;
-        }
+    
+        Boolean isChosen();
         
         List<MenuItem> getItems();
     }
