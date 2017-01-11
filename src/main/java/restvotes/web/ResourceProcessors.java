@@ -3,10 +3,7 @@ package restvotes.web;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
-import org.springframework.hateoas.PagedResources;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.ResourceProcessor;
-import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.*;
 import org.springframework.stereotype.Component;
 import restvotes.AuthorizedUser;
 import restvotes.domain.entity.Menu;
@@ -37,19 +34,42 @@ public class ResourceProcessors {
     public class PollBriefPagedResourceProcessor implements ResourceProcessor<PagedResources<Resource<Poll.Brief>>> {
     
         @Override
-        public PagedResources<Resource<Poll.Brief>> process(PagedResources<Resource<Poll.Brief>> pagedResources) {
-            Collection<Resource<Poll.Brief>> polls = pagedResources.getContent();
-            for (Resource<Poll.Brief> resource : polls) {
-                Poll.Brief poll = resource.getContent();
+        public PagedResources<Resource<Poll.Brief>> process(PagedResources<Resource<Poll.Brief>> resource) {
+            Collection<Resource<Poll.Brief>> polls = resource.getContent();
+            for (Resource<Poll.Brief> pollResource : polls) {
+                Poll.Brief poll = pollResource.getContent();
                 if (!poll.getFinished()) {
-                    pagedResources.add(entityLinks.linkFor(Poll.class).slash(poll.getDate().format(ISO_DATE)).slash("menus").withRel("current"));
-                    pagedResources.add(entityLinks.linkFor(Poll.class).slash("current").withRel("current"));
+                    resource.add(entityLinks.linkFor(Poll.class).slash(poll.getDate().format(ISO_DATE)).slash("menus").withRel("current"));
+                    resource.add(entityLinks.linkFor(Poll.class).slash("current").withRel("current"));
                 }
             }
-            return pagedResources;
+            return resource;
         }
     }
-
+    
+    @Component
+    public class ResourceSupportProcessor implements ResourceProcessor<ResourceSupport> {
+        
+        @Override
+        public ResourceSupport process(ResourceSupport resource) {
+            return resource;
+        }
+    }
+    
+    @Component
+    public class PollResourceProcessor implements ResourceProcessor<Resource<? extends Poll>> {
+        
+        @Override
+        public Resource<? extends Poll> process(Resource<? extends Poll> resource) {
+            // Poll source = resource.getContent();
+            // PollView poll = new PollView(source);
+            // Resource<PollView> pollResource = new Resource<>(poll);
+            //
+            // return pollResource;
+            return resource;
+        }
+    }
+    
     @Component
     public class AnyResourceProcessor implements ResourceProcessor<Resource<?>> {
 
@@ -81,9 +101,9 @@ public class ResourceProcessors {
     public class MenuDetailedResourcesProcessor implements ResourceProcessor<Resources<Resource<Menu.Detailed>>> {
         
         @Override
-        public Resources<Resource<Menu.Detailed>> process(Resources<Resource<Menu.Detailed>> resources) {
+        public Resources<Resource<Menu.Detailed>> process(Resources<Resource<Menu.Detailed>> resource) {
     
-            Collection<Resource<Menu.Detailed>> content = resources.getContent();
+            Collection<Resource<Menu.Detailed>> content = resource.getContent();
     
             Optional<Vote.Brief> voteOptional = voteRepo.getByUserInCurrentPoll(AuthorizedUser.get());
     
@@ -91,11 +111,11 @@ public class ResourceProcessors {
     
             Collection<Resource<Menu.Detailed>> resultContent = new ArrayList<>();
     
-            for (Resource<Menu.Detailed> resource : content) {
-                resultContent.add(fillResource(resource, voteMenuId));
+            for (Resource<Menu.Detailed> menuResource : content) {
+                resultContent.add(fillResource(menuResource, voteMenuId));
             }
     
-            Resources<Resource<Menu.Detailed>> resultResources = new Resources<>(resultContent, resources.getLinks());
+            Resources<Resource<Menu.Detailed>> resultResources = new Resources<>(resultContent, resource.getLinks());
             resultResources.add(entityLinks.linkFor(User.class).slash("choice").withRel("choice"));
             return resultResources;
         }
