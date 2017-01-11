@@ -59,6 +59,8 @@ public class ResourceProcessors {
     @Component
     public class PollResourceProcessor implements ResourceProcessor<Resource<? extends Poll>> {
         
+        // http://stackoverflow.com/a/29039089/5380322
+        // https://github.com/spring-projects/spring-hateoas/issues/270
         @Override
         public Resource<? extends Poll> process(Resource<? extends Poll> resource) {
             // Poll source = resource.getContent();
