@@ -54,9 +54,7 @@ public class Poll extends DateId {
     
     public interface Detailed {
         LocalDate getDate();
-        
         Boolean getFinished();
-        
-        List<Menu.Voted> getMenus();
+        List<Menu.Detailed> getMenus();
     }
 }

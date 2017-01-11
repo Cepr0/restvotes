@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * @author Cepro, 2017-01-01
  */
-@RepositoryRestResource(excerptProjection = Poll.Brief.class)
+@RepositoryRestResource(excerptProjection = Poll.Detailed.class)
 public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     
     @RestResource(exported = false)

@@ -49,7 +49,34 @@ public class ResourceProcessors {
             return pagedResources;
         }
     }
-    
+
+    @Component
+    public class AnyResourceProcessor implements ResourceProcessor<Resource<?>> {
+
+        @Override
+        public Resource<?> process(Resource<?> resource) {
+            return resource;
+        }
+    }
+
+    @Component
+    public class AnyResourcesProcessor implements ResourceProcessor<Resources<?>> {
+
+        @Override
+        public Resources<?> process(Resources<?> resource) {
+            return resource;
+        }
+    }
+
+    @Component
+    public class AnyPagedResourcesProcessor implements ResourceProcessor<PagedResources<?>> {
+
+        @Override
+        public PagedResources<?> process(PagedResources<?> resource) {
+            return resource;
+        }
+    }
+
     @Component
     public class MenuDetailedResourcesProcessor implements ResourceProcessor<Resources<Resource<Menu.Detailed>>> {
         
