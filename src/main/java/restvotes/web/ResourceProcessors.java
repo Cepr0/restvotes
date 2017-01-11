@@ -9,13 +9,15 @@ import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Component;
 import restvotes.AuthorizedUser;
-import restvotes.domain.entity.*;
+import restvotes.domain.entity.Menu;
+import restvotes.domain.entity.Poll;
+import restvotes.domain.entity.User;
+import restvotes.domain.entity.Vote;
 import restvotes.repository.VoteRepo;
+import restvotes.to.MenuView;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 import static java.time.format.DateTimeFormatter.ISO_DATE;
@@ -75,40 +77,10 @@ public class ResourceProcessors {
         
             Menu.Detailed menu = resource.getContent();
             long menuId = menu.getId();
+
+            MenuView menuView = new MenuView(menu).setChosen(voteMenuId == menuId);
         
-            Resource<Menu.Detailed> result = new Resource<>(new Menu.Detailed() {
-            
-                @Override
-                public Long getId() {
-                    return menuId;
-                }
-            
-                @Override
-                public Restaurant getRestaurant() {
-                    return menu.getRestaurant();
-                }
-            
-                @Override
-                public BigDecimal getPrice() {
-                    return menu.getPrice();
-                }
-            
-                @Override
-                public Boolean isChosen() {
-                    return voteMenuId == menuId;
-                }
-            
-                @Override
-                public Integer getRank() {
-                    return null;
-                }
-            
-                @Override
-                public List<MenuItem> getItems() {
-                    return menu.getItems();
-                }
-            
-            }, resource.getLinks());
+            Resource<Menu.Detailed> result = new Resource<>(menuView, resource.getLinks());
         
             result.add(entityLinks.linkForSingleResource(Menu.class, menuId).slash("vote").withRel("vote"));
         

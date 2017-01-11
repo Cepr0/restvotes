@@ -71,7 +71,7 @@ public class Menu extends LongId {
     
         BigDecimal getPrice();
     
-        default Boolean isChosen() {
+        default Boolean getChosen() {
             return null;
         }
     
