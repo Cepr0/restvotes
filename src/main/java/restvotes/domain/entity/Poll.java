@@ -1,5 +1,6 @@
 package restvotes.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -50,6 +51,8 @@ public class Poll extends DateId {
     public interface Brief {
         LocalDate getDate();
         Boolean getFinished();
+        @JsonIgnore
+        List<Menu.Detailed> getMenus();
     }
     
     public interface Detailed {

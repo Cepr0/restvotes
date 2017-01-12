@@ -66,4 +66,12 @@ public class Vote extends LongId {
         @RestResource(exported = false)
         Menu getMenu();
     }
+    
+    public interface Rank {
+        Menu getMenu();
+        Integer getRank();
+        default Long getId() {
+            return getMenu().getId();
+        }
+    }
 }

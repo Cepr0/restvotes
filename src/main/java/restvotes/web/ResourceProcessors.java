@@ -13,11 +13,12 @@ import restvotes.domain.entity.Vote;
 import restvotes.repository.VoteRepo;
 import restvotes.to.MenuView;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
+import static java.time.LocalDate.parse;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * @author Cepro, 2016-12-21
@@ -38,10 +39,14 @@ public class ResourceProcessors {
             Collection<Resource<Poll.Brief>> polls = resource.getContent();
             for (Resource<Poll.Brief> pollResource : polls) {
                 Poll.Brief poll = pollResource.getContent();
+                LinkBuilder menusLink = entityLinks.linkFor(Poll.class).slash(poll.getDate().format(ISO_DATE)).slash("menus");
                 if (!poll.getFinished()) {
-                    resource.add(entityLinks.linkFor(Poll.class).slash(poll.getDate().format(ISO_DATE)).slash("menus").withRel("current"));
-                    resource.add(entityLinks.linkFor(Poll.class).slash("current").withRel("current"));
+                    resource.add(menusLink.withRel("current.menu"));
+                    resource.add(entityLinks.linkFor(Poll.class).slash("current?projection=brief").withRel("current.poll"));
+                } else {
+                    // TODO Add winner
                 }
+                pollResource.add(menusLink.withRel("menus"));
             }
             return resource;
         }
@@ -111,10 +116,23 @@ public class ResourceProcessors {
     
             final long voteMenuId = voteOptional.isPresent() ? voteOptional.get().getMenu().getId() : 0;
     
+            Map<Long, Integer> menuRanks = null;
+            try {
+                String selfStr = resource.getLink("self").getHref();
+                // Matcher m = Pattern.compile("\\d{4}-\\d{2}-\\d{2}").matcher(selfStr);
+                // m.find();
+                // LocalDate date = parse(m.group(0));
+                String[] parts = selfStr.split("/");
+                LocalDate date = parse(parts[parts.length - 2]);
+                List<Vote.Rank> ranks = voteRepo.getRanksByDate(date);
+                menuRanks = ranks.stream().collect(toMap(Vote.Rank::getId, Vote.Rank::getRank));
+            } catch (Exception ignored) {
+            }
+    
             Collection<Resource<Menu.Detailed>> resultContent = new ArrayList<>();
     
             for (Resource<Menu.Detailed> menuResource : content) {
-                resultContent.add(fillResource(menuResource, voteMenuId));
+                resultContent.add(fillResource(menuResource, voteMenuId, menuRanks));
             }
     
             Resources<Resource<Menu.Detailed>> resultResources = new Resources<>(resultContent, resource.getLinks());
@@ -122,12 +140,17 @@ public class ResourceProcessors {
             return resultResources;
         }
     
-        private Resource<Menu.Detailed> fillResource(Resource<Menu.Detailed> resource, final long voteMenuId) {
+        private Resource<Menu.Detailed> fillResource(
+                Resource<Menu.Detailed> resource,
+                final long voteMenuId,
+                Map<Long, Integer> menuRanks) {
         
             Menu.Detailed menu = resource.getContent();
             long menuId = menu.getId();
 
-            MenuView menuView = new MenuView(menu).setChosen(voteMenuId == menuId);
+            MenuView menuView = new MenuView(menu)
+                    .setChosen(voteMenuId == menuId)
+                    .setRank(menuRanks != null? menuRanks.getOrDefault(menuId, 0) : null);
         
             Resource<Menu.Detailed> result = new Resource<>(menuView, resource.getLinks());
         
