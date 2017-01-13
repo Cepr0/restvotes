@@ -2,14 +2,13 @@ package restvotes.web.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
-import org.springframework.stereotype.Component;
 import restvotes.domain.entity.Menu;
 import restvotes.repository.PollRepo;
 
 /**
  * @author Cepro, 2017-01-08
  */
-@Component
+// @Component
 public class MenuResourceAssembler extends ResourceAssemblerSupport<Menu, MenuResource> {
     
     private PollRepo pollRepo;

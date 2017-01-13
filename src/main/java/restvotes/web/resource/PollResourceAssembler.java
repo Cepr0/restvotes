@@ -3,7 +3,6 @@ package restvotes.web.resource;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
-import org.springframework.stereotype.Component;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.MenuItem;
 import restvotes.domain.entity.Poll;
@@ -14,7 +13,7 @@ import java.util.List;
 /**
  * @author Cepro, 2017-01-07
  */
-@Component
+// @Component
 public class PollResourceAssembler extends ResourceAssemblerSupport<Poll, PollResource> {
     
     public PollResourceAssembler() {
