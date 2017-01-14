@@ -46,7 +46,7 @@ public class LinksHelper {
         links.add(getPollLink(pollView.getDate()).withSelfRel());
         
         if (chosenMenuId != null) {
-            links.add(LINKS.linkForSingleResource(Menu.class, chosenMenuId).withRel("userChoice"));
+            links.add(LINKS.linkForSingleResource(Menu.class, chosenMenuId).slash("/?projection=detailed").withRel("userChoice"));
         }
         
         return links;
