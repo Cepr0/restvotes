@@ -30,4 +30,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
     @RestResource(exported = false)
     @Query("select count(v) as count from Vote v join v.user u where u.id = :id and v.poll = current_date")
     int hasVotedTodayById(@Param("id") Long id);
+    
+    // TODO Add search for Users by: name, email, role, enabled
 }

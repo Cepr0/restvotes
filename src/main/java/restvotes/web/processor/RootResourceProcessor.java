@@ -3,13 +3,11 @@ package restvotes.web.processor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.webmvc.RepositoryLinksResource;
-import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
-import restvotes.domain.entity.Poll;
 import restvotes.repository.PollRepo;
 
-import static java.time.format.DateTimeFormatter.ISO_DATE;
+import static restvotes.to.LinksHelper.getPollLink;
 
 /**
  * @author Cepro, 2017-01-13
@@ -18,17 +16,11 @@ import static java.time.format.DateTimeFormatter.ISO_DATE;
 @RequiredArgsConstructor
 public class RootResourceProcessor implements ResourceProcessor<RepositoryLinksResource> {
     
-    private final @NonNull RepositoryEntityLinks entityLinks;
-    
     private final @NonNull PollRepo pollRepo;
     
     @Override
     public RepositoryLinksResource process(RepositoryLinksResource resource) {
-        pollRepo.getCurrent().ifPresent(poll -> {
-            String curPollDateStr = poll.getId().format(ISO_DATE);
-            resource.add(entityLinks.linkFor(Poll.class).slash(curPollDateStr).slash("menus").withRel("currentMenus"));
-            resource.add(entityLinks.linkFor(Poll.class).slash(curPollDateStr).slash("/?projection=brief").withRel("currentPoll"));
-        });
+        pollRepo.getCurrent().ifPresent(poll -> resource.add(getPollLink(poll.getId()).withRel("currentPoll")));
         return resource;
     }
 }

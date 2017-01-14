@@ -9,4 +9,5 @@ import restvotes.domain.entity.Restaurant;
  */
 @RepositoryRestResource
 public interface RestRepo extends JpaRepository<Restaurant, Long> {
+    // TODO Add RestaurantController and getMenusByRestaurantId() for api/restaurants/{id}/menus
 }

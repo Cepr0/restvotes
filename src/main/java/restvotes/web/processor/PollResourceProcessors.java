@@ -3,7 +3,6 @@ package restvotes.web.processor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
-import org.springframework.hateoas.LinkBuilder;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
@@ -17,7 +16,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
 
-import static java.time.format.DateTimeFormatter.ISO_DATE;
+import static restvotes.to.LinksHelper.getPollLink;
 
 /**
  * @author Cepro, 2017-01-13
@@ -39,25 +38,19 @@ public class PollResourceProcessors {
             Collection<Resource<Poll.Brief>> polls = resource.getContent();
             for (Resource<Poll.Brief> pollResource : polls) {
                 Poll.Brief poll = pollResource.getContent();
-                
-                String dateStr = poll.getDate().format(ISO_DATE);
-                LinkBuilder menusLink = entityLinks.linkFor(Poll.class).slash(dateStr).slash("menus");
-                
+
                 if (!poll.getFinished()) {
-                    resource.add(menusLink.withRel("currentMenus"));
-                    resource.add(entityLinks.linkFor(Poll.class).slash(dateStr).slash("/?projection=brief").withRel("currentPoll"));
+                    resource.add(getPollLink(poll.getDate()).withRel("currentPoll"));
                 } else {
                     // TODO Add winner
                 }
-
-                pollResource.add(menusLink.withRel("menus"));
             }
             return resource;
         }
     }
     
     @Component
-    public class PollBriefResourceProcessor implements ResourceProcessor<Resource<Poll.Detailed>> {
+    public class PollDetailedResourceProcessor implements ResourceProcessor<Resource<Poll.Detailed>> {
     
         @Override
         public Resource<Poll.Detailed> process(Resource<Poll.Detailed> resource) {
