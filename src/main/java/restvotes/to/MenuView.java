@@ -1,7 +1,6 @@
 package restvotes.to;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.Identifiable;
@@ -12,34 +11,40 @@ import restvotes.domain.entity.Restaurant;
 
 import java.math.BigDecimal;
 import java.util.List;
-
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import java.util.Map;
 
 /**
  * @author Cepro, 2017-01-11
  */
 @Getter
 @Setter
-@Relation(collectionRelation = "menus")
-@JsonInclude(NON_NULL)
+@Relation(value = "menu", collectionRelation = "menus")
+// @JsonInclude(NON_NULL)
 public class MenuView implements Menu.Detailed, Identifiable<Long> {
 
     @JsonIgnore
     private Long id;
 
-    private Restaurant restaurant;
-
-    private BigDecimal price;
-
     private Boolean chosen;
 
-    private Integer rank;
-
+    private int rank = 0;
+    
+    private Restaurant restaurant;
+    
     private List<MenuItem> items;
-
+    
+    private BigDecimal price;
+    
     public MenuView(Menu.Detailed menu) {
         id = menu.getId();
         restaurant = menu.getRestaurant();
+        price = menu.getPrice();
         items = menu.getItems();
+    }
+    
+    public MenuView(Menu.Detailed menu, Long chosenMenuId, Map<Long, Integer> ranks) {
+        this(menu);
+        chosen = (chosenMenuId != null) ? chosenMenuId.equals(id) : null;
+        rank = (ranks != null) ? ranks.getOrDefault(id, 0) : 0;
     }
 }

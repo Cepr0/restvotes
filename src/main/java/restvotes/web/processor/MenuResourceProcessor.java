@@ -59,8 +59,9 @@ public class MenuResourceProcessor {
                 Optional<Vote.Brief> voteOptional = voteRepo.getByUserAndDate(AuthorizedUser.get(), pollDate);
                 voteMenuId = voteOptional.isPresent() ? voteOptional.get().getMenu().getId() : 0;
                 
-                // Get Map<Long, Integer> for every Menu and its rank in the current Poll date
+                // Get Map<Long, Integer> for every Menu (its ID as Long) and its rank (as Integer) in the current Poll date
                 List<Vote.Rank> ranks = voteRepo.getRanksByDate(pollDate);
+                // TODO Move Map making to VoteRepo
                 menuRanks = ranks.stream().collect(toMap(Vote.Rank::getId, Vote.Rank::getRank));
             } catch (Exception ignored) {
             }
@@ -123,7 +124,7 @@ public class MenuResourceProcessor {
             
             MenuView menuView = new MenuView(menu)
                     .setChosen(voteMenuId == menuId)
-                    .setRank(menuRanks != null? menuRanks.getOrDefault(menuId, 0) : null);
+                    .setRank(menuRanks != null? menuRanks.getOrDefault(menuId, 0) : 0);
     
             return new Resource<>(menuView, resource.getLinks());
         }

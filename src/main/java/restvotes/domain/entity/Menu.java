@@ -1,7 +1,6 @@
 package restvotes.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +18,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 import static java.math.BigDecimal.ZERO;
 import static javax.persistence.CascadeType.ALL;
@@ -62,7 +60,7 @@ public class Menu extends LongId {
     
     @Projection(name = "detailed", types = {Menu.class})
     @Relation(collectionRelation = "menus")
-    @JsonInclude(NON_NULL)
+    // @JsonInclude(NON_NULL)
     public interface Detailed {
         @JsonIgnore
         Long getId();
@@ -75,8 +73,8 @@ public class Menu extends LongId {
             return null;
         }
     
-        default Integer getRank() {
-            return null;
+        default int getRank() {
+            return 0;
         }
     
         List<MenuItem> getItems();

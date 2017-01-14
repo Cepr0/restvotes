@@ -8,9 +8,14 @@ import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
+import restvotes.AuthorizedUser;
 import restvotes.domain.entity.Poll;
+import restvotes.repository.VoteRepo;
+import restvotes.to.PollView;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Map;
 
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 
@@ -23,8 +28,10 @@ public class PollResourceProcessors {
     
     private final @NonNull RepositoryEntityLinks entityLinks;
     
+    private final @NonNull VoteRepo voteRepo;
+    
     @Component
-    public class PollBriefPagedResourceProcessor implements ResourceProcessor<PagedResources<Resource<Poll.Brief>>> {
+    public class PollBriefPagedResourcesProcessor implements ResourceProcessor<PagedResources<Resource<Poll.Brief>>> {
         
         @Override
         public PagedResources<Resource<Poll.Brief>> process(PagedResources<Resource<Poll.Brief>> resource) {
@@ -49,5 +56,23 @@ public class PollResourceProcessors {
         }
     }
     
+    @Component
+    public class PollBriefResourceProcessor implements ResourceProcessor<Resource<Poll.Detailed>> {
+    
+        @Override
+        public Resource<Poll.Detailed> process(Resource<Poll.Detailed> resource) {
+    
+            Poll.Detailed poll = resource.getContent();
+            LocalDate pollDate = poll.getDate();
+
+            Long chosenMenuId = voteRepo.getByUserAndDate(AuthorizedUser.get(), pollDate)
+                                        .map(v -> v.getMenu().getId())
+                                        .orElse(null);
+    
+            Map<Long, Integer> ranks = voteRepo.getMenuAndRankParesByDate(pollDate);
+    
+            return new Resource<>(new PollView(poll, chosenMenuId, ranks));
+        }
+    }
     
 }
