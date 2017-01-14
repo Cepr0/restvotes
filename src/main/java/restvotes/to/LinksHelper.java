@@ -20,6 +20,13 @@ import java.util.List;
 @Component
 public class LinksHelper {
     
+    private final static String PROJECTION_DETAILED = "/?projection=detailed";
+    private final static String POLL = "poll";
+    private final static String CURRENT_POLL = "currentPoll";
+    private final static String MENU = "menu";
+    private final static String RESTAURANT = "restaurant";
+    private final static String VOTE = "vote";
+    
     private static RepositoryEntityLinks LINKS;
     
     @SuppressWarnings("SpringJavaAutowiringInspection")
@@ -33,8 +40,8 @@ public class LinksHelper {
     
         LinkBuilder menuLinkBuilder = LINKS.linkForSingleResource(Menu.class, menuView.getId());
         Link selfLink = menuLinkBuilder.withSelfRel();
-        Link voteLink = menuLinkBuilder.slash("vote").withRel("vote");
-        Link restaurantLink = LINKS.linkForSingleResource(Restaurant.class, menuView.getRestaurant().getId()).withRel("restaurant");
+        Link voteLink = menuLinkBuilder.slash(VOTE).withRel(VOTE);
+        Link restaurantLink = LINKS.linkForSingleResource(Restaurant.class, menuView.getRestaurant().getId()).withRel(RESTAURANT);
         
         return Arrays.asList(selfLink, restaurantLink, voteLink);
     }
@@ -43,16 +50,44 @@ public class LinksHelper {
     
         List<Link> links = new ArrayList<>();
                 
-        links.add(getPollLink(pollView.getDate()).withSelfRel());
+        links.add(getPollSelfLink(pollView.getDate()));
         
         if (chosenMenuId != null) {
-            links.add(LINKS.linkForSingleResource(Menu.class, chosenMenuId).slash("/?projection=detailed").withRel("userChoice"));
+            links.add(LINKS.linkForSingleResource(Menu.class, chosenMenuId).slash(PROJECTION_DETAILED).withRel("userChoice"));
         }
         
         return links;
     }
     
-    public static LinkBuilder getPollLink(LocalDate date) {
-        return LINKS.linkForSingleResource(Poll.class, date).slash("/?projection=detailed");
+    public static Link getPollLink(Poll poll) {
+        return LINKS.linkForSingleResource(poll).slash(PROJECTION_DETAILED).withRel(POLL);
+    }
+    
+    public static Link getPollLink(LocalDate date) {
+        return LINKS.linkForSingleResource(Poll.class, date).slash(PROJECTION_DETAILED).withRel(POLL);
+    }
+    
+    public static Link getCurrentPollLink(Poll poll) {
+        return LINKS.linkForSingleResource(poll).slash(PROJECTION_DETAILED).withRel(CURRENT_POLL);
+    }
+    
+    public static Link getCurrentPollLink(LocalDate date) {
+        return LINKS.linkForSingleResource(Poll.class, date).slash(PROJECTION_DETAILED).withRel(CURRENT_POLL);
+    }
+    
+    public static Link getPollSelfLink(Poll poll) {
+        return LINKS.linkForSingleResource(poll).slash(PROJECTION_DETAILED).withSelfRel();
+    }
+    
+    public static Link getPollSelfLink(LocalDate date) {
+        return LINKS.linkForSingleResource(Poll.class, date).slash(PROJECTION_DETAILED).withSelfRel();
+    }
+    
+    public static Link getRestaurantLink(Restaurant restaurant) {
+        return LINKS.linkForSingleResource(restaurant).withRel(RESTAURANT);
+    }
+    
+    public static Link getMenuLink(Menu menu) {
+        return LINKS.linkForSingleResource(menu).slash(PROJECTION_DETAILED).withRel(MENU);
     }
 }

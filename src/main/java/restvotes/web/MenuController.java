@@ -3,7 +3,6 @@ package restvotes.web;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,8 @@ import restvotes.repository.VoteRepo;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static restvotes.to.LinksHelper.*;
+
 /**
  * @author Cepro, 2017-01-08
  */
@@ -26,8 +27,6 @@ import java.util.Optional;
 @RepositoryRestController
 @RequestMapping("/menus/{id}")
 public class MenuController {
-    
-    private final RepositoryEntityLinks entityLinks;
     
     private final @NonNull VoteRepo voteRepo;
     
@@ -61,10 +60,12 @@ public class MenuController {
                     vote.setRegistered(LocalDateTime.now());
                     
                     Vote updated = voteRepo.save(vote);
+                    // TODO Handle an exception here if Vote didn't save
                     result = new ResponseEntity<>(getMenuBriefResource(updated), HttpStatus.OK);
                     
                 } else {
                     Vote created = voteRepo.save(new Vote(poll, menu, restaurant, user));
+                    // TODO Handle an exception here if Vote didn't save
                     result = new ResponseEntity<>(getMenuBriefResource(created), HttpStatus.CREATED);
                 }
             } else {
@@ -87,7 +88,7 @@ public class MenuController {
             
             @Override
             public Restaurant getRestaurant() {
-                return vote.getRestaurant();
+                return null;
             }
             
             @Override
@@ -96,8 +97,11 @@ public class MenuController {
             }
         });
         
-        resource.add(entityLinks.linkForSingleResource(vote.getRestaurant()).withRel("restaurant"));
-        resource.add(entityLinks.linkForSingleResource(vote.getMenu()).withRel("menu"));
+        resource.add(
+                getRestaurantLink(vote.getRestaurant()),
+                getMenuLink(vote.getMenu()),
+                getPollLink(vote.getPoll()));
+        
         return resource;
     }
 }

@@ -59,7 +59,9 @@ public class Vote extends LongId {
     public interface Brief {
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime getRegistered();
-        
+    
+        @JsonIgnore
+        @RestResource(exported = false)
         Restaurant getRestaurant();
         
         @JsonIgnore

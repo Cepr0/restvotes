@@ -2,7 +2,6 @@ package restvotes.web.processor;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
@@ -16,6 +15,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
 
+import static restvotes.to.LinksHelper.getCurrentPollLink;
 import static restvotes.to.LinksHelper.getPollLink;
 
 /**
@@ -24,8 +24,6 @@ import static restvotes.to.LinksHelper.getPollLink;
 @RequiredArgsConstructor
 @Component
 public class PollResourceProcessors {
-    
-    private final @NonNull RepositoryEntityLinks entityLinks;
     
     private final @NonNull VoteRepo voteRepo;
     
@@ -38,9 +36,11 @@ public class PollResourceProcessors {
             Collection<Resource<Poll.Brief>> polls = resource.getContent();
             for (Resource<Poll.Brief> pollResource : polls) {
                 Poll.Brief poll = pollResource.getContent();
+                
+                pollResource.add(getPollLink(poll.getDate()));
 
                 if (!poll.getFinished()) {
-                    resource.add(getPollLink(poll.getDate()).withRel("currentPoll"));
+                    resource.add(getCurrentPollLink(poll.getDate()));
                 } else {
                     // TODO Add winner
                 }

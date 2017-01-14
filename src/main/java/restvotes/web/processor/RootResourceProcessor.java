@@ -7,7 +7,7 @@ import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
 import restvotes.repository.PollRepo;
 
-import static restvotes.to.LinksHelper.getPollLink;
+import static restvotes.to.LinksHelper.getCurrentPollLink;
 
 /**
  * @author Cepro, 2017-01-13
@@ -20,7 +20,7 @@ public class RootResourceProcessor implements ResourceProcessor<RepositoryLinksR
     
     @Override
     public RepositoryLinksResource process(RepositoryLinksResource resource) {
-        pollRepo.getCurrent().ifPresent(poll -> resource.add(getPollLink(poll.getId()).withRel("currentPoll")));
+        pollRepo.getCurrent().ifPresent(poll -> resource.add(getCurrentPollLink(poll)));
         return resource;
     }
 }
