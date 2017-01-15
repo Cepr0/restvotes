@@ -7,7 +7,7 @@ import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
 import restvotes.repository.PollRepo;
 
-import static restvotes.to.LinksHelper.getCurrentPollLink;
+import static restvotes.web.LinksHelper.getCurrentPollLink;
 
 /**
  * @author Cepro, 2017-01-13

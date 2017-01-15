@@ -47,17 +47,21 @@ public class Poll extends DateId {
         return this;
     }
     
+    public Boolean getFinished() {
+        return finished;
+    }
+    
     @Projection(name = "brief", types = {Poll.class})
     public interface Brief {
         LocalDate getDate();
         Boolean getFinished();
         @JsonIgnore
-        List<Menu.Detailed> getMenus();
+        List<Menu> getMenus();
     }
     
     public interface Detailed {
         LocalDate getDate();
         Boolean getFinished();
-        List<Menu.Detailed> getMenus();
+        List<Menu> getMenus();
     }
 }

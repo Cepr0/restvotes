@@ -1,4 +1,4 @@
-package restvotes.web;
+package restvotes.web.controller;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import restvotes.repository.VoteRepo;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static restvotes.to.LinksHelper.*;
+import static restvotes.web.LinksHelper.*;
 
 /**
  * @author Cepro, 2017-01-08
@@ -46,7 +46,7 @@ public class MenuController {
         if (pollOptional.isPresent()) {
             
             Poll poll = pollOptional.get();
-            if (!poll.isFinished()) {
+            if (!poll.getFinished()) {
                 
                 User user = AuthorizedUser.get();
                 Restaurant restaurant = menu.getRestaurant();

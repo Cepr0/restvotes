@@ -82,14 +82,4 @@ public class Menu extends LongId {
         List<MenuItem> getItems();
     }
     
-    public interface Voted {
-        
-        Restaurant getRestaurant();
-        
-        BigDecimal getPrice();
-    
-        Boolean isChosen();
-        
-        List<MenuItem> getItems();
-    }
 }

@@ -9,9 +9,4 @@ import restvotes.domain.entity.Menu;
  */
 @RepositoryRestResource(excerptProjection = Menu.Detailed.class)
 public interface MenuRepo extends JpaRepository<Menu, Long> {
-    
-    // @SuppressWarnings("SpringDataJpaMethodInconsistencyInspection")
-    // @RestResource(exported = false)
-    // @Query("select m from Menu m join Poll p where p = ?1")
-    // List<Menu.Voted> findByPoll(Poll poll);
 }

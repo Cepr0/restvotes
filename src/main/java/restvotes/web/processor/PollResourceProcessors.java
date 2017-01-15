@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 import restvotes.AuthorizedUser;
 import restvotes.domain.entity.Poll;
 import restvotes.repository.VoteRepo;
-import restvotes.to.PollView;
+import restvotes.web.view.PollView;
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
 
-import static restvotes.to.LinksHelper.getCurrentPollLink;
-import static restvotes.to.LinksHelper.getPollLink;
+import static restvotes.web.LinksHelper.getCurrentPollLink;
+import static restvotes.web.LinksHelper.getPollLink;
 
 /**
  * @author Cepro, 2017-01-13
@@ -49,23 +49,41 @@ public class PollResourceProcessors {
         }
     }
     
+    // @Component
+    // public class PollDetailedResourceProcessor implements ResourceProcessor<Resource<Poll.Detailed>> {
+    //
+    //     @Override
+    //     public Resource<Poll.Detailed> process(Resource<Poll.Detailed> resource) {
+    //
+    //         Poll.Detailed poll = resource.getContent();
+    //         LocalDate pollDate = poll.getDate();
+    //
+    //         Long chosenMenuId = voteRepo.getByUserAndDate(AuthorizedUser.get(), pollDate)
+    //                                     .map(v -> v.getMenu().getId())
+    //                                     .orElse(null);
+    //
+    //         Map<Long, Integer> ranks = voteRepo.getMenuAndRankParesByDate(pollDate);
+    //
+    //         return new Resource<>(new PollView(poll, chosenMenuId, ranks));
+    //     }
+    // }
+    //
     @Component
-    public class PollDetailedResourceProcessor implements ResourceProcessor<Resource<Poll.Detailed>> {
-    
+    public class PollResourceProcessor implements ResourceProcessor<Resource<Poll>> {
+        
         @Override
-        public Resource<Poll.Detailed> process(Resource<Poll.Detailed> resource) {
-    
-            Poll.Detailed poll = resource.getContent();
+        public Resource<Poll> process(Resource<Poll> resource) {
+            
+            Poll poll = resource.getContent();
             LocalDate pollDate = poll.getDate();
-
+            
             Long chosenMenuId = voteRepo.getByUserAndDate(AuthorizedUser.get(), pollDate)
                                         .map(v -> v.getMenu().getId())
                                         .orElse(null);
-    
+            
             Map<Long, Integer> ranks = voteRepo.getMenuAndRankParesByDate(pollDate);
-    
+            
             return new Resource<>(new PollView(poll, chosenMenuId, ranks));
         }
     }
-    
 }

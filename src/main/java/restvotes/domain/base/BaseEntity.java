@@ -12,4 +12,6 @@ public abstract class BaseEntity<ID extends Serializable> implements Identifiabl
     
     @Override
     public abstract ID getId();
+    
+    public abstract BaseEntity setId(ID id);
 }

@@ -22,5 +22,11 @@ public class LongId extends BaseEntity<Long> {
 
     @Id
     @GeneratedValue
-    private final Long id;
+    private Long id;
+    
+    @Override
+    public BaseEntity setId(Long id) {
+        this.id = id;
+        return this;
+    }
 }

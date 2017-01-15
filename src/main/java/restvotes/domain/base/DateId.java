@@ -24,7 +24,7 @@ public class DateId extends BaseEntity<LocalDate> {
     @Id
     @Column(columnDefinition = "date default now()", unique = true, nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private final LocalDate date;
+    private LocalDate date;
     
     public DateId() {
         date = LocalDate.now();
@@ -34,6 +34,12 @@ public class DateId extends BaseEntity<LocalDate> {
     @Override
     public LocalDate getId() {
         return date;
+    }
+    
+    @Override
+    public BaseEntity setId(LocalDate date) {
+        this.date = date;
+        return this;
     }
     
     public LocalDate getDate() {

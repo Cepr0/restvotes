@@ -1,4 +1,4 @@
-package restvotes.web;
+package restvotes.web.controller;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -21,31 +21,10 @@ import restvotes.repository.PollRepo;
 @RequestMapping("/polls")
 public class PollController {
 
-    // private final @NonNull RepositoryEntityLinks entityLinks;
-    //
     private final @NonNull PagedResourcesAssembler<Poll.Brief> assembler;
 
     private final @NonNull PollRepo pollRepo;
     
-    // private final @NonNull VoteRepo voteRepo;
-    //
-    // @GetMapping("/{date}/choice")
-    // public ResponseEntity<?> hasVoted(@PathVariable("date") LocalDate date) {
-    //
-    //     return voteRepo.getByUserAndDate(AuthorizedUser.get(), date)
-    //                    .map(this::getOkResponse)
-    //                    .orElse(new ResponseEntity<>(NOT_FOUND));
-    // }
-    //
-    // private ResponseEntity<Resource<Vote.Brief>> getOkResponse(Vote.Brief vote) {
-    //
-    //     Resource<Vote.Brief> resource = new Resource<>(vote);
-    //     resource.add(entityLinks.linkForSingleResource(vote.getRestaurant()).withRel("restaurant"));
-    //     resource.add(entityLinks.linkForSingleResource(vote.getMenu()).withRel("menu"));
-    //
-    //     return ResponseEntity.ok(resource);
-    // }
-
     @GetMapping
     ResponseEntity<PagedResources<Resource<Poll.Brief>>> getPolls(Pageable pageable) {
 

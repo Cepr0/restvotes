@@ -1,4 +1,4 @@
-package restvotes.to;
+package restvotes.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.domain.entity.Restaurant;
+import restvotes.web.view.MenuView;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -46,41 +47,41 @@ public class LinksHelper {
         return Arrays.asList(selfLink, restaurantLink, voteLink);
     }
     
-    public static Iterable<Link> getPollViewLinks(Poll.Detailed pollView, Long chosenMenuId) {
+    public static Iterable<Link> getPollViewLinks(LocalDate pollDate, Long chosenMenuId) {
     
         List<Link> links = new ArrayList<>();
                 
-        links.add(getPollSelfLink(pollView.getDate()));
+        links.add(getPollSelfLink(pollDate));
         
         if (chosenMenuId != null) {
-            links.add(LINKS.linkForSingleResource(Menu.class, chosenMenuId).slash(PROJECTION_DETAILED).withRel("userChoice"));
+            links.add(LINKS.linkForSingleResource(Menu.class, chosenMenuId).withRel("userChoice"));
         }
         
         return links;
     }
     
     public static Link getPollLink(Poll poll) {
-        return LINKS.linkForSingleResource(poll).slash(PROJECTION_DETAILED).withRel(POLL);
+        return LINKS.linkForSingleResource(poll).withRel(POLL);
     }
     
     public static Link getPollLink(LocalDate date) {
-        return LINKS.linkForSingleResource(Poll.class, date).slash(PROJECTION_DETAILED).withRel(POLL);
+        return LINKS.linkForSingleResource(Poll.class, date).withRel(POLL);
     }
     
     public static Link getCurrentPollLink(Poll poll) {
-        return LINKS.linkForSingleResource(poll).slash(PROJECTION_DETAILED).withRel(CURRENT_POLL);
+        return LINKS.linkForSingleResource(poll).withRel(CURRENT_POLL);
     }
     
     public static Link getCurrentPollLink(LocalDate date) {
-        return LINKS.linkForSingleResource(Poll.class, date).slash(PROJECTION_DETAILED).withRel(CURRENT_POLL);
+        return LINKS.linkForSingleResource(Poll.class, date).withRel(CURRENT_POLL);
     }
     
     public static Link getPollSelfLink(Poll poll) {
-        return LINKS.linkForSingleResource(poll).slash(PROJECTION_DETAILED).withSelfRel();
+        return LINKS.linkForSingleResource(poll).withSelfRel();
     }
     
     public static Link getPollSelfLink(LocalDate date) {
-        return LINKS.linkForSingleResource(Poll.class, date).slash(PROJECTION_DETAILED).withSelfRel();
+        return LINKS.linkForSingleResource(Poll.class, date).withSelfRel();
     }
     
     public static Link getRestaurantLink(Restaurant restaurant) {
@@ -88,6 +89,6 @@ public class LinksHelper {
     }
     
     public static Link getMenuLink(Menu menu) {
-        return LINKS.linkForSingleResource(menu).slash(PROJECTION_DETAILED).withRel(MENU);
+        return LINKS.linkForSingleResource(menu).withRel(MENU);
     }
 }
