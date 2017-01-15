@@ -17,6 +17,7 @@ import static java.util.Collections.unmodifiableList;
 /**
  * https://jira.spring.io/browse/DATAREST-524
  * http://www.baeldung.com/spring-data-rest-validators
+ * http://stackoverflow.com/a/38668148/5380322
  *
  * @author Cepro, 2016-12-29
  */
@@ -41,7 +42,7 @@ public class ValidatorRegistrar implements InitializingBean {
     
     @Override
     public void afterPropertiesSet() throws Exception {
-        
+        // TODO http://stackoverflow.com/a/38668148/5380322
         Map<String, Validator> validators = beanFactory.getBeansOfType(Validator.class);
         for (Map.Entry<String, Validator> entry : validators.entrySet()) {
             EVENTS.stream()

@@ -15,8 +15,8 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
 
-import static restvotes.web.LinksHelper.getCurrentPollLink;
-import static restvotes.web.LinksHelper.getPollLink;
+import static restvotes.util.LinksHelper.getCurrentPollLink;
+import static restvotes.util.LinksHelper.getPollLink;
 
 /**
  * @author Cepro, 2017-01-13

@@ -18,7 +18,7 @@ import restvotes.repository.VoteRepo;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static restvotes.web.LinksHelper.*;
+import static restvotes.util.LinksHelper.*;
 
 /**
  * @author Cepro, 2017-01-08

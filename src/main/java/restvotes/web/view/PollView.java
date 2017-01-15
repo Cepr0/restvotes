@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static restvotes.web.LinksHelper.getMenuViewLinks;
-import static restvotes.web.LinksHelper.getPollViewLinks;
+import static restvotes.util.LinksHelper.getMenuViewLinks;
+import static restvotes.util.LinksHelper.getPollViewLinks;
 
 /**
  * @author Cepro, 2017-01-11

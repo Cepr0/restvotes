@@ -1,11 +1,11 @@
 package restvotes;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import restvotes.domain.entity.*;
 import restvotes.repository.*;
 
@@ -19,9 +19,10 @@ import static restvotes.domain.entity.User.Role.ROLE_USER;
 /**
  * @author Cepro, 2017-01-02
  */
+@Profile({"dev", "demo", "test"})
 @Component
 @RequiredArgsConstructor
-public class DemoData {
+public class DemoData implements ApplicationRunner {
 
     private final PollRepo pollRepo;
     
@@ -33,40 +34,43 @@ public class DemoData {
     
     private final VoteRepo voteRepo;
     
-    @Async
-    @EventListener
-    @Profile({"dev", "demo", "test"})
-    public void propagateData(ApplicationReadyEvent event) {
-        
+    @Override
+    @Transactional
+    public void run(ApplicationArguments args) throws Exception {
         Restaurant r1 = new Restaurant("Rest1", "Address1", "http://rest1.com", "1234567890");
         Restaurant r2 = new Restaurant("Rest2", "Address2", "http://rest2.com", "2345678901");
         Restaurant r3 = new Restaurant("Rest3", "Address3", "http://rest3.com", "3456789012");
+    
+        // TODO Implement all in Services
         
         restRepo.save(asList(r1, r2, r3));
-        
+        restRepo.flush();
+    
         Menu m1 = new Menu(r1, asList(
                 new MenuItem("Description1 M1", valueOf(15.0)),
                 new MenuItem("Description2 M1", valueOf(20.0)),
                 new MenuItem("Description3 M1", valueOf(10.0))
         ));
-        
+    
         Menu m2 = new Menu(r2, asList(
                 new MenuItem("Description1 M2", valueOf(15.50)),
                 new MenuItem("Description2 M2", valueOf(20.50)),
                 new MenuItem("Description3 M2", valueOf(10.50))
         ));
-        
+    
         Menu m3 = new Menu(r3, asList(
                 new MenuItem("Description1 M3", valueOf(15.90)),
                 new MenuItem("Description2 M3", valueOf(20.90)),
                 new MenuItem("Description3 M3", valueOf(10.90))
         ));
-        
-        menuRepo.save(asList(m1, m2, m3));
     
-        Poll p1 = new Poll(LocalDate.now().minusDays(1), asList(m1, m2, m3)).setFinished(true);
-        
+        menuRepo.save(asList(m1, m2, m3));
+        menuRepo.flush();
+    
+        Poll p1 = new Poll(LocalDate.now().minusDays(2), asList(m1, m2, m3)).setFinished(true);
+    
         pollRepo.save(p1);
+        pollRepo.flush();
     
         Menu m4 = new Menu(r1, asList(
                 new MenuItem("Description1 M4", valueOf(16.0)),
@@ -87,10 +91,12 @@ public class DemoData {
         ));
     
         menuRepo.save(asList(m4, m5, m6));
+        menuRepo.flush();
     
-        Poll p2 = new Poll(asList(m4, m5, m6));
+        Poll p2 = new Poll(LocalDate.now().minusDays(1), asList(m4, m5, m6));
     
         pollRepo.save(p2);
+        pollRepo.flush();
     
         User u1 = new User("Frodo Baggins", "frodo@restvotes.com", "123456", ROLE_ADMIN);
         User u2 = new User("Gandalf the Grey", "gandalf@restvotes.com", "123456", ROLE_ADMIN);
@@ -102,6 +108,7 @@ public class DemoData {
         User u8 = new User("Gimli", "gimli@restvotes.com", "123456", ROLE_USER);
     
         userRepo.save(asList(u1, u2, u3, u4, u5, u6, u7, u8));
+        userRepo.flush();
     
         // Vote v1 = new Vote(p1, p1.getMenus().get(0), p1.getMenus().get(0).getRestaurant(), u1);
         // Vote v2 = new Vote(p1, p1.getMenus().get(0), p1.getMenus().get(0).getRestaurant(), u2);
@@ -111,7 +118,7 @@ public class DemoData {
         Vote v6 = new Vote(p1, p1.getMenus().get(1), p1.getMenus().get(1).getRestaurant(), u6);
         Vote v7 = new Vote(p1, p1.getMenus().get(1), p1.getMenus().get(1).getRestaurant(), u7);
         Vote v8 = new Vote(p1, p1.getMenus().get(2), p1.getMenus().get(2).getRestaurant(), u8);
-        
+    
         voteRepo.save(asList(/*v1, v2, */v3, v4, v5, v6, v7, v8));
     
         // Vote v9 = new Vote(p2, p2.getMenus().get(0), p2.getMenus().get(0).getRestaurant(), u1);

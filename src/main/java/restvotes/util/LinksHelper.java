@@ -1,4 +1,4 @@
-package restvotes.web;
+package restvotes.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;

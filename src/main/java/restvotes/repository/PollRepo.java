@@ -4,7 +4,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import restvotes.domain.entity.Poll;
@@ -24,11 +26,11 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     Page<Poll.Brief> getAll(Pageable pageable);
     
     @RestResource(exported = false)
-    @Query("select p from Poll p where p.finished = false order by p.date asc ")
+    @Query("select p from Poll p where p.finished = false order by p.date asc")
     Page<Poll> getUnfinished(Pageable pageable);
     
     @RestResource(exported = false)
-    @Query("select p from Poll p where p.finished = false order by p.date asc ")
+    @Query("select p from Poll p where p.finished = false order by p.date asc")
     Page<Poll.Detailed> getUnfinishedDetailed(Pageable pageable);
     
     // http://stackoverflow.com/a/22472888/5380322
@@ -43,6 +45,22 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     default Optional<Poll.Detailed> getCurrentDetailed() {
         Page<Poll.Detailed> polls = getUnfinishedDetailed(new PageRequest(0, 1));
         List<Poll.Detailed> pollList = polls.getContent();
+        return !pollList.isEmpty() ? Optional.of(pollList.get(0)) : Optional.empty();
+    }
+    
+    @RestResource(exported = false)
+    @Modifying(clearAutomatically = true)
+    @Query("update Poll p set p.finished = true where p.finished = false and p.date <= ?1")
+    int disableUntil(LocalDate until);
+    
+    @RestResource(exported = false)
+    @Query("select p from Poll p where p.date <= :date order by p.date desc")
+    Page<Poll> getPrevious(@Param("date") LocalDate date, Pageable page);
+    
+    @RestResource(exported = false)
+    default Optional<Poll> getLast(LocalDate date) {
+        Page<Poll> polls = getPrevious(date, new PageRequest(0, 1));
+        List<Poll> pollList = polls.getContent();
         return !pollList.isEmpty() ? Optional.of(pollList.get(0)) : Optional.empty();
     }
 }
