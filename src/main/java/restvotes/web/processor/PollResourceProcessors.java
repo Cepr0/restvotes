@@ -7,8 +7,10 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
 import restvotes.AuthorizedUser;
+import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.repository.VoteRepo;
+import restvotes.util.LinksHelper;
 import restvotes.web.view.PollView;
 
 import java.time.LocalDate;
@@ -42,32 +44,17 @@ public class PollResourceProcessors {
                 if (!poll.getFinished()) {
                     resource.add(getCurrentPollLink(poll.getDate()));
                 } else {
-                    // TODO Add winner
+                    
+                    Menu winner = poll.getWinner();
+                    if (winner != null) {
+                        pollResource.add(LinksHelper.getWinnerLink(winner));
+                    }
                 }
             }
             return resource;
         }
     }
     
-    // @Component
-    // public class PollDetailedResourceProcessor implements ResourceProcessor<Resource<Poll.Detailed>> {
-    //
-    //     @Override
-    //     public Resource<Poll.Detailed> process(Resource<Poll.Detailed> resource) {
-    //
-    //         Poll.Detailed poll = resource.getContent();
-    //         LocalDate pollDate = poll.getDate();
-    //
-    //         Long chosenMenuId = voteRepo.getByUserAndDate(AuthorizedUser.get(), pollDate)
-    //                                     .map(v -> v.getMenu().getId())
-    //                                     .orElse(null);
-    //
-    //         Map<Long, Integer> ranks = voteRepo.getMenuAndRankParesByDate(pollDate);
-    //
-    //         return new Resource<>(new PollView(poll, chosenMenuId, ranks));
-    //     }
-    // }
-    //
     @Component
     public class PollResourceProcessor implements ResourceProcessor<Resource<Poll>> {
         

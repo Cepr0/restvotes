@@ -10,6 +10,7 @@ import restvotes.domain.base.DateId;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,6 +34,10 @@ public class Poll extends DateId {
     @ManyToMany(cascade = {PERSIST, MERGE})
     private List<Menu> menus = new ArrayList<>();
     
+    @JsonIgnore
+    @ManyToOne(optional = true)
+    private Menu winner;
+    
     public Poll(@NonNull List<Menu> menus) {
         setMenus(menus);
     }
@@ -55,6 +60,8 @@ public class Poll extends DateId {
     public interface Brief {
         LocalDate getDate();
         Boolean getFinished();
+        @JsonIgnore
+        Menu getWinner();
         @JsonIgnore
         List<Menu> getMenus();
     }

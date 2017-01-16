@@ -21,12 +21,13 @@ import java.util.List;
 @Component
 public class LinksHelper {
     
-    private final static String PROJECTION_DETAILED = "/?projection=detailed";
-    private final static String POLL = "poll";
-    private final static String CURRENT_POLL = "currentPoll";
-    private final static String MENU = "menu";
-    private final static String RESTAURANT = "restaurant";
-    private final static String VOTE = "vote";
+    private static final String PROJECTION_DETAILED = "/?projection=detailed";
+    private static final String POLL = "poll";
+    private static final String CURRENT_POLL = "currentPoll";
+    private static final String MENU = "menu";
+    private static final String RESTAURANT = "restaurant";
+    private static final String VOTE = "vote";
+    private static final String WINNER = "winner";
     
     private static RepositoryEntityLinks LINKS;
     
@@ -38,7 +39,7 @@ public class LinksHelper {
     
     
     public static Iterable<Link> getMenuViewLinks(MenuView menuView) {
-    
+        
         LinkBuilder menuLinkBuilder = LINKS.linkForSingleResource(Menu.class, menuView.getId());
         Link selfLink = menuLinkBuilder.withSelfRel();
         Link voteLink = menuLinkBuilder.slash(VOTE).withRel(VOTE);
@@ -48,9 +49,9 @@ public class LinksHelper {
     }
     
     public static Iterable<Link> getPollViewLinks(LocalDate pollDate, Long chosenMenuId) {
-    
+        
         List<Link> links = new ArrayList<>();
-                
+        
         links.add(getPollSelfLink(pollDate));
         
         if (chosenMenuId != null) {
@@ -90,5 +91,9 @@ public class LinksHelper {
     
     public static Link getMenuLink(Menu menu) {
         return LINKS.linkForSingleResource(menu).withRel(MENU);
+    }
+    
+    public static Link getWinnerLink(Menu winner) {
+        return LINKS.linkForSingleResource(winner).withRel(WINNER);
     }
 }

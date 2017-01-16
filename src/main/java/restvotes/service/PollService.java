@@ -12,13 +12,13 @@ import java.time.LocalDate;
 public interface PollService {
     
     /**
-     * Disables all unfinished {@link Poll}s until given date (inclusive).
+     * Close all unfinished {@link Poll}s until given date (inclusive).
      * <p>Unfinished Poll must be automatically finished at 'EndOfVotingTime'
      * (see app.properties; default value is 11-00)
      *
      * @return true if operation is performed or false otherwise
      */
-    boolean disableAllUntil(LocalDate until);
+    boolean closeAllUntil(LocalDate until);
     
     /**
      * Gets {@link Poll} by the given date
@@ -45,4 +45,8 @@ public interface PollService {
      */
     Poll copyOf(Poll poll);
     
+    /**
+     * Place vote winners in finished Polls if they still haven't them
+     */
+    void placeWinners();
 }

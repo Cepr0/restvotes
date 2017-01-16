@@ -39,53 +39,56 @@ public class Engine {
         Thread.sleep(5000);
         
         info(LOG, "App is running...");
-
+    
         LocalTime endOfVotingTime = properties.getEndOfVotingTimeValue();
         info(LOG, "The end of voting time is set to %s", endOfVotingTime);
-
-        info(LOG, "Trying to check previous Polls...");
+    
+        info(LOG, "Trying to create a new Poll by copying previous one...");
+        pollService.copyPrevious();
+    
+        info(LOG, "Checking previous Polls if they closed...");
     
         LocalDate today = LocalDate.now();
     
         // If now is a time after the end of voting, we are disabling all Polls until now
         if (LocalTime.now().isAfter(endOfVotingTime)) {
-            if (pollService.disableAllUntil(today)) {
-                info(LOG, "All Polls until now have been disabled.");
+            if (pollService.closeAllUntil(today)) {
+                info(LOG, "All Polls until now have been closed.");
             }
         } else {
             // If now is time before the end of voting, we are disabling all Polls until yesterday exclusive
-            if (pollService.disableAllUntil(today.minusDays(1L))) {
-                info(LOG, "All Polls until yesterday have been disabled.");
+            if (pollService.closeAllUntil(today.minusDays(1L))) {
+                info(LOG, "All Polls until yesterday have been closed.");
             }
         }
     
-        // Create a new Poll if the current one doesn't exist
-        newDayTask();
+        info(LOG, "Checking if all finished Polls have a winner...");
+        pollService.placeWinners();
     
-        // Setup a schedule task - disable all Poll until now every day (at 11-00 by default)
+        // Setup a scheduled every day task (at 11-00 by default)
         scheduler.schedule(() -> {
-        
-            // TODO Определить победителя и добавить его в Poll
-        
-            if (pollService.disableAllUntil(LocalDate.now())) {
-                info(LOG, "The current Poll has been disable.");
-            }
-        
-            // TODO Сделать вывод в лог результатов голосования
-            // TODO Сделать рассылку результатов по почте всем пользователям
+            
+            // 1. Close all Polls until now
+            info(LOG, "The end of voting. Closing current Poll...");
+            pollService.closeAllUntil(LocalDate.now());
+
+            // 2. Placing a winner of the voting
+            info(LOG, "Setting a winner...");
+            pollService.placeWinners();
+    
+            // TODO 3. Log voting result
+            // TODO 4. Send result to each user by email
         
         }, new CronTrigger(properties.getEndOfVotingSchedule()));
     }
     
     @Scheduled(cron="1 0 0 * * *")
     public void newDayTask() {
-        info(LOG, "Starting a new day. Trying to copy previous Poll or create new one...");
+        
+        info(LOG, "Starting a new day. Trying to create a new Poll by copying previous one...");
+        pollService.copyPrevious();
 
-        // If Poll for current day doesn't exist - make copy of the last Poll
-        if (pollService.copyPrevious() != null) {
-            info(LOG, "A previous Poll is copied.");
-        } else {
-            // TODO Create new Poll
-        }
+        info(LOG, "Checking if all finished Polls have a winner...");
+        pollService.placeWinners();
     }
 }

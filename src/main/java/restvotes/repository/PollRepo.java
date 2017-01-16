@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.transaction.annotation.Transactional;
 import restvotes.domain.entity.Poll;
 
 import java.time.LocalDate;
@@ -56,7 +55,7 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     int disableUntil(LocalDate until);
     
     @RestResource(exported = false)
-    @EntityGraph(attributePaths = "menus") // Кастыль!!!
+    @EntityGraph(attributePaths = "menus") // TODO Костыль!!! Find the way to get lazy data optimal
     @Query("select p from Poll p where p.date <= :date order by p.date desc")
     Page<Poll> getPrevious(@Param("date") LocalDate date, Pageable page);
     
@@ -67,6 +66,13 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
         return !pollList.isEmpty() ? Optional.of(pollList.get(0)) : Optional.empty();
     }
 
-    @EntityGraph(attributePaths = "menus")  // Кастыль!!!
+    @EntityGraph(attributePaths = "menus")  // TODO Костыль!!! Find the way to get lazy data optimal
     Poll findByDate(LocalDate date);
+    
+    @Query("select p from Poll p where p.finished = true and p.winner is null")
+    List<Poll> getFinishedWithoutWinner();
+    
+    @Modifying(clearAutomatically = true)
+    @Query("update Poll p set p.winner.id = ?2 where p.date = ?1")
+    int placeWinner(LocalDate pollDate, Long menuId);
 }

@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
+import restvotes.domain.entity.Vote;
 import restvotes.repository.PollRepo;
+import restvotes.repository.VoteRepo;
 import restvotes.service.PollService;
 
 import java.time.LocalDate;
@@ -30,9 +32,11 @@ public class PollServiceImpl implements PollService {
     
     private final PollRepo pollRepo;
     
+    private final VoteRepo voteRepo;
+    
     @Override
-//    @CacheEvict(value = "polls")
-    public boolean disableAllUntil(LocalDate until) {
+    // @CacheEvict(value = "polls")
+    public boolean closeAllUntil(LocalDate until) {
         try {
             int count = pollRepo.disableUntil(until);
             debug(LOG, "poll.is_disabled", until, count);
@@ -44,7 +48,7 @@ public class PollServiceImpl implements PollService {
     }
     
     @Override
-//    @Cacheable("polls")
+    // @Cacheable("polls")
     @Transactional(readOnly = true)
     public Poll getOne(LocalDate date) {
         try {
@@ -92,7 +96,7 @@ public class PollServiceImpl implements PollService {
     }
     
     @Override
-//    @CacheEvict(value = "polls")
+    // @CacheEvict(value = "polls")
     public Poll copyOf(Poll source) {
         try {
             List<Menu> menus = requireNonNull(source).getMenus();
@@ -103,6 +107,31 @@ public class PollServiceImpl implements PollService {
         } catch (Exception e) {
             error(LOG, "poll.is_not_copied", source.getDate(), e.getMessage());
             return null;
+        }
+    }
+    
+    @Override
+    // @CacheEvict(value = "polls")
+    public void placeWinners() {
+        
+        // 1. Get all finished Polls without winners
+        List<Poll> polls = pollRepo.getFinishedWithoutWinner();
+        
+        // 2. Make a loop through them
+        for (Poll poll : polls) {
+    
+            // 3. For each one get <menuId, rank> pares, calculate the best and place a winner to current Poll
+            List<Vote.Rank> ranks = voteRepo.getRanksByDate(poll.getDate());
+            if (!ranks.isEmpty()) {
+                Long menuId = ranks.get(0).getMenu().getId();
+                try  {
+                    if (pollRepo.placeWinner(poll.getDate(), menuId) > 0) {
+                        debug(LOG, "Placed a winner [id: %d] to Poll %s", menuId, poll);
+                    }
+                } catch (Exception e) {
+                    error(LOG, "A winner [id: %d] is not placed to Poll %s. Cause: ", menuId, poll, e.getMessage());
+                }
+            }
         }
     }
 }
