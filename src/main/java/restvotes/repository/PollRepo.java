@@ -3,12 +3,14 @@ package restvotes.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.transaction.annotation.Transactional;
 import restvotes.domain.entity.Poll;
 
 import java.time.LocalDate;
@@ -54,6 +56,7 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     int disableUntil(LocalDate until);
     
     @RestResource(exported = false)
+    @EntityGraph(attributePaths = "menus") // Кастыль!!!
     @Query("select p from Poll p where p.date <= :date order by p.date desc")
     Page<Poll> getPrevious(@Param("date") LocalDate date, Pageable page);
     
@@ -63,4 +66,7 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
         List<Poll> pollList = polls.getContent();
         return !pollList.isEmpty() ? Optional.of(pollList.get(0)) : Optional.empty();
     }
+
+    @EntityGraph(attributePaths = "menus")  // Кастыль!!!
+    Poll findByDate(LocalDate date);
 }

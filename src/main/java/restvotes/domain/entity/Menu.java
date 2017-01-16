@@ -40,6 +40,9 @@ public class Menu extends LongId {
     
     @OneToMany(mappedBy = "menu", cascade = ALL, orphanRemoval = true)
     private List<MenuItem> items = new ArrayList<>();
+
+    // Don't work PUT/POST request without this, see http://stackoverflow.com/a/41335854/5380322
+    public Menu(String str) {}
     
     public Menu(@NonNull Restaurant restaurant, @NonNull List<MenuItem> items) {
         this.restaurant = restaurant;

@@ -46,5 +46,6 @@ public class RestVotes {
     public TaskScheduler taskScheduler() {
         return new ThreadPoolTaskScheduler();
     }
-    
+
+    // TODO Restrict updating Poll if it has votes (or delete all Vote if update Poll, with sending email to all voting Users)
 }

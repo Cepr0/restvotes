@@ -10,7 +10,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import restvotes.service.PollService;
 
 import java.time.LocalDate;
@@ -35,7 +34,6 @@ public class Engine {
     
     @Async
     @EventListener
-    @Transactional
     public void appReady(ApplicationReadyEvent event) throws InterruptedException {
         
         Thread.sleep(5000);
@@ -80,10 +78,9 @@ public class Engine {
     }
     
     @Scheduled(cron="1 0 0 * * *")
-    @Transactional
     public void newDayTask() {
         info(LOG, "Starting a new day. Trying to copy previous Poll or create new one...");
-        
+
         // If Poll for current day doesn't exist - make copy of the last Poll
         if (pollService.copyPrevious() != null) {
             info(LOG, "A previous Poll is copied.");

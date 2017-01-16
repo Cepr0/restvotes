@@ -2,8 +2,6 @@ package restvotes.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import restvotes.domain.entity.Menu;
@@ -33,7 +31,7 @@ public class PollServiceImpl implements PollService {
     private final PollRepo pollRepo;
     
     @Override
-    @CacheEvict(value = "polls")
+//    @CacheEvict(value = "polls")
     public boolean disableAllUntil(LocalDate until) {
         try {
             int count = pollRepo.disableUntil(until);
@@ -46,7 +44,7 @@ public class PollServiceImpl implements PollService {
     }
     
     @Override
-    @Cacheable("polls")
+//    @Cacheable("polls")
     @Transactional(readOnly = true)
     public Poll getOne(LocalDate date) {
         try {
@@ -58,8 +56,14 @@ public class PollServiceImpl implements PollService {
             return null;
         }
     }
-    
+
+
+    // LazyInitializationException
+    // http://stackoverflow.com/q/27115639/5380322
+    // http://stackoverflow.com/q/26611173/5380322
+    // http://stackoverflow.com/a/10466591/5380322
     @Override
+//    @CacheEvict(value = "polls")
     public Poll copyPrevious() {
         try {
             LocalDate today = LocalDate.now();
@@ -71,8 +75,10 @@ public class PollServiceImpl implements PollService {
                     error(LOG, "poll.is_not_copied", "Last Poll", "It has current date");
                     return null;
                 } else {
-                    Poll copy = this.copyOf(poll);
-                    // debug(LOG, "poll.is_copied", copy);
+                    List<Menu> menus = poll.getMenus();
+                    Poll p = new Poll(menus);
+                    Poll copy = pollRepo.saveAndFlush(p);
+                    debug(LOG, "poll.is_copied", copy);
                     return copy;
                 }
             } else {
@@ -86,12 +92,12 @@ public class PollServiceImpl implements PollService {
     }
     
     @Override
-    @CacheEvict(value = "polls")
+//    @CacheEvict(value = "polls")
     public Poll copyOf(Poll source) {
         try {
             List<Menu> menus = requireNonNull(source).getMenus();
             Poll poll = new Poll(menus);
-            Poll copy = pollRepo.save(poll);
+            Poll copy = pollRepo.saveAndFlush(poll);
             debug(LOG, "poll.is_copied", copy);
             return copy;
         } catch (Exception e) {
