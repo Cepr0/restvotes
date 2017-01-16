@@ -23,7 +23,6 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 import static java.math.BigDecimal.ZERO;
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
 
 /**
  * @author Cepro, 2017-01-01
@@ -35,13 +34,13 @@ import static javax.persistence.FetchType.EAGER;
 @Table(name = "menus")
 public class Menu extends LongId {
     
-    @ManyToOne(optional = false, fetch = EAGER)
+    @ManyToOne(optional = false)
     private Restaurant restaurant;
     
     @OneToMany(mappedBy = "menu", cascade = ALL, orphanRemoval = true)
     private List<MenuItem> items = new ArrayList<>();
 
-    // Don't work PUT/POST request without this, see http://stackoverflow.com/a/41335854/5380322
+    // PUT/POST request don't work without this, see http://stackoverflow.com/a/41335854/5380322
     public Menu(String str) {}
     
     public Menu(@NonNull Restaurant restaurant, @NonNull List<MenuItem> items) {
