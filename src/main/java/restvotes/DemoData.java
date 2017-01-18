@@ -50,8 +50,6 @@ public class DemoData implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        // TODO Implement all in Services
-
         Step0();
         Step1();
         Step2();

@@ -39,40 +39,35 @@ public class MenuController {
         if (menu == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        
+        // TODO Move this logic to the service level
         ResponseEntity<?> result;
         
         Optional<Poll> pollOptional = pollRepo.getCurrent();
         if (pollOptional.isPresent()) {
             
             Poll poll = pollOptional.get();
-            if (!poll.getFinished()) {
+            User user = AuthorizedUser.get();
+            Restaurant restaurant = menu.getRestaurant();
+            
+            Optional<Vote> voteOptional = voteRepo.findByPollAndUser(poll, user);
+            if (voteOptional.isPresent()) {
                 
-                User user = AuthorizedUser.get();
-                Restaurant restaurant = menu.getRestaurant();
+                Vote vote = voteOptional.get();
+                vote.setMenu(menu);
+                vote.setRestaurant(restaurant);
+                vote.setRegistered(LocalDateTime.now());
                 
-                Optional<Vote> voteOptional = voteRepo.findByPollAndUser(poll, user);
-                if (voteOptional.isPresent()) {
-                    
-                    Vote vote = voteOptional.get();
-                    vote.setMenu(menu);
-                    vote.setRestaurant(restaurant);
-                    vote.setRegistered(LocalDateTime.now());
-                    
-                    Vote updated = voteRepo.save(vote);
-                    // TODO Handle an exception here if Vote didn't save
-                    result = new ResponseEntity<>(getMenuBriefResource(updated), HttpStatus.OK);
-                    
-                } else {
-                    Vote created = voteRepo.save(new Vote(poll, menu, restaurant, user));
-                    // TODO Handle an exception here if Vote didn't save
-                    result = new ResponseEntity<>(getMenuBriefResource(created), HttpStatus.CREATED);
-                }
+                Vote updated = voteRepo.save(vote);
+                // TODO Handle an exception here if Vote didn't save
+                result = new ResponseEntity<>(getMenuBriefResource(updated), HttpStatus.OK);
+                
             } else {
-                result = new ResponseEntity(HttpStatus.FORBIDDEN);
+                Vote created = voteRepo.save(new Vote(poll, menu, restaurant, user));
+                // TODO Handle an exception here if Vote didn't save
+                result = new ResponseEntity<>(getMenuBriefResource(created), HttpStatus.CREATED);
             }
-        } else {
-            result = new ResponseEntity(HttpStatus.NOT_FOUND);
+        } else { // If current unfinished Poll is not found
+            result = new ResponseEntity(HttpStatus.FORBIDDEN);
         }
         
         return result;
