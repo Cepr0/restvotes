@@ -1,12 +1,10 @@
 package restvotes.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
-import org.springframework.data.rest.core.annotation.RestResource;
 import restvotes.domain.base.LongId;
 
 import javax.persistence.Column;
@@ -56,17 +54,9 @@ public class Vote extends LongId {
         this(poll, menu, restaurant, user, LocalDateTime.now());
     }
     
-    public interface Brief {
+    public interface Registered {
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime getRegistered();
-    
-        @JsonIgnore
-        @RestResource(exported = false)
-        Restaurant getRestaurant();
-        
-        @JsonIgnore
-        @RestResource(exported = false)
-        Menu getMenu();
     }
     
     public interface Rank {

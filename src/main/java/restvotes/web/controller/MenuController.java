@@ -4,20 +4,15 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.hateoas.Resource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import restvotes.AuthorizedUser;
-import restvotes.domain.entity.*;
-import restvotes.repository.PollRepo;
-import restvotes.repository.VoteRepo;
+import restvotes.domain.entity.Menu;
+import restvotes.domain.entity.Vote;
+import restvotes.service.MenuService;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
+import static org.springframework.http.HttpStatus.*;
 import static restvotes.util.LinksHelper.*;
 
 /**
@@ -28,75 +23,29 @@ import static restvotes.util.LinksHelper.*;
 @RequestMapping("/menus/{id}")
 public class MenuController {
     
-    private final @NonNull VoteRepo voteRepo;
-    
-    private final @NonNull PollRepo pollRepo;
-    
-    @Transactional
+    private final @NonNull MenuService menuService;
+
     @PutMapping("/vote")
     public ResponseEntity<?> submitVote(@PathVariable("id") Menu menu) {
         
         if (menu == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(NOT_FOUND);
         }
-        // TODO Move this logic to the service level
-        ResponseEntity<?> result;
         
-        Optional<Poll> pollOptional = pollRepo.getCurrent();
-        if (pollOptional.isPresent()) {
+        Vote vote = menuService.submitVote(menu);
+        
+        if (vote != null) {
             
-            Poll poll = pollOptional.get();
-            User user = AuthorizedUser.get();
-            Restaurant restaurant = menu.getRestaurant();
+            return new ResponseEntity<>(
+                    new Resource<Vote.Registered>(
+                            vote::getRegistered,
+                            getRestaurantLink(vote.getRestaurant()),
+                            getMenuLink(vote.getMenu()),
+                            getPollLink(vote.getPoll())
+                    ), OK);
             
-            Optional<Vote> voteOptional = voteRepo.findByPollAndUser(poll, user);
-            if (voteOptional.isPresent()) {
-                
-                Vote vote = voteOptional.get();
-                vote.setMenu(menu);
-                vote.setRestaurant(restaurant);
-                vote.setRegistered(LocalDateTime.now());
-                
-                Vote updated = voteRepo.save(vote);
-                // TODO Handle an exception here if Vote didn't save
-                result = new ResponseEntity<>(getMenuBriefResource(updated), HttpStatus.OK);
-                
-            } else {
-                Vote created = voteRepo.save(new Vote(poll, menu, restaurant, user));
-                // TODO Handle an exception here if Vote didn't save
-                result = new ResponseEntity<>(getMenuBriefResource(created), HttpStatus.CREATED);
-            }
         } else { // If current unfinished Poll is not found
-            result = new ResponseEntity(HttpStatus.FORBIDDEN);
+            return new ResponseEntity(FORBIDDEN);
         }
-        
-        return result;
-    }
-    
-    private Resource<Vote.Brief> getMenuBriefResource(final Vote vote) {
-        
-        Resource<Vote.Brief> resource = new Resource<>(new Vote.Brief() {
-            @Override
-            public LocalDateTime getRegistered() {
-                return vote.getRegistered();
-            }
-            
-            @Override
-            public Restaurant getRestaurant() {
-                return null;
-            }
-            
-            @Override
-            public Menu getMenu() {
-                return null;
-            }
-        });
-        
-        resource.add(
-                getRestaurantLink(vote.getRestaurant()),
-                getMenuLink(vote.getMenu()),
-                getPollLink(vote.getPoll()));
-        
-        return resource;
     }
 }
