@@ -65,6 +65,9 @@ public class Engine {
         info(LOG, "Checking if all finished Polls have a winner...");
         pollService.placeWinners();
     
+        info(LOG, "Searching 'empty' polls...");
+        pollService.deleteEmpty();
+    
         // Setup a scheduled every day task (at 11-00 by default)
         scheduler.schedule(() -> {
             
@@ -77,8 +80,8 @@ public class Engine {
             pollService.placeWinners();
     
             // TODO 3. Log voting result
-            // TODO 4. Send result to each user by email
-        
+            // TODO 4. Send result to each user by email (using Queue?..)
+            
         }, new CronTrigger(properties.getEndOfVotingSchedule()));
     }
     
@@ -90,5 +93,8 @@ public class Engine {
 
         info(LOG, "Checking if all finished Polls have a winner...");
         pollService.placeWinners();
+    
+        info(LOG, "Searching 'empty' polls...");
+        pollService.deleteEmpty();
     }
 }

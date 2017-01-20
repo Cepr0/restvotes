@@ -63,7 +63,8 @@ public class DemoData implements ApplicationRunner {
         // http://stackoverflow.com/q/27115639/5380322
         // http://stackoverflow.com/q/26611173/5380322
         // http://stackoverflow.com/a/10466591/5380322
-
+    
+        // TODO Find a better solution of lazy loading
         Poll p = pollRepo.findByDate(p2.getDate());
         List<Menu> menus = p.getMenus();
         Poll p3 = new Poll(menus);

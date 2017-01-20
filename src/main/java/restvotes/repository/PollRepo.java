@@ -75,4 +75,12 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     @Modifying(clearAutomatically = true)
     @Query("update Poll p set p.winner.id = ?2 where p.date = ?1")
     int placeWinner(LocalDate pollDate, Long menuId);
+    
+    @Modifying(clearAutomatically = true)
+    @Query("delete from Poll p where p.winner is null and p.finished = true")
+    int deleteFinishedAndWithoutVotes();
+    
+    @Modifying(clearAutomatically = true)
+    @Query(value = "delete from polls_menus pm where pm.poll_date in (select p.date from polls p where p.winner_id is null and p.finished = true)", nativeQuery = true)
+    void unlinkMenusFromFinishedAndWithoutVotes();
 }

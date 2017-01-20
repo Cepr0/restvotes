@@ -37,4 +37,7 @@ public interface VoteRepo extends CrudRepository<Vote, Long> {
     default Map<Long, Integer> getMenuAndRankParesByDate(LocalDate date) {
         return getRanksByDate(date).stream().collect(toMap(Vote.Rank::getId, Vote.Rank::getRank));
     }
+    
+    @RestResource(exported = false)
+    Integer countByPoll(Poll poll);
 }

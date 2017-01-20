@@ -9,6 +9,10 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapt
 import restvotes.domain.entity.Poll;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+
+import static java.time.LocalTime.parse;
+import static java.time.format.DateTimeFormatter.ofPattern;
 
 /**
  * @author Cepro, 2016-12-24
@@ -29,6 +33,7 @@ public class RepoRestConfig extends RepositoryRestConfigurerAdapter {
     @Override
     public void configureConversionService(ConfigurableConversionService conversionService) {
         conversionService.addConverter(String.class, LocalDate.class, LocalDate::parse);
+        conversionService.addConverter(String.class, LocalTime.class, time -> parse(time, ofPattern("yyyy-MM-dd HH:mm:ss")));
         super.configureConversionService(conversionService);
     }
     
@@ -52,6 +57,7 @@ public class RepoRestConfig extends RepositoryRestConfigurerAdapter {
     
     @Override
     public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
+        // TODO Move here the ValidatorRegistrar functionality
         super.configureValidatingRepositoryEventListener(validatingListener);
     }
 }

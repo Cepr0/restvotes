@@ -49,4 +49,10 @@ public interface PollService {
      * Place vote winners in finished Polls if they still haven't them
      */
     void placeWinners();
+    
+    /**
+     * Delete {@link Poll}s if they finished and don't have any votes (e.g. 'empty')
+     * @return number of deleted {@link Poll}s
+     */
+    int deleteEmpty();
 }

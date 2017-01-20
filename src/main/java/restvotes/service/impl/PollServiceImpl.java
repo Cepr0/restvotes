@@ -1,6 +1,7 @@
 package restvotes.service.impl;
 
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +31,11 @@ import static restvotes.util.LogUtils.error;
 @Transactional
 public class PollServiceImpl implements PollService {
     
-    private final PollRepo pollRepo;
+    private final @NonNull PollRepo pollRepo;
     
-    private final VoteRepo voteRepo;
+    private final @NonNull VoteRepo voteRepo;
     
     @Override
-    // @CacheEvict(value = "polls")
     public boolean closeAllUntil(LocalDate until) {
         try {
             int count = pollRepo.disableUntil(until);
@@ -48,9 +48,9 @@ public class PollServiceImpl implements PollService {
     }
     
     @Override
-    // @Cacheable("polls")
     @Transactional(readOnly = true)
     public Poll getOne(LocalDate date) {
+        // TODO Delete this method
         try {
             Poll poll = pollRepo.getOne(requireNonNull(date));
             debug(LOG, "poll.is_found", poll);
@@ -60,25 +60,25 @@ public class PollServiceImpl implements PollService {
             return null;
         }
     }
-
-
+    
+    
     // LazyInitializationException
     // http://stackoverflow.com/q/27115639/5380322
     // http://stackoverflow.com/q/26611173/5380322
     // http://stackoverflow.com/a/10466591/5380322
     @Override
-//    @CacheEvict(value = "polls")
     public Poll copyPrevious() {
         try {
             LocalDate today = LocalDate.now();
-            Optional<Poll> currentPoll = pollRepo.getLast(today);
-            if (currentPoll.isPresent()) {
+            Optional<Poll> lastPoll = pollRepo.getLast(today);
+            if (lastPoll.isPresent()) {
                 
-                Poll poll = currentPoll.get();
+                Poll poll = lastPoll.get();
                 if (poll.getDate().isEqual(today)) {
                     error(LOG, "poll.is_not_copied", "Last Poll", "It has current date");
                     return null;
                 } else {
+                    // TODO Find a better solution of lazy loading
                     List<Menu> menus = poll.getMenus();
                     Poll p = new Poll(menus);
                     Poll copy = pollRepo.saveAndFlush(p);
@@ -96,8 +96,9 @@ public class PollServiceImpl implements PollService {
     }
     
     @Override
-    // @CacheEvict(value = "polls")
     public Poll copyOf(Poll source) {
+        // TODO Delete this method
+        
         try {
             List<Menu> menus = requireNonNull(source).getMenus();
             Poll poll = new Poll(menus);
@@ -111,7 +112,6 @@ public class PollServiceImpl implements PollService {
     }
     
     @Override
-    // @CacheEvict(value = "polls")
     public void placeWinners() {
         
         // 1. Get all finished Polls without winners
@@ -119,12 +119,12 @@ public class PollServiceImpl implements PollService {
         
         // 2. Make a loop through them
         for (Poll poll : polls) {
-    
+            
             // 3. For each one get <menuId, rank> pares, calculate the best and place a winner to current Poll
             List<Vote.Rank> ranks = voteRepo.getRanksByDate(poll.getDate());
             if (!ranks.isEmpty()) {
                 Long menuId = ranks.get(0).getMenu().getId();
-                try  {
+                try {
                     if (pollRepo.placeWinner(poll.getDate(), menuId) > 0) {
                         debug(LOG, "Placed a winner [id: %d] to Poll %s", menuId, poll);
                     }
@@ -132,6 +132,22 @@ public class PollServiceImpl implements PollService {
                     error(LOG, "A winner [id: %d] is not placed to Poll %s. Cause: ", menuId, poll, e.getMessage());
                 }
             }
+        }
+    }
+    
+    @Override
+    public int deleteEmpty() {
+        
+        try {
+            pollRepo.unlinkMenusFromFinishedAndWithoutVotes();
+            int count = pollRepo.deleteFinishedAndWithoutVotes();
+            if (count > 0) {
+                debug(LOG, "%d 'empty' Polls is deleted.", count);
+            }
+            return count;
+        } catch (Exception e) {
+            error(LOG, "Failed to delete 'empty' Polls. Cause: %s", e.getMessage());
+            return 0;
         }
     }
 }
