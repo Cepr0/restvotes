@@ -3,13 +3,18 @@ package restvotes.web;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 import restvotes.domain.entity.Poll;
 import restvotes.repository.VoteRepo;
-import restvotes.util.PollClosedException;
+
+import java.time.LocalDate;
+
+import static restvotes.util.ExceptionUtil.Type.FORBIDDEN;
+import static restvotes.util.ExceptionUtil.exception;
 
 /**
  * @author Cepro, 2017-01-20
@@ -32,11 +37,16 @@ public class PollEventHandler {
         checkPoll(poll);
     }
     
-    //TODO Add BeforeCreate handle - check if date of new Poll is not less of current one
+    @HandleBeforeCreate
+    public void handleBeforeCreate(Poll poll) {
+        if (poll.getDate().isBefore(LocalDate.now())) {
+            exception(FORBIDDEN, "Creating a Poll in the past is not allowed!");
+        }
+    }
     
     private void checkPoll(Poll poll) {
         if (voteRepo.countByPoll(poll) != 0) {
-            throw new PollClosedException("Changing or deleting a closed Poll is not allowed!");
+            exception(FORBIDDEN, "Changing or deleting a closed Poll is not allowed!");
         }
     }
 }

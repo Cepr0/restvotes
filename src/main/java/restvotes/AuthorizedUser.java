@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import restvotes.domain.entity.User;
 import restvotes.repository.UserRepo;
 
+import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -22,5 +23,9 @@ public class AuthorizedUser {
     
     public static User get() {
         return repo.getOne(ThreadLocalRandom.current().nextLong(1, 9));
+    }
+    
+    public static Locale locale() {
+        return null;
     }
 }

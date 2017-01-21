@@ -3,7 +3,6 @@ package restvotes.util;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Component;
 
 import static restvotes.util.LogUtils.LogType.*;
@@ -36,11 +35,7 @@ public class LogUtils {
     private static void logIt(LogType logType, Logger log, String codeOrMessage, Object... args) {
         
         String message;
-        try {
-            message = messages.getMessage(codeOrMessage, args, null);
-        } catch (NoSuchMessageException ignored) {
-            message = String.format(codeOrMessage, args);
-        }
+        message = messages.getMessage(codeOrMessage, args, String.format(codeOrMessage, args), null);
         
         switch (logType) {
             case INFO:
