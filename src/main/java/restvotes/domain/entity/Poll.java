@@ -70,5 +70,6 @@ public class Poll extends DateId {
         LocalDate getDate();
         Boolean getFinished();
         List<Menu> getMenus();
+        @JsonIgnore Menu getWinner();
     }
 }

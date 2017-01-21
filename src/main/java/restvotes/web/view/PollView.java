@@ -32,22 +32,16 @@ public class PollView extends Poll implements Poll.Detailed {
     private Resources<Resource<Menu.Detailed>> menuResources;
     
     public PollView(Poll poll, Long chosenMenuId, Map<Long, Integer> ranks) {
-        LocalDate date = poll.getDate();
-        Boolean finished = poll.getFinished();
-        List<Menu> menus = poll.getMenus();
     
-        setData(date, finished, menus, chosenMenuId, ranks);
+        setData(poll.getDate(), poll.getFinished(), poll.getMenus(), poll.getWinner(), chosenMenuId, ranks);
     }
     
     public PollView(Poll.Detailed poll, Long chosenMenuId, Map<Long, Integer> ranks) {
-        LocalDate date = poll.getDate();
-        Boolean finished = poll.getFinished();
-        List<Menu> menus = poll.getMenus();
-        
-        setData(date, finished, menus, chosenMenuId, ranks);
+    
+        setData(poll.getDate(), poll.getFinished(), poll.getMenus(), poll.getWinner(), chosenMenuId, ranks);
     }
     
-    private void setData(LocalDate date, Boolean finished, List<Menu> menus, Long chosenMenuId, Map<Long, Integer> ranks) {
+    private void setData(LocalDate date, Boolean finished, List<Menu> menus, Menu winner, Long chosenMenuId, Map<Long, Integer> ranks) {
 
         super.setId(date);
         super.setFinished(finished);
@@ -58,10 +52,10 @@ public class PollView extends Poll implements Poll.Detailed {
             super.getMenus().add(menuView);
             
             // making menu resource and adding its links
-            content.add(new Resource<>(menuView, getMenuViewLinks(menuView)));
+            content.add(new Resource<>(menuView, getMenuViewLinks(menuView, finished)));
         }
         
-        menuResources = new Resources<>(content, getPollViewLinks(date, chosenMenuId));
+        menuResources = new Resources<>(content, getPollViewLinks(date, chosenMenuId, winner));
     }
     
     @JsonIgnore

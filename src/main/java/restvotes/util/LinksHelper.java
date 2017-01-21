@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkBuilder;
-import org.springframework.hateoas.ResourceSupport;
 import org.springframework.stereotype.Component;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
@@ -29,6 +28,7 @@ public class LinksHelper {
     public static final String RESTAURANT = "restaurant";
     public static final String VOTE = "vote";
     public static final String WINNER = "winner";
+    private static final String MENUS = "menus";
     
     private static RepositoryEntityLinks LINKS;
     
@@ -39,17 +39,26 @@ public class LinksHelper {
     }
     
     
-    public static Iterable<Link> getMenuViewLinks(MenuView menuView) {
+    public static Iterable<Link> getMenuViewLinks(MenuView menuView, Boolean finished) {
         
         LinkBuilder menuLinkBuilder = LINKS.linkForSingleResource(Menu.class, menuView.getId());
-        Link selfLink = menuLinkBuilder.withSelfRel();
-        Link voteLink = menuLinkBuilder.slash(VOTE).withRel(VOTE);
         Link restaurantLink = LINKS.linkForSingleResource(Restaurant.class, menuView.getRestaurant().getId()).withRel(RESTAURANT);
-        
-        return Arrays.asList(selfLink, restaurantLink, voteLink);
+
+        if (finished != null && !finished) {
+            return Arrays.asList(
+                    menuLinkBuilder.withSelfRel(),
+                    restaurantLink,
+                    menuLinkBuilder.slash(VOTE).withRel(VOTE) // Only if Poll is not finished
+            );
+        } else {
+            return Arrays.asList(
+                    menuLinkBuilder.withSelfRel(),
+                    restaurantLink
+            );
+        }
     }
     
-    public static Iterable<Link> getPollViewLinks(LocalDate pollDate, Long chosenMenuId) {
+    public static Iterable<Link> getPollViewLinks(LocalDate pollDate, Long chosenMenuId, Menu winner) {
         
         List<Link> links = new ArrayList<>();
         
@@ -57,6 +66,10 @@ public class LinksHelper {
         
         if (chosenMenuId != null) {
             links.add(LINKS.linkForSingleResource(Menu.class, chosenMenuId).withRel("userChoice"));
+        }
+        
+        if (winner != null) {
+            links.add(LINKS.linkForSingleResource(Poll.class, pollDate).slash(MENUS).slash(winner).withRel(WINNER));
         }
         
         return links;
@@ -94,11 +107,7 @@ public class LinksHelper {
         return LINKS.linkForSingleResource(menu).withRel(MENU);
     }
     
-    public static Link getWinnerLink(Menu winner) {
-        return LINKS.linkForSingleResource(winner).withRel(WINNER);
-    }
-    
-    public static void removeLink(ResourceSupport resource, String rel) {
-        // TODO Have to be done
+    public static Link getWinnerLink(Poll.Brief poll, Menu winner) {
+        return LINKS.linkForSingleResource(Poll.class, poll.getDate()).slash(MENUS).slash(winner).withRel(WINNER);
     }
 }

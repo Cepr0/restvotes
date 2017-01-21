@@ -47,7 +47,7 @@ public class PollResourceProcessors {
                     // Determining the winner
                     Menu winner = poll.getWinner();
                     if (winner != null) {
-                        pollResource.add(getWinnerLink(winner));
+                        pollResource.add(getWinnerLink(poll, winner));
                     }
                 }
             }
