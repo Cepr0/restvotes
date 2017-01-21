@@ -8,10 +8,13 @@ import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
+import restvotes.AppProperties;
 import restvotes.domain.entity.Poll;
 import restvotes.repository.VoteRepo;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import static restvotes.util.ExceptionUtil.Type.FORBIDDEN;
 import static restvotes.util.ExceptionUtil.exception;
@@ -24,6 +27,8 @@ import static restvotes.util.ExceptionUtil.exception;
 @AllArgsConstructor
 @RepositoryEventHandler(Poll.class)
 public class PollEventHandler {
+    
+    private final AppProperties properties;
     
     private @NonNull VoteRepo voteRepo;
     
@@ -41,6 +46,12 @@ public class PollEventHandler {
     public void handleBeforeCreate(Poll poll) {
         if (poll.getDate().isBefore(LocalDate.now())) {
             exception(FORBIDDEN, "Creating a Poll in the past is not allowed!");
+        }
+    
+        LocalTime endOfVotingTimeValue = properties.getEndOfVotingTimeValue();
+        String timeStr = endOfVotingTimeValue.format(DateTimeFormatter.ofPattern("HH:mm"));
+        if (poll.getDate().isEqual(LocalDate.now()) || LocalTime.now().isAfter(endOfVotingTimeValue)) {
+            exception(FORBIDDEN, "Creating a Poll in current day after %s is not allowed!", timeStr);
         }
     }
     

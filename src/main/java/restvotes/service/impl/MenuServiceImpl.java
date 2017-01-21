@@ -32,11 +32,17 @@ public class MenuServiceImpl implements MenuService {
         
         Optional<Poll> pollOptional = pollRepo.getCurrent();
         if (!pollOptional.isPresent()) {
-            // If current unfinished Poll is not found
+            // If Poll is not found
             return null;
         }
     
         Poll poll = pollOptional.get();
+        
+        if (poll.getFinished()) {
+            // If current Poll is closed
+            return null;
+        }
+        
         User user = AuthorizedUser.get();
         Restaurant restaurant = menu.getRestaurant();
     

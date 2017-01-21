@@ -34,6 +34,7 @@ public class MenuController {
         
         Vote vote = menuService.submitVote(menu);
         
+        // If submitting was successful
         if (vote != null) {
             
             return new ResponseEntity<>(
