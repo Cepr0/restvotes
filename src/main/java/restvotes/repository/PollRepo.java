@@ -16,6 +16,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+
 /**
  * @author Cepro, 2017-01-01
  */
@@ -39,14 +42,15 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     default Optional<Poll> getCurrent() {
         Page<Poll> polls = getUnfinished(new PageRequest(0, 1));
         List<Poll> pollList = polls.getContent();
-        return !pollList.isEmpty() ? Optional.of(pollList.get(0)) : Optional.empty();
+        // If unfinished polls are present then get first one, else get last Poll until now
+        return !pollList.isEmpty() ? of(pollList.get(0)) : getLast(LocalDate.now());
     }
     
     @RestResource(exported = false)
     default Optional<Poll.Detailed> getCurrentDetailed() {
         Page<Poll.Detailed> polls = getUnfinishedDetailed(new PageRequest(0, 1));
         List<Poll.Detailed> pollList = polls.getContent();
-        return !pollList.isEmpty() ? Optional.of(pollList.get(0)) : Optional.empty();
+        return !pollList.isEmpty() ? of(pollList.get(0)) : empty();
     }
     
     @RestResource(exported = false)
@@ -63,7 +67,7 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     default Optional<Poll> getLast(LocalDate date) {
         Page<Poll> polls = getPrevious(date, new PageRequest(0, 1));
         List<Poll> pollList = polls.getContent();
-        return !pollList.isEmpty() ? Optional.of(pollList.get(0)) : Optional.empty();
+        return !pollList.isEmpty() ? of(pollList.get(0)) : empty();
     }
 
     @EntityGraph(attributePaths = "menus")  // TODO Костыль!!! Find the way to get lazy data optimal

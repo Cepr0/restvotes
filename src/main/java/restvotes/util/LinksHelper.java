@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkBuilder;
+import org.springframework.hateoas.ResourceSupport;
 import org.springframework.stereotype.Component;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
@@ -21,13 +22,13 @@ import java.util.List;
 @Component
 public class LinksHelper {
     
-    private static final String PROJECTION_DETAILED = "/?projection=detailed";
-    private static final String POLL = "poll";
-    private static final String CURRENT_POLL = "currentPoll";
-    private static final String MENU = "menu";
-    private static final String RESTAURANT = "restaurant";
-    private static final String VOTE = "vote";
-    private static final String WINNER = "winner";
+    public static final String PROJECTION_DETAILED = "/?projection=detailed";
+    public static final String POLL = "poll";
+    public static final String CURRENT_POLL = "currentPoll";
+    public static final String MENU = "menu";
+    public static final String RESTAURANT = "restaurant";
+    public static final String VOTE = "vote";
+    public static final String WINNER = "winner";
     
     private static RepositoryEntityLinks LINKS;
     
@@ -95,5 +96,9 @@ public class LinksHelper {
     
     public static Link getWinnerLink(Menu winner) {
         return LINKS.linkForSingleResource(winner).withRel(WINNER);
+    }
+    
+    public static void removeLink(ResourceSupport resource, String rel) {
+        // TODO Have to be done
     }
 }

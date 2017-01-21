@@ -9,16 +9,15 @@ import org.springframework.stereotype.Component;
 import restvotes.AuthorizedUser;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
+import restvotes.repository.PollRepo;
 import restvotes.repository.VoteRepo;
-import restvotes.util.LinksHelper;
 import restvotes.web.view.PollView;
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
 
-import static restvotes.util.LinksHelper.getCurrentPollLink;
-import static restvotes.util.LinksHelper.getPollLink;
+import static restvotes.util.LinksHelper.*;
 
 /**
  * @author Cepro, 2017-01-13
@@ -27,31 +26,34 @@ import static restvotes.util.LinksHelper.getPollLink;
 @Component
 public class PollResourceProcessors {
     
+    private final @NonNull PollRepo pollRepo;
+    
     private final @NonNull VoteRepo voteRepo;
     
     @Component
     public class PollBriefPagedResourcesProcessor implements ResourceProcessor<PagedResources<Resource<Poll.Brief>>> {
         
         @Override
-        public PagedResources<Resource<Poll.Brief>> process(PagedResources<Resource<Poll.Brief>> resource) {
+        public PagedResources<Resource<Poll.Brief>> process(PagedResources<Resource<Poll.Brief>> pagedResources) {
         
-            Collection<Resource<Poll.Brief>> polls = resource.getContent();
+            Collection<Resource<Poll.Brief>> polls = pagedResources.getContent();
             for (Resource<Poll.Brief> pollResource : polls) {
-                Poll.Brief poll = pollResource.getContent();
                 
+                Poll.Brief poll = pollResource.getContent();
                 pollResource.add(getPollLink(poll.getDate()));
 
-                if (!poll.getFinished()) {
-                    resource.add(getCurrentPollLink(poll.getDate()));
-                } else {
+                if (poll.getFinished()) {
                     
+                    // Determining the winner
                     Menu winner = poll.getWinner();
                     if (winner != null) {
-                        pollResource.add(LinksHelper.getWinnerLink(winner));
+                        pollResource.add(getWinnerLink(winner));
                     }
                 }
             }
-            return resource;
+            
+            pollRepo.getCurrent().ifPresent(poll -> pagedResources.add(getCurrentPollLink(poll)));
+            return pagedResources;
         }
     }
     
