@@ -85,6 +85,7 @@ public class Engine {
         }, new CronTrigger(properties.getEndOfVotingSchedule()));
     }
     
+    // TODO Check if this scheduled task work correctly...
     @Scheduled(cron="1 0 0 * * *")
     public void newDayTask() {
         

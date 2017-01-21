@@ -48,6 +48,7 @@ public class PollController {
     ResponseEntity<?> getPollMenu(@PathVariable("date") Poll poll, @PathVariable("id") Menu menu) {
     
         if (menu == null || poll == null) {
+            // TODO Replace with exception?
             return new ResponseEntity(NOT_FOUND);
         }
     

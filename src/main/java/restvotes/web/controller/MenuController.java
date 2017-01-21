@@ -29,6 +29,7 @@ public class MenuController {
     public ResponseEntity<?> submitVote(@PathVariable("id") Menu menu) {
         
         if (menu == null) {
+            // TODO Replace with exception?
             return new ResponseEntity(NOT_FOUND);
         }
         
@@ -46,6 +47,7 @@ public class MenuController {
                     ), OK);
             
         } else { // If current unfinished Poll is not found
+            // TODO Replace with exception?
             return new ResponseEntity(FORBIDDEN);
         }
     }
