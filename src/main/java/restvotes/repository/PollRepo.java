@@ -1,9 +1,7 @@
 package restvotes.repository;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,9 +14,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-
 /**
  * @author Cepro, 2017-01-01
  */
@@ -30,27 +25,13 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     Page<Poll.Brief> getAll(Pageable pageable);
     
     @RestResource(exported = false)
-    @Query("select p from Poll p where p.finished = false order by p.date asc")
-    Page<Poll> getUnfinished(Pageable pageable);
+    @Query(value = "select * from polls p where p.finished = false order by p.date asc limit 1", nativeQuery = true)
+    Optional<Poll> getFirstUnfinished();
     
-    @RestResource(exported = false)
-    @Query("select p from Poll p where p.finished = false order by p.date asc")
-    Page<Poll.Detailed> getUnfinishedDetailed(Pageable pageable);
-    
-    // http://stackoverflow.com/a/22472888/5380322
-    @RestResource(exported = false)
+    @RestResource(path = "current", rel = "current")
     default Optional<Poll> getCurrent() {
-        Page<Poll> polls = getUnfinished(new PageRequest(0, 1));
-        List<Poll> pollList = polls.getContent();
         // If unfinished polls are present then get first one, else get last Poll until now
-        return !pollList.isEmpty() ? of(pollList.get(0)) : getLast(LocalDate.now());
-    }
-    
-    @RestResource(exported = false)
-    default Optional<Poll.Detailed> getCurrentDetailed() {
-        Page<Poll.Detailed> polls = getUnfinishedDetailed(new PageRequest(0, 1));
-        List<Poll.Detailed> pollList = polls.getContent();
-        return !pollList.isEmpty() ? of(pollList.get(0)) : empty();
+        return getFirstUnfinished().map(Optional::of).orElse(this.getLast(LocalDate.now()));
     }
     
     @RestResource(exported = false)
@@ -59,31 +40,27 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     int disableUntil(LocalDate until);
     
     @RestResource(exported = false)
-    @EntityGraph(attributePaths = "menus") // TODO Костыль!!! Find the way to get lazy data optimal
-    @Query("select p from Poll p where p.date <= :date order by p.date desc")
-    Page<Poll> getPrevious(@Param("date") LocalDate date, Pageable page);
+    @Query(value = "select * from polls p where p.date <= :date order by p.date desc limit 1", nativeQuery = true)
+    Optional<Poll> getLast(@Param("date") LocalDate date);
+    
+    @RestResource(path = "byDate", rel = "byDate")
+    Poll findByDate(@Param("date") LocalDate date);
     
     @RestResource(exported = false)
-    default Optional<Poll> getLast(LocalDate date) {
-        Page<Poll> polls = getPrevious(date, new PageRequest(0, 1));
-        List<Poll> pollList = polls.getContent();
-        return !pollList.isEmpty() ? of(pollList.get(0)) : empty();
-    }
-
-    @EntityGraph(attributePaths = "menus")  // TODO Костыль!!! Find the way to get lazy data optimal
-    Poll findByDate(LocalDate date);
-    
     @Query("select p from Poll p where p.finished = true and p.winner is null")
     List<Poll> getFinishedWithoutWinner();
     
+    @RestResource(exported = false)
     @Modifying(clearAutomatically = true)
     @Query("update Poll p set p.winner.id = ?2 where p.date = ?1")
     int placeWinner(LocalDate pollDate, Long menuId);
     
+    @RestResource(exported = false)
     @Modifying(clearAutomatically = true)
     @Query("delete from Poll p where p.winner is null and p.finished = true")
     int deleteFinishedAndWithoutVotes();
     
+    @RestResource(exported = false)
     @Modifying(clearAutomatically = true)
     @Query(value = "delete from polls_menus pm where pm.poll_date in (select p.date from polls p where p.winner_id is null and p.finished = true)", nativeQuery = true)
     void unlinkMenusFromFinishedAndWithoutVotes();

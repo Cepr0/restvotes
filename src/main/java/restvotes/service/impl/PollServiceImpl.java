@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
 import static restvotes.util.LogUtils.debug;
 import static restvotes.util.LogUtils.error;
 
@@ -47,21 +46,6 @@ public class PollServiceImpl implements PollService {
         }
     }
     
-    @Override
-    @Transactional(readOnly = true)
-    public Poll getOne(LocalDate date) {
-        // TODO Delete this method
-        try {
-            Poll poll = pollRepo.getOne(requireNonNull(date));
-            debug(LOG, "poll.is_found", poll);
-            return poll;
-        } catch (Exception e) {
-            error(LOG, "poll.is_not_found", date, e.getMessage());
-            return null;
-        }
-    }
-    
-    
     // LazyInitializationException
     // http://stackoverflow.com/q/27115639/5380322
     // http://stackoverflow.com/q/26611173/5380322
@@ -78,7 +62,6 @@ public class PollServiceImpl implements PollService {
                     error(LOG, "poll.is_not_copied", "Last Poll", "It has current date");
                     return null;
                 } else {
-                    // TODO Find a better solution of lazy loading
                     List<Menu> menus = poll.getMenus();
                     Poll p = new Poll(menus);
                     Poll copy = pollRepo.saveAndFlush(p);
@@ -91,22 +74,6 @@ public class PollServiceImpl implements PollService {
             }
         } catch (Exception e) {
             error(LOG, "poll.is_not_copied", "Last Poll", e.getMessage());
-            return null;
-        }
-    }
-    
-    @Override
-    public Poll copyOf(Poll source) {
-        // TODO Delete this method
-        
-        try {
-            List<Menu> menus = requireNonNull(source).getMenus();
-            Poll poll = new Poll(menus);
-            Poll copy = pollRepo.saveAndFlush(poll);
-            debug(LOG, "poll.is_copied", copy);
-            return copy;
-        } catch (Exception e) {
-            error(LOG, "poll.is_not_copied", source.getDate(), e.getMessage());
             return null;
         }
     }

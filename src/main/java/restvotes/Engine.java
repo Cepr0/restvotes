@@ -43,6 +43,9 @@ public class Engine {
         LocalTime endOfVotingTime = properties.getEndOfVotingTimeValue();
         info(LOG, "The end of voting time is set to %s", endOfVotingTime);
     
+        LocalTime newDayPollTime = properties.getNewDayPollTimeValue();
+        info(LOG, "Automatic Poll creation time is set to %s", newDayPollTime);
+    
         // info(LOG, "Trying to create a new Poll by copying previous one...");
         // pollService.copyPrevious();
         //
@@ -69,8 +72,8 @@ public class Engine {
         info(LOG, "Searching 'empty' polls...");
         pollService.deleteEmpty();
     
-        // If now is time before the end of voting - automatically creating a new Poll
-        if (now.isBefore(endOfVotingTime)) {
+        // If now is time after Automatic Poll creation time but before the end of voting - automatically creating a new Poll
+        if (now.isAfter(newDayPollTime) && now.isBefore(endOfVotingTime)) {
             newPollTask();
         }
     

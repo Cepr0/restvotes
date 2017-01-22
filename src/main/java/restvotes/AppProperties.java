@@ -43,7 +43,7 @@ public class AppProperties {
         }
     }
     
-    public LocalTime getNewDayPollTime() {
+    public LocalTime getNewDayPollTimeValue() {
         try {
             return parse(newDayPollTime, DateTimeFormatter.ofPattern("H:mm"));
         } catch (Exception e) {
@@ -65,8 +65,8 @@ public class AppProperties {
 
             case NEW_DAY_POLL:
                 result = format(SCHEDULE_PATTERN,
-                        getNewDayPollTime().getMinute(),
-                        getNewDayPollTime().getHour());
+                        getNewDayPollTimeValue().getMinute(),
+                        getNewDayPollTimeValue().getHour());
                 break;
 
             case END_OF_VOTING:

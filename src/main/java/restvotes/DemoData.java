@@ -6,7 +6,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import restvotes.domain.entity.*;
 import restvotes.repository.*;
@@ -55,16 +54,15 @@ public class DemoData implements ApplicationRunner {
         Step2();
         Step3();
         Step4();
-//        Step5();
+        // Step5();
     }
 
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional()
     private void Step5() {
         // http://stackoverflow.com/q/27115639/5380322
         // http://stackoverflow.com/q/26611173/5380322
         // http://stackoverflow.com/a/10466591/5380322
     
-        // TODO Find a better solution of lazy loading
         Poll p = pollRepo.findByDate(p2.getDate());
         List<Menu> menus = p.getMenus();
         Poll p3 = new Poll(menus);
