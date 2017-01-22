@@ -50,7 +50,8 @@ public class PollEventHandler {
     
         LocalTime endOfVotingTimeValue = properties.getEndOfVotingTimeValue();
         String timeStr = endOfVotingTimeValue.format(DateTimeFormatter.ofPattern("HH:mm"));
-        if (poll.getDate().isEqual(LocalDate.now()) || LocalTime.now().isAfter(endOfVotingTimeValue)) {
+        
+        if (poll.getDate().isEqual(LocalDate.now()) && LocalTime.now().isAfter(endOfVotingTimeValue)) {
             exception(FORBIDDEN, "Creating a Poll in current day after %s is not allowed!", timeStr);
         }
     }

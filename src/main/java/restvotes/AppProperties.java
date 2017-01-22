@@ -24,10 +24,13 @@ import static restvotes.util.LogUtils.error;
 public class AppProperties {
     
     private static final String END_OF_VOTING_TIME_DEFAULT = "11:00";
-    private static final String END_OF_VOTING_SCHEDULE_PATTERN = "1 %s %s * * *";
+    private static final String NEW_DAY_POLL_TIME_DEFAULT = "9:00";
+    private static final String SCHEDULE_PATTERN = "1 %s %s * * *";
     private static final String EMAIL_DELIMITERS_PATTERN = "[,;]?\\s+";
     
     private String endOfVotingTime;
+    
+    private String newDayPollTime;
     
     private String sendErrorsTo;
 
@@ -40,14 +43,48 @@ public class AppProperties {
         }
     }
     
-    public String getEndOfVotingSchedule() {
-        return format(END_OF_VOTING_SCHEDULE_PATTERN,
-                getEndOfVotingTimeValue().getMinute(),
-                getEndOfVotingTimeValue().getHour());
+    public LocalTime getNewDayPollTime() {
+        try {
+            return parse(newDayPollTime, DateTimeFormatter.ofPattern("H:mm"));
+        } catch (Exception e) {
+            error(LOG, "engine.newDayPollTime_is_not_parsed", newDayPollTime);
+            return parse(NEW_DAY_POLL_TIME_DEFAULT);
+        }
+        
+    }
+    
+    public String getSchedule(ScheduleType type) {
+    
+        String result = null;
+        
+        switch (type) {
+    
+            case NEW_DAY:
+                result = format(SCHEDULE_PATTERN, "0", "0");
+                break;
+
+            case NEW_DAY_POLL:
+                result = format(SCHEDULE_PATTERN,
+                        getNewDayPollTime().getMinute(),
+                        getNewDayPollTime().getHour());
+                break;
+
+            case END_OF_VOTING:
+                result = format(SCHEDULE_PATTERN,
+                        getEndOfVotingTimeValue().getMinute(),
+                        getEndOfVotingTimeValue().getHour());
+                break;
+        }
+        
+        return result;
     }
     
     public String[] getEmailList() {
         // TODO Add handler of 'sendErrorsTo'
         return sendErrorsTo.split(EMAIL_DELIMITERS_PATTERN);
+    }
+    
+    public enum ScheduleType {
+        NEW_DAY, NEW_DAY_POLL, END_OF_VOTING
     }
 }
