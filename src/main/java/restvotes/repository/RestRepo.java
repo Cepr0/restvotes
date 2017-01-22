@@ -13,11 +13,10 @@ import java.util.List;
  */
 @RepositoryRestResource
 public interface RestRepo extends JpaRepository<Restaurant, Long> {
-    // TODO Add RestaurantController and getMenusByRestaurantId() for api/restaurants/{id}/menus
     
     @RestResource(path = "byName", rel = "byName")
-    List<Restaurant> findByNameLikeIgnoreCase(@Param("name") String name);
+    List<Restaurant> findByNameLikeIgnoreCaseOrderByNameAsc(@Param("name") String name);
     
     @RestResource(path = "byAddress", rel = "byAddress")
-    List<Restaurant> findByAddressLikeIgnoreCase(@Param("address") String name);
+    List<Restaurant> findByAddressLikeIgnoreCaseOrderByNameAsc(@Param("address") String name);
 }

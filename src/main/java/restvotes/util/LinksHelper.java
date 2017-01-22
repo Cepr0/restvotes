@@ -103,11 +103,19 @@ public class LinksHelper {
         return LINKS.linkForSingleResource(restaurant).withRel(RESTAURANT);
     }
     
+    public static Link getRestauranMenustLink(Restaurant restaurant) {
+        return LINKS.linkForSingleResource(restaurant).slash(MENUS).withRel(MENUS);
+    }
+    
     public static Link getMenuLink(Menu menu) {
         return LINKS.linkForSingleResource(menu).withRel(MENU);
     }
     
     public static Link getWinnerLink(Poll.Brief poll, Menu winner) {
         return LINKS.linkForSingleResource(Poll.class, poll.getDate()).slash(MENUS).slash(winner).withRel(WINNER);
+    }
+    
+    public static Link getMenuSelfLink(Menu.Detailed menu) {
+        return LINKS.linkForSingleResource(Menu.class, menu.getId()).withSelfRel();
     }
 }

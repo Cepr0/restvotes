@@ -21,5 +21,5 @@ public interface UserRepo extends JpaRepository<User, Long> {
     Optional<User> findByEmail(@Param("email") String email);
     
     @RestResource(path = "byName", rel = "byName")
-    List<User> findByNameLikeIgnoreCase(@Param("name") String name);
+    List<User> findByNameLikeIgnoreCaseOrderByNameAsc(@Param("name") String name);
 }
