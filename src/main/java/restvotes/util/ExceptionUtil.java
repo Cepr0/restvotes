@@ -2,6 +2,7 @@ package restvotes.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import restvotes.util.exception.ForbiddenException;
 import restvotes.util.exception.NotFoundException;
@@ -29,10 +30,11 @@ public class ExceptionUtil {
         switch (type) {
             case FORBIDDEN: throw new ForbiddenException(message);
             case NOT_FOUND: throw new NotFoundException(message);
+            case USERNAME_NOT_FOUND: throw new UsernameNotFoundException(message);
         }
     }
     
     public static enum Type {
-        FORBIDDEN, NOT_FOUND;
+        FORBIDDEN, NOT_FOUND, USERNAME_NOT_FOUND;
     }
 }

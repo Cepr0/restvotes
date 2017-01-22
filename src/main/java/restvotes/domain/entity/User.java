@@ -2,10 +2,13 @@ package restvotes.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.security.core.GrantedAuthority;
 import restvotes.domain.base.LongId;
 
 import javax.persistence.*;
@@ -67,7 +70,7 @@ public class User extends LongId {
     /**
      * Defines user roles
      */
-    public static enum Role {
+    public enum Role implements GrantedAuthority {
         ROLE_USER("User"), ROLE_ADMIN("Admin");
         
         Role(String title) {
@@ -79,6 +82,11 @@ public class User extends LongId {
         @Override
         public String toString() {
             return title;
+        }
+    
+        @Override
+        public String getAuthority() {
+            return name();
         }
     }
 }

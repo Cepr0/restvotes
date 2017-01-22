@@ -1,31 +1,39 @@
 package restvotes;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.context.i18n.LocaleContextHolder;
 import restvotes.domain.entity.User;
-import restvotes.repository.UserRepo;
 
 import java.util.Locale;
-import java.util.concurrent.ThreadLocalRandom;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static restvotes.domain.entity.User.Role.ROLE_ADMIN;
+import static restvotes.domain.entity.User.Role.ROLE_USER;
 
 /**
  * @author Cepro, 2017-01-08
  */
-@Component
-public class AuthorizedUser {
+public class AuthorizedUser extends org.springframework.security.core.userdetails.User {
     
-    private static UserRepo repo;
+    private static User user;
     
-    @Autowired
-    public AuthorizedUser(UserRepo userRepo) {
-        repo = userRepo;
+    public AuthorizedUser(User user) {
+        super(
+                user.getEmail(),
+                user.getPassword(),
+                user.isEnabled(),
+                true, true, true,
+                (user.getRole() == ROLE_ADMIN) ? asList(ROLE_ADMIN, ROLE_USER) : singletonList(ROLE_USER));
+        
+        AuthorizedUser.user = user;
     }
     
     public static User get() {
-        return repo.getOne(ThreadLocalRandom.current().nextLong(1, 9));
-    }
+        return user;
+     }
     
+    // http://stackoverflow.com/a/16106304/5380322
     public static Locale locale() {
-        return null;
+        return LocaleContextHolder.getLocale();
     }
 }
