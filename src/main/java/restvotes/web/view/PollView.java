@@ -48,7 +48,7 @@ public class PollView extends Poll implements Poll.Detailed {
         
         List<Resource<Menu.Detailed>> content = new ArrayList<>();
         for (Menu menu : menus) {
-            MenuView menuView = new MenuView(menu, chosenMenuId, ranks);
+            MenuView menuView = new MenuView(menu, chosenMenuId, ranks, winner != null ? winner.getId() : null);
             super.getMenus().add(menuView);
             
             // making menu resource and adding its links

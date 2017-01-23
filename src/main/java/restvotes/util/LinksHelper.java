@@ -29,6 +29,9 @@ public class LinksHelper {
     public static final String VOTE = "vote";
     public static final String WINNER = "winner";
     private static final String MENUS = "menus";
+    private static final String PROFILE = "profile";
+    private static final String POLLS = "polls";
+    private static final String SEARCH = "search";
     
     private static RepositoryEntityLinks LINKS;
     
@@ -117,5 +120,14 @@ public class LinksHelper {
     
     public static Link getMenuSelfLink(Menu.Detailed menu) {
         return LINKS.linkForSingleResource(Menu.class, menu.getId()).withSelfRel();
+    }
+    
+    public static Link getPollSearchLink() {
+        return LINKS.linkFor(Poll.class).slash(SEARCH).withRel(SEARCH);
+    }
+    
+    public static Link getPollProfileLink() {
+        Link link = LINKS.linkFor(Poll.class).withRel(PROFILE);
+        return new Link(link.getHref().replace("/"+ POLLS, "/"+ PROFILE + "/"+ POLLS), PROFILE);
     }
 }

@@ -18,4 +18,6 @@ public interface MenuRepo extends JpaRepository<Menu, Long> {
     @RestResource(exported = false)
     @Query("select m from Menu m where m.restaurant = ?1 order by m.id desc")
     Page<Menu.Detailed> getByRestaurant(Restaurant restaurant, Pageable pageable);
+    
+    // TODO Make exported getByRestaurantNameLikeIgnoreCase
 }

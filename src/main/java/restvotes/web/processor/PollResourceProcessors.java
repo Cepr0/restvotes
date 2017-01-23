@@ -40,7 +40,7 @@ public class PollResourceProcessors {
             for (Resource<Poll.Brief> pollResource : polls) {
                 
                 Poll.Brief poll = pollResource.getContent();
-                pollResource.add(getPollLink(poll.getDate()));
+                pollResource.add(getPollSelfLink(poll.getDate()), getPollLink(poll.getDate()));
 
                 if (poll.getFinished()) {
                     
@@ -53,6 +53,8 @@ public class PollResourceProcessors {
             }
             
             pollRepo.getCurrent().ifPresent(poll -> pagedResources.add(getCurrentPollLink(poll)));
+            pagedResources.add(getPollSearchLink(), getPollProfileLink());
+            
             return pagedResources;
         }
     }

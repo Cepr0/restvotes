@@ -53,14 +53,16 @@ public class PollController {
         }
     
         LocalDate date = poll.getDate();
-        
+        Menu winner = poll.getWinner();
+        Long winnerId = (winner != null) ? winner.getId() : null;
+    
         Long chosenMenuId = voteRepo.getByUserAndDate(AuthorizedUser.get(), date)
                                     .map(v -> v.getMenu().getId())
                                     .orElse(null);
     
         Map<Long, Integer> ranks = voteRepo.getMenuAndRankParesByDate(date);
     
-        MenuView menuView = new MenuView(menu, chosenMenuId, ranks);
+        MenuView menuView = new MenuView(menu, chosenMenuId, ranks, winnerId);
         return ResponseEntity.ok(new Resource<>(menuView, getMenuViewLinks(menuView, null)));
     }
     

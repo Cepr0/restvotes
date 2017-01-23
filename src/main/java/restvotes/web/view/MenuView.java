@@ -26,16 +26,19 @@ public class MenuView extends Menu implements Menu.Detailed {
 
     private Integer rank = null;
     
+    private Boolean winner = null;
+    
     public MenuView(Menu menu) {
         super.setId(menu.getId());
         super.setRestaurant(menu.getRestaurant());
         super.setItems(menu.getItems());
     }
     
-    public MenuView(Menu menu, Long chosenMenuId, Map<Long, Integer> ranks) {
+    public MenuView(Menu menu, Long chosenMenuId, Map<Long, Integer> ranks, Long winnerId) {
         this(menu);
         chosen = getId().equals(chosenMenuId);
         rank = (ranks != null) ? ranks.getOrDefault(getId(), 0) : null;
+        winner = getId().equals(winnerId);
     }
     
     @JsonProperty("restaurant")
