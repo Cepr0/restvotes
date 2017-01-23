@@ -1,4 +1,4 @@
-package restvotes.web;
+package restvotes.web.eventHandler;
 
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -28,9 +28,9 @@ import static restvotes.util.ExceptionUtil.exception;
 @RepositoryEventHandler(Poll.class)
 public class PollEventHandler {
     
-    private final AppProperties properties;
+    private final @NonNull AppProperties properties;
     
-    private @NonNull VoteRepo voteRepo;
+    private final @NonNull VoteRepo voteRepo;
     
     @HandleBeforeSave
     public void handleBeforeSave(Poll poll) {

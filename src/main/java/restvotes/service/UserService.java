@@ -28,7 +28,7 @@ public class UserService implements UserDetailsService {
     @Override
     public AuthorizedUser loadUserByUsername(String email) throws UsernameNotFoundException {
     
-        Optional<User> user = userRepo.findByEmail(email);
+        Optional<User> user = userRepo.findEnabledByEmail(email);
         if(user.isPresent()) {
             return new AuthorizedUser(user.get());
         } else {
