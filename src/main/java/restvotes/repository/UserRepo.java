@@ -18,14 +18,28 @@ import java.util.Optional;
 public interface UserRepo extends JpaRepository<User, Long> {
     
     // TODO Add search for Users by: role, enabled
-    
+    // TODO http://stackoverflow.com/a/38652548/5380322
+    // TODO Make contextual search
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RestResource(path = "byRole", rel = "byRole")
+    List<User> findByRole(@Param("role") User.Role role);
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RestResource(path = "disabled", rel = "disabled")
+    List<User> findByEnabledFalse();
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RestResource(path = "enabled", rel = "enabled")
+    List<User> findByEnabledTrue();
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RestResource(path = "byEmail", rel = "byEmail")
     Optional<User> findByEmail(@Param("email") String email);
     
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RestResource(path = "byName", rel = "byName")
-    List<User> findByNameLikeIgnoreCaseOrderByNameAsc(@Param("name") String name);
+    List<User> findByNameIgnoreCaseContainingOrderByNameAsc(@Param("name") String name);
     
     @RestResource(exported = false)
     @Query("select u from User u where u.email = ?1 and u.enabled = true")

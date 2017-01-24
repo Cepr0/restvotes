@@ -20,4 +20,6 @@ public interface MenuRepo extends JpaRepository<Menu, Long> {
     Page<Menu.Detailed> getByRestaurant(Restaurant restaurant, Pageable pageable);
     
     // TODO Make exported getByRestaurantNameLikeIgnoreCase
+    // TODO Make by Items search
+    // TODO Make by
 }

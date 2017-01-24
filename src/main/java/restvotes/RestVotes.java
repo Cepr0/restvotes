@@ -48,6 +48,4 @@ public class RestVotes {
     public TaskScheduler taskScheduler() {
         return new ThreadPoolTaskScheduler();
     }
-    
-    // TODO Add User eventHandler - check if User post themselves or Admin add a new one then consider Role or not
 }

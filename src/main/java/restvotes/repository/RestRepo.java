@@ -13,10 +13,13 @@ import java.util.List;
  */
 @RepositoryRestResource
 public interface RestRepo extends JpaRepository<Restaurant, Long> {
-    
+
+    // TODO http://stackoverflow.com/a/38652548/5380322
+    // TODO Make contextual search
+
     @RestResource(path = "byName", rel = "byName")
-    List<Restaurant> findByNameLikeIgnoreCaseOrderByNameAsc(@Param("name") String name);
+    List<Restaurant> findByNameIgnoreCaseContainingOrderByNameAsc(@Param("name") String name);
     
     @RestResource(path = "byAddress", rel = "byAddress")
-    List<Restaurant> findByAddressLikeIgnoreCaseOrderByNameAsc(@Param("address") String name);
+    List<Restaurant> findByAddressIgnoreCaseContainingOrderByNameAsc(@Param("address") String name);
 }
