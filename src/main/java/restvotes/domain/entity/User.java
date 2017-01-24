@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
+import static restvotes.domain.entity.User.Role.ROLE_USER;
 
 /**
  * Defines User entity
@@ -49,10 +50,10 @@ public class User extends LongId {
     @Column(columnDefinition = "boolean default true", nullable = false)
     private boolean enabled = true;
     
-    @Column(nullable = false)
+    @Column(columnDefinition = "integer default '0'", nullable = false)
     @Enumerated(EnumType.ORDINAL)
     @NotNull
-    private Role role = Role.ROLE_USER;
+    private Role role = ROLE_USER;
     
     @NotNull
     @Column(columnDefinition = "timestamp default now()", updatable = false, nullable = false)
@@ -60,7 +61,7 @@ public class User extends LongId {
     private final LocalDateTime registered;
     
     public User() {
-        this(null, null, null, false, null, LocalDateTime.now());
+        this(null, null, null, true, ROLE_USER, LocalDateTime.now());
     }
     
     public User(String name, String email, String password, Role role) {

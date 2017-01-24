@@ -53,7 +53,7 @@ public class PollResourceProcessors {
             }
             
             pollRepo.getCurrent().ifPresent(poll -> pagedResources.add(getCurrentPollLink(poll)));
-            pagedResources.add(getPollSearchLink(), getPollProfileLink());
+            pagedResources.add(getPollProfileLink(), getPollSearchLink());
             
             return pagedResources;
         }
