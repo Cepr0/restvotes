@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import restvotes.repository.PollRepo;
 
 import static restvotes.util.LinksHelper.getCurrentPollLink;
+import static restvotes.util.LinksHelper.getUserProfileLink;
 
 /**
  * @author Cepro, 2017-01-13
@@ -20,7 +21,8 @@ public class RootResourceProcessor implements ResourceProcessor<RepositoryLinksR
     
     @Override
     public RepositoryLinksResource process(RepositoryLinksResource resource) {
-        pollRepo.getCurrent().ifPresent(poll -> resource.add(getCurrentPollLink(poll)));
+        pollRepo.getCurrent()
+                .ifPresent(poll -> resource.add(getCurrentPollLink(poll), getUserProfileLink()));
         return resource;
     }
 }
