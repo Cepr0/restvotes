@@ -1,6 +1,8 @@
 package restvotes.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.hateoas.core.Relation;
 import org.springframework.security.core.GrantedAuthority;
 import restvotes.domain.base.LongId;
 
@@ -15,6 +18,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 import static restvotes.domain.entity.User.Role.ROLE_USER;
 
@@ -67,7 +71,26 @@ public class User extends LongId {
     public User(String name, String email, String password, Role role) {
         this(name, email, password, true, role, LocalDateTime.now());
     }
-    
+
+    public User(String name, String email, String password) {
+        this(name, email, password, true, ROLE_USER, LocalDateTime.now());
+    }
+
+    @Relation("user")
+    @JsonInclude(NON_NULL)
+    public interface Profile {
+
+        @JsonIgnore
+        Long getId();
+
+        String getName();
+
+        String getEmail();
+
+        @JsonProperty(access = WRITE_ONLY)
+        String getPassword();
+    }
+
     /**
      * Defines user roles
      */

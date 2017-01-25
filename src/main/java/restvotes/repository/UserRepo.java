@@ -44,4 +44,8 @@ public interface UserRepo extends JpaRepository<User, Long> {
     @RestResource(exported = false)
     @Query("select u from User u where u.email = ?1 and u.enabled = true")
     Optional<User> findEnabledByEmail(@Param("email") String email);
+
+    @RestResource(exported = false)
+    @Query("select u from User u where u.id = ?1")
+    Optional<User> findById(Long id);
 }
