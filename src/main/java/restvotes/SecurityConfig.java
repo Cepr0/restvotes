@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import restvotes.service.UserService;
 
+import static org.springframework.http.HttpMethod.POST;
+
 /**
  * @author Cepro, 2017-01-22
  */
@@ -28,6 +30,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().and().authorizeRequests().anyRequest().authenticated().and().csrf().disable();
+        http.httpBasic().and()
+            .anonymous().and()
+            .authorizeRequests().antMatchers(POST,"/api/userProfile", "/api/userProfile/").anonymous().and()
+            .authorizeRequests().antMatchers("/api/**").authenticated().and()
+            .csrf().disable();
     }
 }
