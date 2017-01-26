@@ -36,13 +36,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         
         String BASE = configuration.getBasePath().getPath();
         
-        String[] BASE_AND_PROFILE = {BASE, BASE + "/", BASE + "/profile/**"};
+        String[] ROOT_BASE_AND_PROFILE = {"/*", BASE, BASE + "/", BASE + "/profile/**"};
         String[] USER_PROFILE = {BASE + "/userProfile", BASE + "/userProfile/"};
         String[] COMMON_ELEMENTS = {BASE + "/polls/**", BASE + "/menus/**", BASE + "/restaurants/**", BASE + "/userProfile/**"};
         String VOTE = BASE + "/menus/*/vote";
     
-        http.httpBasic().and().csrf().disable().authorizeRequests()
-            .antMatchers(GET, BASE_AND_PROFILE).permitAll()
+        http.httpBasic().realmName("restvotes").and().csrf().disable().authorizeRequests()
+            .antMatchers(GET, ROOT_BASE_AND_PROFILE).permitAll()
             .antMatchers(POST, USER_PROFILE).permitAll()
             .antMatchers(GET, COMMON_ELEMENTS).authenticated()
             .antMatchers(PUT, VOTE).authenticated()

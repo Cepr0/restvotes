@@ -32,7 +32,7 @@ public class RestVotes {
      * @return H2 Server instance
      * @throws SQLException
      */
-    @Profile(value = {"dev", "demo"})
+    @Profile(value = {"dev"})
     @Bean(initMethod = "start", destroyMethod = "stop")
     public Server h2Server() throws SQLException {
         return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092");
