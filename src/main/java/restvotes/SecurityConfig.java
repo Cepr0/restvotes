@@ -32,13 +32,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().and().csrf().disable()
                 .authorizeRequests()
-                    .antMatchers(GET, "/api?", "/api/profile?").permitAll()
-                    .antMatchers(POST,"/api/userProfile?").permitAll()
-                    .antMatchers(GET, "/api/polls/**", "/api/menus/**", "/api/restaurants/**", "/api/userProfile?").authenticated()
+                    .antMatchers(GET, "/api?", "/api/profile/**").permitAll()
+                    //.antMatchers(POST,"/api/userProfile?").permitAll()
+                    .antMatchers(GET, "/api/**").authenticated()
+                    //.antMatchers(GET, "/api/polls/**", "/api/menus/**", "/api/restaurants/**", "/api/userProfile?").authenticated()
                     .antMatchers(PUT, "/api/menus/*/vote").authenticated()
                     .antMatchers(POST, "/api/*").hasRole("ADMIN")
                     .antMatchers(PUT, "/api/*/*").hasRole("ADMIN")
                     .antMatchers(PATCH, "/api/*/*").hasRole("ADMIN")
                     .antMatchers(DELETE, "/api/*/*").hasRole("ADMIN");
+
+        // http://stackoverflow.com/a/30819556/5380322
     }
 }
