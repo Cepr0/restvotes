@@ -3,6 +3,7 @@ package restvotes;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,7 +22,9 @@ import static org.springframework.http.HttpMethod.*;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
-    private @NonNull UserService userService;
+    private final @NonNull UserService userService;
+    
+    private final @NonNull RepositoryRestConfiguration configuration;
     
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -30,18 +33,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().and().csrf().disable()
-                .authorizeRequests()
-                    .antMatchers(GET, "/api?", "/api/profile/**").permitAll()
-                    //.antMatchers(POST,"/api/userProfile?").permitAll()
-                    .antMatchers(GET, "/api/**").authenticated()
-                    //.antMatchers(GET, "/api/polls/**", "/api/menus/**", "/api/restaurants/**", "/api/userProfile?").authenticated()
-                    .antMatchers(PUT, "/api/menus/*/vote").authenticated()
-                    .antMatchers(POST, "/api/*").hasRole("ADMIN")
-                    .antMatchers(PUT, "/api/*/*").hasRole("ADMIN")
-                    .antMatchers(PATCH, "/api/*/*").hasRole("ADMIN")
-                    .antMatchers(DELETE, "/api/*/*").hasRole("ADMIN");
-
+        
+        String BASE = configuration.getBasePath().getPath();
+        
+        String[] BASE_AND_PROFILE = {BASE, BASE + "/", BASE + "/profile/**"};
+        String[] USER_PROFILE = {BASE + "/userProfile", BASE + "/userProfile/"};
+        String[] COMMON_ELEMENTS = {BASE + "/polls/**", BASE + "/menus/**", BASE + "/restaurants/**", BASE + "/userProfile/**"};
+        String VOTE = BASE + "/menus/*/vote";
+    
+        http.httpBasic().and().csrf().disable().authorizeRequests()
+            .antMatchers(GET, BASE_AND_PROFILE).permitAll()
+            .antMatchers(POST, USER_PROFILE).permitAll()
+            .antMatchers(GET, COMMON_ELEMENTS).authenticated()
+            .antMatchers(PUT, VOTE).authenticated()
+            .anyRequest().hasRole("ADMIN");
+        
         // http://stackoverflow.com/a/30819556/5380322
+        // http://stackoverflow.com/a/22636142/5380322
     }
 }

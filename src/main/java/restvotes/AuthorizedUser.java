@@ -29,13 +29,19 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
         
         AuthorizedUser.user = user;
     }
-    // TODO Refactor User get functional
+    
     public static User get() {
 
         Authentication auth = getContext().getAuthentication();
         if (auth != null) {
-            if (auth.getPrincipal() instanceof AuthorizedUser) {
-                return user;
+            
+            Object principal = auth.getPrincipal();
+            if (principal instanceof AuthorizedUser) {
+                
+                String email = ((AuthorizedUser) principal).getUsername();
+                if(email.equals(user.getEmail())) {
+                    return user;
+                }
             }
         }
         return null;
