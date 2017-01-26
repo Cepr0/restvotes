@@ -27,7 +27,7 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
         
         AuthorizedUser.user = user;
     }
-    
+    // TODO Refactor User get functional
     public static User get() {
         return user;
      }
