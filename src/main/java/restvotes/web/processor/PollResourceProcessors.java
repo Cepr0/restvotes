@@ -14,7 +14,6 @@ import restvotes.repository.VoteRepo;
 import restvotes.web.view.PollView;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Map;
 
 import static restvotes.util.LinksHelper.*;
@@ -36,26 +35,46 @@ public class PollResourceProcessors {
         @Override
         public PagedResources<Resource<Poll.Brief>> process(PagedResources<Resource<Poll.Brief>> pagedResources) {
         
-            Collection<Resource<Poll.Brief>> polls = pagedResources.getContent();
-            for (Resource<Poll.Brief> pollResource : polls) {
-                
-                Poll.Brief poll = pollResource.getContent();
-                pollResource.add(getPollSelfLink(poll.getDate()), getPollLink(poll.getDate()));
-
-                if (poll.getFinished()) {
-                    
-                    // Determining the winner
-                    Menu winner = poll.getWinner();
-                    if (winner != null) {
-                        pollResource.add(getWinnerLink(poll, winner));
-                    }
-                }
-            }
+//            Collection<Resource<Poll.Brief>> polls = pagedResources.getContent();
+//            for (Resource<Poll.Brief> pollResource : polls) {
+//
+//                Poll.Brief poll = pollResource.getContent();
+//                // pollResource.add(getPollSelfLink(poll.getDate()), getPollLink(poll.getDate()));
+//
+//                if (poll.getFinished()) {
+//
+//                    // Determining the winner
+//                    Menu winner = poll.getWinner();
+//                    if (winner != null) {
+//                        pollResource.add(getWinnerLink(poll, winner));
+//                    }
+//                }
+//            }
             
             pollRepo.getCurrent().ifPresent(poll -> pagedResources.add(getCurrentPollLink(poll)));
             pagedResources.add(getPollProfileLink(), getPollSearchLink());
             
             return pagedResources;
+        }
+    }
+
+    @Component
+    public class PollBriefResourceProcessor implements ResourceProcessor<Resource<Poll.Brief>> {
+
+        @Override
+        public Resource<Poll.Brief> process(Resource<Poll.Brief> resource) {
+            Poll.Brief poll = resource.getContent();
+            // pollResource.add(getPollSelfLink(poll.getDate()), getPollLink(poll.getDate()));
+
+            if (poll.getFinished()) {
+
+                // Determining the winner
+                Menu winner = poll.getWinner();
+                if (winner != null) {
+                    resource.add(getWinnerLink(poll, winner));
+                }
+            }
+            return resource;
         }
     }
     

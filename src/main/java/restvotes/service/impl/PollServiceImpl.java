@@ -53,18 +53,24 @@ public class PollServiceImpl implements PollService {
     @Override
     public Poll copyPrevious() {
         try {
+
             LocalDate today = LocalDate.now();
             Optional<Poll> lastPoll = pollRepo.getLast(today);
+
             if (lastPoll.isPresent()) {
                 
                 Poll poll = lastPoll.get();
+
                 if (poll.getDate().isEqual(today)) {
+
                     error(LOG, "poll.is_not_copied", "Last Poll", "It has current date");
                     return null;
                 } else {
+
                     List<Menu> menus = poll.getMenus();
-                    Poll p = new Poll(menus);
-                    Poll copy = pollRepo.saveAndFlush(p);
+                    debug(LOG, "Last Poll menu size: %d", menus.size());
+
+                    Poll copy = pollRepo.saveAndFlush(new Poll(menus));
                     debug(LOG, "poll.is_copied", copy);
                     return copy;
                 }

@@ -41,7 +41,8 @@ public class PollController {
     @GetMapping
     ResponseEntity<PagedResources<Resource<Poll.Brief>>> getPolls(Pageable pageable) {
 
-        return ResponseEntity.ok(assembler.toResource(pollRepo.getAll(pageable)));
+        PagedResources<Resource<Poll.Brief>> resource = assembler.toResource(pollRepo.getAll(pageable));
+        return ResponseEntity.ok(resource);
     }
     
     @GetMapping("/{date}/menus/{id}")
