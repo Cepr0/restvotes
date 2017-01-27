@@ -17,7 +17,7 @@ import static restvotes.domain.entity.User.Role.ROLE_USER;
  */
 public class AuthorizedUser extends org.springframework.security.core.userdetails.User {
     
-    private static User user;
+    private User user;
     
     public AuthorizedUser(User user) {
         super(
@@ -27,7 +27,7 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
                 true, true, true,
                 (user.getRole() == ROLE_ADMIN) ? asList(ROLE_ADMIN, ROLE_USER) : singletonList(ROLE_USER));
         
-        AuthorizedUser.user = user;
+        this.user = user;
     }
     
     public static User get() {
@@ -37,11 +37,9 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
             
             Object principal = auth.getPrincipal();
             if (principal instanceof AuthorizedUser) {
-                
-                String email = ((AuthorizedUser) principal).getUsername();
-                if(email.equals(user.getEmail())) {
-                    return user;
-                }
+    
+                AuthorizedUser authorizedUser = (AuthorizedUser) principal;
+                return authorizedUser.getUser();
             }
         }
         return null;
@@ -50,5 +48,9 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
     // http://stackoverflow.com/a/16106304/5380322
     public static Locale locale() {
         return LocaleContextHolder.getLocale();
+    }
+    
+    private User getUser() {
+        return user;
     }
 }

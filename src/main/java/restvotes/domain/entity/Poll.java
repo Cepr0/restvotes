@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.data.rest.core.annotation.RestResource;
 import restvotes.domain.base.DateId;
 
 import javax.persistence.Entity;
@@ -33,6 +34,7 @@ public class Poll extends DateId {
     @ManyToMany(cascade = {PERSIST, MERGE})
     private List<Menu> menus = new ArrayList<>();
     
+    @RestResource(exported = false)
     @JsonIgnore
     @ManyToOne(optional = true)
     private Menu winner;
@@ -59,8 +61,12 @@ public class Poll extends DateId {
     public interface Brief {
         LocalDate getDate();
         Boolean getFinished();
+        
+        @RestResource(exported = false)
         @JsonIgnore
         Menu getWinner();
+    
+        @RestResource(exported = false)
         @JsonIgnore
         List<Menu> getMenus();
     }
@@ -69,6 +75,9 @@ public class Poll extends DateId {
         LocalDate getDate();
         Boolean getFinished();
         List<Menu> getMenus();
-        @JsonIgnore Menu getWinner();
+        
+        @RestResource(exported = false)
+        @JsonIgnore
+        Menu getWinner();
     }
 }

@@ -2,6 +2,7 @@ package restvotes.web.controller;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -33,16 +34,25 @@ import static restvotes.util.LinksHelper.getMenuViewLinks;
 public class PollController {
 
     private final @NonNull PagedResourcesAssembler<Poll.Brief> assembler;
+    
+    private final @NonNull PagedResourcesAssembler<Poll> pollAssembler;
 
     private final @NonNull PollRepo pollRepo;
     
     private final @NonNull VoteRepo voteRepo;
     
-    @GetMapping
+    // @GetMapping
     ResponseEntity<PagedResources<Resource<Poll.Brief>>> getPolls(Pageable pageable) {
-
+        // http://stackoverflow.com/a/21362291/5380322
         PagedResources<Resource<Poll.Brief>> resource = assembler.toResource(pollRepo.getAll(pageable));
         return ResponseEntity.ok(resource);
+    }
+    
+    // @GetMapping
+    ResponseEntity<?> getAll(Pageable pageable) {
+        Page<Poll> polls = pollRepo.findAll(pageable);
+        PagedResources<Resource<Poll>> pagedResources = pollAssembler.toResource(polls);
+        return ResponseEntity.ok(pagedResources);
     }
     
     @GetMapping("/{date}/menus/{id}")

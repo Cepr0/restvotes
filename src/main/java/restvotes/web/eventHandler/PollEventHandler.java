@@ -56,7 +56,7 @@ public class PollEventHandler {
         }
     }
     
-    private void checkPoll(Poll poll) {
+    private void checkPoll(Poll poll) { // TODO Add check for Restaurants duplicates in one Poll
         if (voteRepo.countByPoll(poll) != 0) {
             exception(FORBIDDEN, "Changing or deleting a closed Poll is not allowed!");
         }

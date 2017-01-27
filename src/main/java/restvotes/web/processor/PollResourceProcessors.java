@@ -16,7 +16,8 @@ import restvotes.web.view.PollView;
 import java.time.LocalDate;
 import java.util.Map;
 
-import static restvotes.util.LinksHelper.*;
+import static restvotes.util.LinksHelper.getCurrentPollLink;
+import static restvotes.util.LinksHelper.getWinnerLink;
 
 /**
  * @author Cepro, 2017-01-13
@@ -52,7 +53,7 @@ public class PollResourceProcessors {
 //            }
             
             pollRepo.getCurrent().ifPresent(poll -> pagedResources.add(getCurrentPollLink(poll)));
-            pagedResources.add(getPollProfileLink(), getPollSearchLink());
+            //pagedResources.add(getPollProfileLink(), getPollSearchLink());
             
             return pagedResources;
         }
