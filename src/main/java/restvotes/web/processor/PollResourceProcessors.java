@@ -86,8 +86,11 @@ public class PollResourceProcessors {
                                         .orElse(null);
             
             Map<Long, Integer> ranks = voteRepo.getMenuAndRankParesByDate(pollDate);
-            
-            return new Resource<>(new PollView(poll, chosenMenuId, ranks));
+    
+            Optional<Poll> pollOptional = pollRepo.getCurrent();
+            LocalDate curPollDate = pollOptional.isPresent() ? pollOptional.get().getDate() : null;
+    
+            return new Resource<>(new PollView(poll, chosenMenuId, ranks, curPollDate));
         }
     }
 }

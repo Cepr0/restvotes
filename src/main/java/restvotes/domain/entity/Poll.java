@@ -68,6 +68,7 @@ public class Poll extends DateId {
 //    @Projection(name = "brief", types = {Poll.class})
     public interface Brief {
         LocalDate getDate();
+
         Boolean getFinished();
     
         @JsonInclude(NON_NULL)
@@ -80,7 +81,12 @@ public class Poll extends DateId {
     
     public interface Detailed {
         LocalDate getDate();
+
         Boolean getFinished();
+
+        @JsonInclude(NON_NULL)
+        Boolean getCurrent();
+
         List<Menu> getMenus();
         
         @RestResource(exported = false)

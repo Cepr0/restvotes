@@ -22,8 +22,7 @@ import static restvotes.util.LinksHelper.getPollViewLinks;
  * @author Cepro, 2017-01-11
  */
 @Relation(value = "poll", collectionRelation = "polls")
-// @JsonInclude(NON_NULL)
-@JsonPropertyOrder({"date", "finished", "_embedded"})
+@JsonPropertyOrder({"date", "finished", "current", "_embedded"})
 public class PollView extends Poll implements Poll.Detailed {
     
     // To get embedded Menu array in json output
@@ -31,17 +30,20 @@ public class PollView extends Poll implements Poll.Detailed {
     @JsonUnwrapped
     private Resources<Resource<Menu.Detailed>> menuResources;
     
-    public PollView(Poll poll, Long chosenMenuId, Map<Long, Integer> ranks) {
+    public PollView(Poll poll, Long chosenMenuId, Map<Long, Integer> ranks, LocalDate curPollDate) {
     
-        setData(poll.getDate(), poll.getFinished(), poll.getMenus(), poll.getWinner(), chosenMenuId, ranks);
+        setData(
+                poll.getDate(),
+                poll.getFinished(),
+                poll.getMenus(),
+                poll.getWinner(),
+                chosenMenuId,
+                ranks,
+                curPollDate
+        );
     }
     
-    public PollView(Poll.Detailed poll, Long chosenMenuId, Map<Long, Integer> ranks) {
-    
-        setData(poll.getDate(), poll.getFinished(), poll.getMenus(), poll.getWinner(), chosenMenuId, ranks);
-    }
-    
-    private void setData(LocalDate date, Boolean finished, List<Menu> menus, Menu winner, Long chosenMenuId, Map<Long, Integer> ranks) {
+    private void setData(LocalDate date, Boolean finished, List<Menu> menus, Menu winner, Long chosenMenuId, Map<Long, Integer> ranks, LocalDate curPollDate) {
 
         super.setId(date);
         super.setFinished(finished);
@@ -56,6 +58,8 @@ public class PollView extends Poll implements Poll.Detailed {
         }
         
         menuResources = new Resources<>(content, getPollViewLinks(date, chosenMenuId, winner));
+    
+        setCurrent(curPollDate != null && curPollDate.isEqual(getDate()));
     }
     
     @JsonIgnore
@@ -74,6 +78,12 @@ public class PollView extends Poll implements Poll.Detailed {
     @Override
     public Boolean getFinished() {
         return super.getFinished();
+    }
+    
+    @JsonProperty("current")
+    @Override
+    public Boolean getCurrent() {
+        return super.getCurrent();
     }
     
     @JsonIgnore
