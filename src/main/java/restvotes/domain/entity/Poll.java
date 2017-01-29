@@ -76,10 +76,6 @@ public class Poll extends DateId {
         @RestResource(exported = false)
         @JsonIgnore
         Menu getWinner();
-    
-        @RestResource(exported = false)
-        @JsonIgnore
-        List<Menu> getMenus();
     }
     
     public interface Detailed {

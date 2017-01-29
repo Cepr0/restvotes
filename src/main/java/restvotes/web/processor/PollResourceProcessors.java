@@ -11,13 +11,14 @@ import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.repository.PollRepo;
 import restvotes.repository.VoteRepo;
+import restvotes.web.view.PollBriefView;
 import restvotes.web.view.PollView;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Optional;
 
-import static restvotes.util.LinksHelper.getCurrentPollLink;
-import static restvotes.util.LinksHelper.getWinnerLink;
+import static restvotes.util.LinksHelper.*;
 
 /**
  * @author Cepro, 2017-01-13
@@ -38,9 +39,7 @@ public class PollResourceProcessors {
     
             pollRepo.getCurrent()
                     .ifPresent(poll -> pagedResources.add(getCurrentPollLink()));
-            
-            //pagedResources.add(getPollProfileLink(), getPollSearchLink());
-            
+
             return pagedResources;
         }
     }
@@ -51,17 +50,25 @@ public class PollResourceProcessors {
         @Override
         public Resource<Poll.Brief> process(Resource<Poll.Brief> resource) {
             Poll.Brief poll = resource.getContent();
-            // pollResource.add(getPollSelfLink(poll.getDate()), getPollLink(poll.getDate()));
-
+    
+            Optional<Poll> pollOptional = pollRepo.getCurrent();
+            LocalDate curPollDate = pollOptional.isPresent() ? pollOptional.get().getDate() : null;
+    
+            PollBriefView pollBriefView = new PollBriefView(poll, curPollDate);
+            Resource<Poll.Brief> viewResource = new Resource<>(
+                    pollBriefView,
+                    getPollSelfLink(poll.getDate()),
+                    getPollLink(poll.getDate()));
+            
             if (poll.getFinished()) {
 
                 // Determining the winner
                 Menu winner = poll.getWinner();
                 if (winner != null) {
-                    resource.add(getWinnerLink(poll, winner));
+                    viewResource.add(getWinnerLink(poll, winner));
                 }
             }
-            return resource;
+            return viewResource;
         }
     }
     
