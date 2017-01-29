@@ -2,6 +2,8 @@ package restvotes.service;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import restvotes.repository.UserRepo;
 
 import java.util.Optional;
 
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 import static restvotes.util.ExceptionUtil.Type.USERNAME_NOT_FOUND;
 import static restvotes.util.ExceptionUtil.exception;
 
@@ -27,7 +30,7 @@ public class UserService implements UserDetailsService {
     
     @Override
     public AuthorizedUser loadUserByUsername(String email) throws UsernameNotFoundException {
-    
+        
         Optional<User> user = userRepo.findEnabledByEmail(email);
         if(user.isPresent()) {
             return new AuthorizedUser(user.get());
@@ -36,4 +39,16 @@ public class UserService implements UserDetailsService {
             return null;
         }
     }
+    
+    @Profile("test")
+    public void runAs(String email) {
+        AuthorizedUser user = loadUserByUsername(email);
+        getContext()
+                .setAuthentication(
+                        new UsernamePasswordAuthenticationToken(
+                                user,
+                                null,
+                                user.getAuthorities()));
+    }
+    
 }

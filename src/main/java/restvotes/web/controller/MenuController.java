@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Vote;
-import restvotes.service.MenuService;
+import restvotes.service.VoteService;
 
 import static org.springframework.http.HttpStatus.*;
 import static restvotes.util.LinksHelper.*;
@@ -23,7 +23,7 @@ import static restvotes.util.LinksHelper.*;
 @RequestMapping("/menus/{id}")
 public class MenuController {
     
-    private final @NonNull MenuService menuService;
+    private final @NonNull VoteService voteService;
 
     @PutMapping("/vote")
     public ResponseEntity<?> submitVote(@PathVariable("id") Menu menu) {
@@ -33,7 +33,7 @@ public class MenuController {
             return new ResponseEntity(NOT_FOUND);
         }
         
-        Vote vote = menuService.submitVote(menu);
+        Vote vote = voteService.submitVote(menu);
         
         // If submitting was successful
         if (vote != null) {

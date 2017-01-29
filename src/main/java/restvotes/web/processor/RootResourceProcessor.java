@@ -22,7 +22,7 @@ public class RootResourceProcessor implements ResourceProcessor<RepositoryLinksR
     @Override
     public RepositoryLinksResource process(RepositoryLinksResource resource) {
         pollRepo.getCurrent()
-                .ifPresent(poll -> resource.add(getCurrentPollLink(poll), getUserProfileLink()));
+                .ifPresent(poll -> resource.add(getCurrentPollLink(), getUserProfileLink()));
         return resource;
     }
 }

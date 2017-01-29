@@ -38,6 +38,7 @@ public class LinksHelper {
     private static final String SEARCH = "search";
     private static final String USER_PROFILE = "userProfile";
     private static final String SLASH = "/";
+    private static final String CURRENT = "current";
     
     private static RepositoryEntityLinks LINKS;
     
@@ -94,6 +95,10 @@ public class LinksHelper {
     
     public static Link getPollLink(LocalDate date) {
         return LINKS.linkForSingleResource(Poll.class, date).withRel(POLL);
+    }
+    
+    public static Link getCurrentPollLink() {
+        return LINKS.linkFor(Poll.class).slash(CURRENT).withRel(CURRENT_POLL);
     }
     
     public static Link getCurrentPollLink(Poll poll) {

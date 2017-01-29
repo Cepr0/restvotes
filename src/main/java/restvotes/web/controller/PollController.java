@@ -2,11 +2,9 @@ package restvotes.web.controller;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,20 +39,11 @@ public class PollController {
     
     private final @NonNull VoteRepo voteRepo;
     
-    // @GetMapping
-    ResponseEntity<PagedResources<Resource<Poll.Brief>>> getPolls(Pageable pageable) {
-        // http://stackoverflow.com/a/21362291/5380322
-        PagedResources<Resource<Poll.Brief>> resource = assembler.toResource(pollRepo.getAll(pageable));
-        return ResponseEntity.ok(resource);
-    }
-    
-    // @GetMapping
-    ResponseEntity<?> getAll(Pageable pageable) {
-        Page<Poll> polls = pollRepo.findAll(pageable);
-        PagedResources<Resource<Poll>> pagedResources = pollAssembler.toResource(polls);
-        return ResponseEntity.ok(pagedResources);
-    }
-    
+    // http://stackoverflow.com/a/21362291/5380322
+    // http://stackoverflow.com/a/29924387/5380322
+    // http://stackoverflow.com/a/31782016/5380322
+    // http://stackoverflow.com/a/21362291/5380322
+
     @GetMapping("/{date}/menus/{id}")
     ResponseEntity<?> getPollMenu(@PathVariable("date") Poll poll, @PathVariable("id") Menu menu) {
     
@@ -77,20 +66,11 @@ public class PollController {
         return ResponseEntity.ok(new Resource<>(menuView, getMenuViewLinks(menuView, null)));
     }
     
-    // http://stackoverflow.com/a/29924387/5380322
-    // http://stackoverflow.com/a/31782016/5380322
-    // http://stackoverflow.com/a/21362291/5380322
-    // @SuppressWarnings("unchecked")
-    // @GetMapping("/current")
-    // public ResponseEntity<Resource<?>> getCurrent(PersistentEntityResourceAssembler assembler) {
-    //     Optional<Poll> pollOptional = pollRepo.getCurrent();
-    //
-    //     if (pollOptional.isPresent()) {
-    //         Poll poll = pollOptional.get();
-    //         PersistentEntityResource resource = assembler.toFullResource(poll);
-    //         return ResponseEntity.ok(resource);
-    //     } else {
-    //         return ResponseEntity.notFound().build();
-    //     }
-    // }
+    @GetMapping("/current")
+    public ResponseEntity<?> getCurrent(PersistentEntityResourceAssembler assembler) {
+        
+        return pollRepo.getCurrent()
+                       .map(poll -> ResponseEntity.ok(assembler.toFullResource(poll)))
+                       .orElse(ResponseEntity.notFound().build());
+    }
 }

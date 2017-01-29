@@ -35,24 +35,10 @@ public class PollResourceProcessors {
         
         @Override
         public PagedResources<Resource<Poll.Brief>> process(PagedResources<Resource<Poll.Brief>> pagedResources) {
-        
-//            Collection<Resource<Poll.Brief>> polls = pagedResources.getContent();
-//            for (Resource<Poll.Brief> pollResource : polls) {
-//
-//                Poll.Brief poll = pollResource.getContent();
-//                // pollResource.add(getPollSelfLink(poll.getDate()), getPollLink(poll.getDate()));
-//
-//                if (poll.getFinished()) {
-//
-//                    // Determining the winner
-//                    Menu winner = poll.getWinner();
-//                    if (winner != null) {
-//                        pollResource.add(getWinnerLink(poll, winner));
-//                    }
-//                }
-//            }
+    
+            pollRepo.getCurrent()
+                    .ifPresent(poll -> pagedResources.add(getCurrentPollLink()));
             
-            pollRepo.getCurrent().ifPresent(poll -> pagedResources.add(getCurrentPollLink(poll)));
             //pagedResources.add(getPollProfileLink(), getPollSearchLink());
             
             return pagedResources;

@@ -18,12 +18,13 @@ import static org.junit.Assert.assertThat;
 /**
  * @author Cepro, 2017-01-22
  */
+@SuppressWarnings("SpringJavaAutowiredMembersInspection")
 public class PollRepoTest extends BaseTest {
     
     @Autowired private PollRepo pollRepo;
     
-    LocalDate pollDate1 = LocalDate.now().minusDays(1);
-    LocalDate pollDate2 = LocalDate.now().minusDays(2);
+    private LocalDate pollDate1 = LocalDate.now().minusDays(1);
+    private LocalDate pollDate2 = LocalDate.now().minusDays(2);
     
     @Test
     public void getLast() throws Exception {
@@ -43,16 +44,29 @@ public class PollRepoTest extends BaseTest {
     
     @Test
     public void findByDate() throws Exception {
-        Poll poll2 = pollRepo.findByDate(pollDate1);
-        assertThat(poll2, notNullValue());
+        Optional<Poll> poll2Optional = pollRepo.findByDate(pollDate1);
+        boolean present = poll2Optional.isPresent();
+        assertThat(present, is(true));
         
-        List<Menu> menus = poll2.getMenus();
-        assertThat(menus, hasSize(3));
-        
-        Poll poll3 = new Poll(menus);
-        assertThat(poll3, notNullValue());
+        if(present) {
+            Poll poll2 = poll2Optional.get();
+            List<Menu> menus = poll2.getMenus();
+            assertThat(menus, hasSize(3));
     
-        Poll savedPoll = pollRepo.saveAndFlush(poll3);
-        assertThat(savedPoll.getDate(), is(LocalDate.now()));
+            Poll poll3 = new Poll(menus);
+            assertThat(poll3, notNullValue());
+    
+            Poll savedPoll = pollRepo.saveAndFlush(poll3);
+            assertThat(savedPoll.getDate(), is(LocalDate.now()));
+        }
+    }
+    
+    @Test
+    public void getFinishedWithoutWinner() throws Exception {
+        int count = pollRepo.closeUntil(LocalDate.now());
+        assertThat(count, is (1));
+    
+        List<Poll> polls = pollRepo.getFinishedWithoutWinner();
+        assertThat(polls, hasSize(2));
     }
 }

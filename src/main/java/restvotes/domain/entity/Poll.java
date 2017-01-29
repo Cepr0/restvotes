@@ -1,6 +1,7 @@
 package restvotes.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -8,14 +9,12 @@ import lombok.Setter;
 import org.springframework.data.rest.core.annotation.RestResource;
 import restvotes.domain.base.DateId;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 
@@ -31,8 +30,13 @@ public class Poll extends DateId {
     
     private boolean finished = false;
     
+    @JsonInclude(NON_NULL)
+    @Transient
+    private Boolean current = null;
+    
     @ManyToMany(cascade = {PERSIST, MERGE})
     private List<Menu> menus = new ArrayList<>();
+    // TODO Think about use @PreRemove to unlink Menus then deleting 'empty' Poll - http://stackoverflow.com/a/14911910/5380322
     
     @RestResource(exported = false)
     @JsonIgnore
@@ -57,10 +61,17 @@ public class Poll extends DateId {
         return finished;
     }
     
+    public Boolean getCurrent() {
+        return current;
+    }
+    
 //    @Projection(name = "brief", types = {Poll.class})
     public interface Brief {
         LocalDate getDate();
         Boolean getFinished();
+    
+        @JsonInclude(NON_NULL)
+        Boolean getCurrent();
         
         @RestResource(exported = false)
         @JsonIgnore

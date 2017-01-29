@@ -4,10 +4,10 @@ import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Vote;
 
 /**
- * MenuService interface described the business logic for {@link Menu} instances
+ * VoteService interface described the business logic for {@link Vote} instances
  * @author Cepro, 2017-01-19
  */
-public interface MenuService {
+public interface VoteService {
     
     /**
      * Submit vote of authenticated user for given Menu in the current Poll

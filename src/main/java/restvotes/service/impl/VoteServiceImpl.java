@@ -9,7 +9,7 @@ import restvotes.AuthorizedUser;
 import restvotes.domain.entity.*;
 import restvotes.repository.PollRepo;
 import restvotes.repository.VoteRepo;
-import restvotes.service.MenuService;
+import restvotes.service.VoteService;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @Service
 @Transactional
-public class MenuServiceImpl implements MenuService {
+public class VoteServiceImpl implements VoteService {
     
     private final @NonNull VoteRepo voteRepo;
     

@@ -63,10 +63,11 @@ public class DemoData implements ApplicationRunner {
         // http://stackoverflow.com/q/26611173/5380322
         // http://stackoverflow.com/a/10466591/5380322
     
-        Poll p = pollRepo.findByDate(p2.getDate());
-        List<Menu> menus = p.getMenus();
-        Poll p3 = new Poll(menus);
-        pollRepo.save(p3);
+        pollRepo.findByDate(p2.getDate()).ifPresent( p -> {
+            List<Menu> menus = p.getMenus();
+            Poll p3 = new Poll(menus);
+            pollRepo.save(p3);
+        });
     }
 
     @Transactional

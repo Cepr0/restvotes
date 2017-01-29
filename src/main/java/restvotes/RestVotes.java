@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.h2.tools.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.TaskScheduler;
@@ -20,6 +21,7 @@ import java.sql.SQLException;
 @SpringBootApplication
 @EnableAsync
 @EnableScheduling
+@EnableCaching
 public class RestVotes {
 
     public static void main(String[] args) {
@@ -44,8 +46,23 @@ public class RestVotes {
      *
      * @return TaskScheduler instance
      */
+    @Profile(value = {"dev", "demo", "prod"})
     @Bean
     public TaskScheduler taskScheduler() {
         return new ThreadPoolTaskScheduler();
     }
+    
+    // /**
+    //  * http://stackoverflow.com/a/26283080/5380322
+    //  * https://goo.gl/D4oDR9
+    //  * @return a {@link SimpleCacheManager}
+    //  */
+    // @Bean
+    // CacheManager cacheManager() {
+    //
+    //     SimpleCacheManager cacheManager = new SimpleCacheManager();
+    //     cacheManager.setCaches(singletonList(new ConcurrentMapCache("polls")));
+    //
+    //     return cacheManager;
+    // }
 }

@@ -3,10 +3,7 @@ package restvotes.web.eventHandler;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
-import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
-import org.springframework.data.rest.core.annotation.HandleBeforeSave;
-import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
+import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
 import restvotes.AppProperties;
 import restvotes.domain.entity.Poll;
@@ -34,12 +31,12 @@ public class PollEventHandler {
     
     @HandleBeforeSave
     public void handleBeforeSave(Poll poll) {
-        checkPoll(poll);
+        checkClosedPoll(poll);
     }
     
     @HandleBeforeDelete
     public void handleBeforeDelete(Poll poll) {
-        checkPoll(poll);
+        checkClosedPoll(poll);
     }
     
     @HandleBeforeCreate
@@ -55,8 +52,17 @@ public class PollEventHandler {
             exception(FORBIDDEN, "Creating a Poll in current day after %s is not allowed!", timeStr);
         }
     }
+
+    @HandleAfterCreate
+    @HandleAfterSave
+    @HandleAfterDelete
+    // @Cachevict(value = "polls", allEntries = true)
+    public void handleAfter(Poll poll) {
+        LocalDate id = poll.getId();
+    }
     
-    private void checkPoll(Poll poll) { // TODO Add check for Restaurants duplicates in one Poll
+    // TODO Add check for duplicate Restaurants in one Poll
+    private void checkClosedPoll(Poll poll) {
         if (voteRepo.countByPoll(poll) != 0) {
             exception(FORBIDDEN, "Changing or deleting a closed Poll is not allowed!");
         }

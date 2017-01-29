@@ -37,7 +37,7 @@ public class PollServiceImpl implements PollService {
     @Override
     public boolean closeAllUntil(LocalDate until) {
         try {
-            int count = pollRepo.disableUntil(until);
+            int count = pollRepo.closeUntil(until);
             debug(LOG, "poll.is_disabled", until, count);
             return true;
         } catch (Exception e) {
@@ -93,10 +93,11 @@ public class PollServiceImpl implements PollService {
         // 2. Make a loop through them
         for (Poll poll : polls) {
             
-            // 3. For each one get <menuId, rank> pares, calculate the best and place a winner to current Poll
+            // 3. For each one get <menuId, rank> pares, get the best one (they sorted by rank desc)
+            // and place a winner to each Poll
             List<Vote.Rank> ranks = voteRepo.getRanksByDate(poll.getDate());
             if (!ranks.isEmpty()) {
-                Long menuId = ranks.get(0).getMenu().getId();
+                Long menuId = ranks.get(0).getMenu().getId(); // ranks.get(0) - the best one
                 try {
                     if (pollRepo.placeWinner(poll.getDate(), menuId) > 0) {
                         debug(LOG, "Placed a winner [id: %d] to Poll %s", menuId, poll);
