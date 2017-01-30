@@ -17,12 +17,12 @@ import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.repository.PollRepo;
 import restvotes.repository.VoteRepo;
+import restvotes.util.exception.NotFoundException;
 import restvotes.web.view.MenuView;
 
 import java.time.LocalDate;
 import java.util.Map;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static restvotes.util.LinksHelper.getMenuViewLinks;
 
 /**
@@ -54,9 +54,12 @@ public class PollController {
     @GetMapping("/{date}/menus/{id}")
     ResponseEntity<?> getPollMenu(@PathVariable("date") Poll poll, @PathVariable("id") Menu menu) {
     
-        if (menu == null || poll == null) {
-            // TODO Replace with exception?
-            return new ResponseEntity(NOT_FOUND);
+        if (poll == null) {
+            throw new NotFoundException("poll.not_found");
+        }
+        
+        if (menu == null) {
+            throw new NotFoundException("menu.not_found");
         }
     
         LocalDate date = poll.getDate();

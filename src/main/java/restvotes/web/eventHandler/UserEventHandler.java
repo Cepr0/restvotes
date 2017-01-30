@@ -7,13 +7,13 @@ import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 import restvotes.domain.entity.User;
+import restvotes.util.exception.ForbiddenException;
+import restvotes.util.exception.NotFoundException;
 
 import java.util.Objects;
 
 import static restvotes.AuthorizedUser.get;
 import static restvotes.domain.entity.User.Role.ROLE_ADMIN;
-import static restvotes.util.ExceptionUtil.Type.FORBIDDEN;
-import static restvotes.util.ExceptionUtil.exception;
 
 /**
  * @author Cepro, 2017-01-23
@@ -37,12 +37,17 @@ public class UserEventHandler {
     }
     
     private void checkUser(User user) {
-        if (get().getRole() != ROLE_ADMIN && !Objects.equals(get().getId(), user.getId())) {
-            exception(FORBIDDEN, "users.cannot_edit_another_user");
+        User u = get();
+        if (u == null) {
+            throw new NotFoundException("users.not_found");
+        }
+        
+        if (u.getRole() != ROLE_ADMIN && !Objects.equals(u.getId(), user.getId())) {
+            throw new ForbiddenException("users.cannot_edit_another_user");
         }
 
-        if (get().getRole() != ROLE_ADMIN && user.getRole() == ROLE_ADMIN) {
-            exception(FORBIDDEN, "users.cannot_use_role_admin");
+        if (u.getRole() != ROLE_ADMIN && user.getRole() == ROLE_ADMIN) {
+            throw new ForbiddenException("users.cannot_use_role_admin");
         }
     }
 }

@@ -35,6 +35,7 @@ public class RepoRestConfig extends RepositoryRestConfigurerAdapter {
         conversionService.addConverter(String.class, LocalDate.class, LocalDate::parse);
         conversionService.addConverter(String.class, LocalTime.class, time -> parse(time, ofPattern("yyyy-MM-dd HH:mm:ss")));
         super.configureConversionService(conversionService);
+        // TODO Figure out how to output time values in format yyyy-MM-dd HH:mm:ss in exception messages in non 'ru' locale...
     }
     
     @Override

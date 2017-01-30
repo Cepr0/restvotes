@@ -10,12 +10,11 @@ import org.springframework.stereotype.Service;
 import restvotes.AuthorizedUser;
 import restvotes.domain.entity.User;
 import restvotes.repository.UserRepo;
+import restvotes.util.exception.NotFoundException;
 
 import java.util.Optional;
 
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
-import static restvotes.util.ExceptionUtil.Type.USERNAME_NOT_FOUND;
-import static restvotes.util.ExceptionUtil.exception;
 
 /**
  * Implements a {@link UserDetailsService} interface
@@ -35,8 +34,7 @@ public class UserService implements UserDetailsService {
         if(user.isPresent()) {
             return new AuthorizedUser(user.get());
         } else {
-            exception(USERNAME_NOT_FOUND, "User with email %s is not found", email);
-            return null;
+            throw new NotFoundException("users.with_email_not_found", email);
         }
     }
     

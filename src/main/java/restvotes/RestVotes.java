@@ -1,6 +1,5 @@
 package restvotes;
 
-import lombok.RequiredArgsConstructor;
 import org.h2.tools.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +16,6 @@ import java.sql.SQLException;
 /**
  * @author Cepro, 2017-01-01
  */
-@RequiredArgsConstructor
 @SpringBootApplication
 @EnableAsync
 @EnableScheduling

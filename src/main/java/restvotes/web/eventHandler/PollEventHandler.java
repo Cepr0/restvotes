@@ -8,13 +8,11 @@ import org.springframework.stereotype.Component;
 import restvotes.AppProperties;
 import restvotes.domain.entity.Poll;
 import restvotes.repository.VoteRepo;
+import restvotes.util.exception.ForbiddenException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-
-import static restvotes.util.ExceptionUtil.Type.FORBIDDEN;
-import static restvotes.util.ExceptionUtil.exception;
 
 /**
  * @author Cepro, 2017-01-20
@@ -30,26 +28,26 @@ public class PollEventHandler {
     private final @NonNull VoteRepo voteRepo;
     
     @HandleBeforeSave
-    public void handleBeforeSave(Poll poll) {
+    public void handleBeforeSave(Poll poll) throws Exception {
         checkClosedPoll(poll);
     }
     
     @HandleBeforeDelete
-    public void handleBeforeDelete(Poll poll) {
+    public void handleBeforeDelete(Poll poll) throws Exception {
         checkClosedPoll(poll);
     }
     
     @HandleBeforeCreate
     public void handleBeforeCreate(Poll poll) {
         if (poll.getDate().isBefore(LocalDate.now())) {
-            exception(FORBIDDEN, "Creating a Poll in the past is not allowed!");
+            throw new ForbiddenException("poll.creating_in_the_past_are_forbidden");
         }
     
         LocalTime endOfVotingTimeValue = properties.getEndOfVotingTimeValue();
         String timeStr = endOfVotingTimeValue.format(DateTimeFormatter.ofPattern("HH:mm"));
         
         if (poll.getDate().isEqual(LocalDate.now()) && LocalTime.now().isAfter(endOfVotingTimeValue)) {
-            exception(FORBIDDEN, "Creating a Poll in current day after %s is not allowed!", timeStr);
+            throw new ForbiddenException("poll.creating_after_finished_time", timeStr);
         }
     }
 
@@ -64,7 +62,7 @@ public class PollEventHandler {
     // TODO Add check for duplicate Restaurants in one Poll
     private void checkClosedPoll(Poll poll) {
         if (voteRepo.countByPoll(poll) != 0) {
-            exception(FORBIDDEN, "Changing or deleting a closed Poll is not allowed!");
+            throw new ForbiddenException("poll.modifications_are_forbidden");
         }
     }
 }
