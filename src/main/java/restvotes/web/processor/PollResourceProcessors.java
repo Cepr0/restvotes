@@ -39,7 +39,8 @@ public class PollResourceProcessors {
     
             pollRepo.getCurrent()
                     .ifPresent(poll -> pagedResources.add(getCurrentPollLink()));
-
+            
+            pagedResources.add(getPollProfileLink(), getPollSearchLink());
             return pagedResources;
         }
     }
@@ -55,10 +56,7 @@ public class PollResourceProcessors {
             LocalDate curPollDate = pollOptional.isPresent() ? pollOptional.get().getDate() : null;
     
             PollBriefView pollBriefView = new PollBriefView(poll, curPollDate);
-            Resource<Poll.Brief> viewResource = new Resource<>(
-                    pollBriefView,
-                    getPollSelfLink(poll.getDate()),
-                    getPollLink(poll.getDate()));
+            Resource<Poll.Brief> viewResource = new Resource<>(pollBriefView, getPollSelfLink(poll.getDate()));
             
             if (poll.getFinished()) {
 

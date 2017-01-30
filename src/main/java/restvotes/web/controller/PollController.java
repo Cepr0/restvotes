@@ -35,8 +35,6 @@ public class PollController {
 
     private final @NonNull PagedResourcesAssembler<Poll.Brief> assembler;
     
-    private final @NonNull PagedResourcesAssembler<Poll> pollAssembler;
-
     private final @NonNull PollRepo pollRepo;
     
     private final @NonNull VoteRepo voteRepo;

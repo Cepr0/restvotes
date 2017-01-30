@@ -18,7 +18,7 @@ import java.util.Optional;
  * @author Cepro, 2017-01-01
  */
 @SuppressWarnings({"SpringDataJpaMethodInconsistencyInspection", "SpringCacheAnnotationsOnInterfaceInspection"})
-@RepositoryRestResource(excerptProjection = Poll.Brief.class)
+@RepositoryRestResource
 public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     
     // Caching

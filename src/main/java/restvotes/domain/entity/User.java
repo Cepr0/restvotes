@@ -79,7 +79,7 @@ public class User extends LongId {
         if (!isEmpty(password)) this.password = password;
         return this;
     }
-    
+    // TODO Add projection for UserProfile
     /**
      * Defines user roles
      */
