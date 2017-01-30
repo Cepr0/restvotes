@@ -2,9 +2,11 @@ package restvotes.web.controller;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +45,13 @@ public class PollController {
     // http://stackoverflow.com/a/29924387/5380322
     // http://stackoverflow.com/a/31782016/5380322
     // http://stackoverflow.com/a/21362291/5380322
+
+    @GetMapping
+    ResponseEntity<PagedResources<Resource<Poll.Brief>>> getPolls(Pageable pageable) {
+
+        PagedResources<Resource<Poll.Brief>> resource = assembler.toResource(pollRepo.getAll(pageable));
+        return ResponseEntity.ok(resource);
+    }
 
     @GetMapping("/{date}/menus/{id}")
     ResponseEntity<?> getPollMenu(@PathVariable("date") Poll poll, @PathVariable("id") Menu menu) {
