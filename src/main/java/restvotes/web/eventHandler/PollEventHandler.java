@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
 import restvotes.AppProperties;
+import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.repository.VoteRepo;
 import restvotes.util.exception.ForbiddenException;
@@ -13,6 +14,10 @@ import restvotes.util.exception.ForbiddenException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+import java.util.List;
+
+import static restvotes.util.LogUtils.debug;
 
 /**
  * @author Cepro, 2017-01-20
@@ -30,6 +35,7 @@ public class PollEventHandler {
     @HandleBeforeSave
     public void handleBeforeSave(Poll poll) throws Exception {
         checkClosedPoll(poll);
+        checkRestaurantDuplicates(poll);
     }
     
     @HandleBeforeDelete
@@ -49,6 +55,8 @@ public class PollEventHandler {
         if (poll.getDate().isEqual(LocalDate.now()) && LocalTime.now().isAfter(endOfVotingTimeValue)) {
             throw new ForbiddenException("poll.creating_after_finished_time", timeStr);
         }
+    
+        checkRestaurantDuplicates(poll);
     }
 
     @HandleAfterCreate
@@ -56,13 +64,21 @@ public class PollEventHandler {
     @HandleAfterDelete
     // @Cachevict(value = "polls", allEntries = true)
     public void handleAfter(Poll poll) {
-        LocalDate id = poll.getId();
+        debug(LOG, "Poll %s is changed", poll.toString());
     }
     
-    // TODO Add check for duplicate Restaurants in one Poll
     private void checkClosedPoll(Poll poll) {
         if (voteRepo.countByPoll(poll) != 0) {
             throw new ForbiddenException("poll.modifications_are_forbidden");
+        }
+    }
+    
+    private void checkRestaurantDuplicates(Poll poll) {
+    
+        List<Menu> menus = poll.getMenus();
+        boolean hasNoDuplicates = menus.stream().mapToLong(menu -> menu.getRestaurant().getId()).allMatch(new HashSet<>()::add);
+        if (!hasNoDuplicates) {
+            throw new ForbiddenException("poll.has_duplicates");
         }
     }
 }

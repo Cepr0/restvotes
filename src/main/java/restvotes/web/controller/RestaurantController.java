@@ -10,14 +10,18 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Restaurant;
 import restvotes.repository.MenuRepo;
 import restvotes.util.exception.NotFoundException;
-import restvotes.web.view.MenuView;
 
-import static restvotes.util.LinksHelper.getMenuViewLinks;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static restvotes.util.LinksHelper.getMenuLinks;
 
 /**
  * @author Cepro, 2017-01-22
@@ -28,7 +32,7 @@ import static restvotes.util.LinksHelper.getMenuViewLinks;
 @RequestMapping("/restaurants/{id}")
 public class RestaurantController {
     
-    private final @NonNull PagedResourcesAssembler<Menu.Detailed> pagedResourcesAssembler;
+    private final @NonNull PagedResourcesAssembler<Menu> pagedResourcesAssembler;
     
     private final @NonNull MenuRepo menuRepo;
     
@@ -39,14 +43,14 @@ public class RestaurantController {
             throw new NotFoundException("restaurant.not_found");
         }
         
-        // TODO Find a solution without pages?
-        Page<Menu.Detailed> menus = menuRepo.getByRestaurant(restaurant, pageable);
-        return ResponseEntity.ok(pagedResourcesAssembler.toResource(menus));
+        // TODO Make it without pages?
+        Page<Menu> menus = menuRepo.findByRestaurantOrderByIdDesc(restaurant, pageable);
+        return ResponseEntity.ok(pagedResourcesAssembler.toResource(menus,
+                menu -> new Resource<>(menu, getMenuLinks(menu, true))));
     }
     
     @Transactional
-    @PostMapping("/menus")
-    @PutMapping("/menus")
+    @RequestMapping(path = "/menus", method = {POST, PUT})
     public ResponseEntity<?> putMenu(@PathVariable("id")Restaurant restaurant, @RequestBody Menu menu) {
         if (restaurant == null) {
             throw new NotFoundException("restaurant.cannot_be_null");
@@ -57,7 +61,6 @@ public class RestaurantController {
         }
         // TODO Move this to Service?
         Menu savedMenu = menuRepo.saveAndFlush(menu.setRestaurant(restaurant));
-        MenuView menuView = new MenuView(savedMenu);
-        return ResponseEntity.ok(new Resource<>(menuView, getMenuViewLinks(menuView, true)));
+        return ResponseEntity.ok(new Resource<>(savedMenu, getMenuLinks(savedMenu, true)));
     }
 }

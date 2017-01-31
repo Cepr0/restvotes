@@ -73,12 +73,6 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     
     @RestResource(exported = false)
     @Modifying(clearAutomatically = true)
-    @Query("update Poll p set p.winner.id = ?2 where p.date = ?1")
-    // @Cachevict(value = "polls", allEntries = true)
-    int placeWinner(LocalDate pollDate, Long menuId);
-    
-    @RestResource(exported = false)
-    @Modifying(clearAutomatically = true)
     @Query("delete from Poll p where p.winner is null and p.finished = true")
     // @Cachevict(value = "polls", allEntries = true)
     int deleteFinishedAndWithoutVotes();

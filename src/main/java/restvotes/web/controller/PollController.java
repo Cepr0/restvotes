@@ -23,7 +23,7 @@ import restvotes.web.view.MenuView;
 import java.time.LocalDate;
 import java.util.Map;
 
-import static restvotes.util.LinksHelper.getMenuViewLinks;
+import static restvotes.util.LinksHelper.getMenuLinks;
 
 /**
  * @author Cepro, 2017-01-07
@@ -73,7 +73,7 @@ public class PollController {
         Map<Long, Integer> ranks = voteRepo.getMenuAndRankParesByDate(date);
     
         MenuView menuView = new MenuView(menu, chosenMenuId, ranks, winnerId);
-        return ResponseEntity.ok(new Resource<>(menuView, getMenuViewLinks(menuView, null)));
+        return ResponseEntity.ok(new Resource<>(menuView, getMenuLinks(menuView, null)));
     }
     
     @GetMapping("/current")

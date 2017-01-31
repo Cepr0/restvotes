@@ -97,11 +97,12 @@ public class PollServiceImpl implements PollService {
             // and place a winner to each Poll
             List<Vote.Rank> ranks = voteRepo.getRanksByDate(poll.getDate());
             if (!ranks.isEmpty()) {
-                Long menuId = ranks.get(0).getMenu().getId(); // ranks.get(0) - the best one
+                Menu menu = ranks.get(0).getMenu();
+                Long menuId = menu.getId(); // ranks.get(0) - the best one
                 try {
-                    if (pollRepo.placeWinner(poll.getDate(), menuId) > 0) {
-                        debug(LOG, "Placed a winner [id: %d] to Poll %s", menuId, poll);
-                    }
+                    poll.setWinner(menu);
+                    Poll savedPoll = pollRepo.save(poll);
+                    debug(LOG, "Placed a winner [id: %d] to Poll %s", menuId, savedPoll);
                 } catch (Exception e) {
                     error(LOG, "A winner [id: %d] is not placed to Poll %s. Cause: ", menuId, poll, e.getMessage());
                 }

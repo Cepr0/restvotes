@@ -11,7 +11,6 @@ import org.springframework.util.Assert;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.domain.entity.Restaurant;
-import restvotes.web.view.MenuView;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -53,10 +52,10 @@ public class LinksHelper {
     }
     
     
-    public static Iterable<Link> getMenuViewLinks(MenuView menuView, Boolean finished) {
+    public static Iterable<Link> getMenuLinks(Menu menu, Boolean finished) {
         
-        LinkBuilder menuLinkBuilder = LINKS.linkForSingleResource(Menu.class, menuView.getId());
-        Link restaurantLink = LINKS.linkForSingleResource(Restaurant.class, menuView.getRestaurant().getId()).withRel(RESTAURANT);
+        LinkBuilder menuLinkBuilder = LINKS.linkForSingleResource(Menu.class, menu.getId());
+        Link restaurantLink = LINKS.linkForSingleResource(Restaurant.class, menu.getRestaurant().getId()).withRel(RESTAURANT);
 
         if (finished != null && !finished) {
             return Arrays.asList(

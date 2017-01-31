@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static restvotes.util.LinksHelper.getMenuViewLinks;
+import static restvotes.util.LinksHelper.getMenuLinks;
 import static restvotes.util.LinksHelper.getPollViewLinks;
 
 /**
@@ -54,7 +54,7 @@ public class PollView extends Poll implements Poll.Detailed {
             super.getMenus().add(menuView);
             
             // making menu resource and adding its links
-            content.add(new Resource<>(menuView, getMenuViewLinks(menuView, finished)));
+            content.add(new Resource<>(menuView, getMenuLinks(menuView, finished)));
         }
         
         menuResources = new Resources<>(content, getPollViewLinks(date, chosenMenuId, winner));

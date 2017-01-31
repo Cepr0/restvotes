@@ -12,13 +12,16 @@ import restvotes.domain.entity.Restaurant;
 /**
  * @author Cepro, 2017-01-01
  */
-@RepositoryRestResource(excerptProjection = Menu.Detailed.class)
+@SuppressWarnings("SpringDataJpaMethodInconsistencyInspection")
+@RepositoryRestResource//(excerptProjection = Menu.Detailed.class)
 public interface MenuRepo extends JpaRepository<Menu, Long> {
     
-    @SuppressWarnings("SpringDataJpaMethodInconsistencyInspection")
     @RestResource(exported = false)
     @Query("select m from Menu m where m.restaurant = ?1 order by m.id desc")
     Page<Menu.Detailed> getByRestaurant(Restaurant restaurant, Pageable pageable);
+    
+    @RestResource(exported = false)
+    Page<Menu> findByRestaurantOrderByIdDesc(Restaurant restaurant, Pageable pageable);
     
     // TODO Make exported getByRestaurantNameLikeIgnoreCase
     // TODO Make by Items search
