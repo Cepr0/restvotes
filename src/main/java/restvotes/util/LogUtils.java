@@ -51,6 +51,6 @@ public class LogUtils {
     }
     
     public enum LogType {
-        INFO, ERROR, DEBUG;
+        INFO, ERROR, DEBUG
     }
 }

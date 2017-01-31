@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import restvotes.domain.entity.User;
 import restvotes.service.UserService;
 
 import static org.springframework.http.HttpMethod.*;
@@ -28,7 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService);
+        // https://spring.io/guides/tutorials/react-and-spring-data-rest/#react-and-spring-data-rest-part-5
+        auth.userDetailsService(userService).passwordEncoder(User.PASSWORD_ENCODER);
     }
     
     @Override

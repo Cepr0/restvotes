@@ -33,13 +33,13 @@ public class PollEventHandler {
     private final @NonNull VoteRepo voteRepo;
     
     @HandleBeforeSave
-    public void handleBeforeSave(Poll poll) throws Exception {
+    public void handleBeforeSave(Poll poll) {
         checkClosedPoll(poll);
         checkRestaurantDuplicates(poll);
     }
     
     @HandleBeforeDelete
-    public void handleBeforeDelete(Poll poll) throws Exception {
+    public void handleBeforeDelete(Poll poll) {
         checkClosedPoll(poll);
     }
     
@@ -74,7 +74,7 @@ public class PollEventHandler {
     }
     
     private void checkRestaurantDuplicates(Poll poll) {
-    
+        // http://stackoverflow.com/a/30053822/5380322
         List<Menu> menus = poll.getMenus();
         boolean hasNoDuplicates = menus.stream().mapToLong(menu -> menu.getRestaurant().getId()).allMatch(new HashSet<>()::add);
         if (!hasNoDuplicates) {

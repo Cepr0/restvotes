@@ -42,7 +42,10 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
                 return authorizedUser.getUser();
             }
         }
-        return null;
+        
+        // If auth is null return a dummy User with ID = -1
+        // to avoid NPE if we need to invoke get().detId(), for ex. in UserProfileController
+        return (User) new User().setId(-1L);
      }
     
     // http://stackoverflow.com/a/16106304/5380322

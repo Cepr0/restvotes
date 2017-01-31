@@ -11,5 +11,6 @@ import restvotes.Messages;
 public class NotFoundException extends RuntimeException {
     
     public NotFoundException(String codeOrMessage, Object... args) {
-        super(Messages.getMessage(codeOrMessage, args));    }
+        super(Messages.getMessage(codeOrMessage, args));
+    }
 }

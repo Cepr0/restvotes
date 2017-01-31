@@ -2,13 +2,14 @@ package restvotes.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import restvotes.domain.base.LongId;
 
 import javax.persistence.*;
@@ -24,12 +25,14 @@ import static restvotes.domain.entity.User.Role.ROLE_USER;
  * <p>Email is unique field
  * @author Cepro, 2016-11-25
  */
-@AllArgsConstructor
 @Getter
 @Setter
 @Entity
 @Table(name = "users")
 public class User extends LongId {
+    
+    // https://spring.io/guides/tutorials/react-and-spring-data-rest/#react-and-spring-data-rest-part-5
+    public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
     
     @NotEmpty
     @Column(nullable = false)
@@ -61,6 +64,15 @@ public class User extends LongId {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime registered;
     
+    public User(String name, String email, String password, boolean enabled, Role role, LocalDateTime registered) {
+        this.name = name;
+        this.email = email;
+        setPassword(password);
+        this.enabled = enabled;
+        this.role = role;
+        this.registered = registered;
+    }
+    
     public User() {
         this(null, null, null, true, ROLE_USER, LocalDateTime.now());
     }
@@ -74,12 +86,18 @@ public class User extends LongId {
     }
     
     public User update(String name, String email, String password) {
-        if (!isEmpty(name)) this.name = name;
-        if (!isEmpty(email)) this.email = email;
-        if (!isEmpty(password)) this.password = password;
+        if (!isEmpty(name)) setName(name);
+        if (!isEmpty(email)) setEmail(email);
+        if (!isEmpty(password)) setPassword(password);
         return this;
     }
-    // TODO Add projection for UserProfile
+    
+    public User setPassword(String password) {
+        this.password = PASSWORD_ENCODER.encode(isEmpty(password) ? "" : password);
+        return this;
+    }
+    
+    // TODO Add projection for UserProfile?
     /**
      * Defines user roles
      */
