@@ -67,7 +67,9 @@ public class User extends LongId {
     public User(String name, String email, String password, boolean enabled, Role role, LocalDateTime registered) {
         this.name = name;
         this.email = email;
-        setPassword(password);
+        if (password != null) {
+            setPassword(password);
+        }
         this.enabled = enabled;
         this.role = role;
         this.registered = registered;

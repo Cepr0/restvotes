@@ -1,14 +1,15 @@
-package restvotes.web.eventHandler;
+package restvotes.rest.eventHandler;
 
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
-import restvotes.AppProperties;
+import restvotes.config.AppProperties;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.repository.VoteRepo;
+import restvotes.util.MessageUtil;
 import restvotes.util.exception.ForbiddenException;
 
 import java.time.LocalDate;
@@ -16,8 +17,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
-
-import static restvotes.util.LogUtils.debug;
 
 /**
  * @author Cepro, 2017-01-20
@@ -64,7 +63,7 @@ public class PollEventHandler {
     @HandleAfterDelete
     // @Cachevict(value = "polls", allEntries = true)
     public void handleAfter(Poll poll) {
-        debug(LOG, "Poll %s is changed", poll.toString());
+        LOG.debug(MessageUtil.getMessage("Poll %s is changed", poll.toString()));
     }
     
     private void checkClosedPoll(Poll poll) {

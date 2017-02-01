@@ -7,9 +7,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import restvotes.AuthorizedUser;
 import restvotes.domain.entity.User;
 import restvotes.repository.UserRepo;
+import restvotes.util.AuthorizedUser;
 import restvotes.util.exception.NotFoundException;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package restvotes.web.processor;
+package restvotes.rest.processor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Resource;

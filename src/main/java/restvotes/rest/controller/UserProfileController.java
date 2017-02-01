@@ -1,4 +1,4 @@
-package restvotes.web.controller;
+package restvotes.rest.controller;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -7,10 +7,10 @@ import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import restvotes.AuthorizedUser;
 import restvotes.domain.entity.User;
 import restvotes.repository.UserRepo;
-import restvotes.web.view.UserProfile;
+import restvotes.rest.view.UserProfile;
+import restvotes.util.AuthorizedUser;
 
 import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;

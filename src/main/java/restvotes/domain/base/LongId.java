@@ -3,7 +3,6 @@ package restvotes.domain.base;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,7 +15,6 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 @NoArgsConstructor(force = true)
 @Getter
-@ToString
 @EqualsAndHashCode(callSuper = false)
 public class LongId extends BaseEntity<Long> {
 

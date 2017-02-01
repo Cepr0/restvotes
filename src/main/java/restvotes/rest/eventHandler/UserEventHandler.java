@@ -1,4 +1,4 @@
-package restvotes.web.eventHandler;
+package restvotes.rest.eventHandler;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +12,8 @@ import restvotes.util.exception.NotFoundException;
 
 import java.util.Objects;
 
-import static restvotes.AuthorizedUser.get;
 import static restvotes.domain.entity.User.Role.ROLE_ADMIN;
+import static restvotes.util.AuthorizedUser.get;
 
 /**
  * @author Cepro, 2017-01-23

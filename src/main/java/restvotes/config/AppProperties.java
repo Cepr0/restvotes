@@ -1,4 +1,4 @@
-package restvotes;
+package restvotes.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 import static java.lang.String.format;
 import static java.time.LocalTime.parse;
-import static restvotes.util.LogUtils.error;
+import static restvotes.util.MessageUtil.getMessage;
 
 /**
  * @author Cepro, 2016-12-13
@@ -38,7 +38,7 @@ public class AppProperties {
         try {
             return parse(endOfVotingTime, DateTimeFormatter.ofPattern("H:mm"));
         } catch (Exception e) {
-            error(LOG, "engine.endOfVotingTime_is_not_parsed", endOfVotingTime);
+            LOG.error(getMessage("engine.endOfVotingTime_is_not_parsed", endOfVotingTime));
             return parse(END_OF_VOTING_TIME_DEFAULT);
         }
     }
@@ -47,7 +47,7 @@ public class AppProperties {
         try {
             return parse(newDayPollTime, DateTimeFormatter.ofPattern("H:mm"));
         } catch (Exception e) {
-            error(LOG, "engine.newDayPollTime_is_not_parsed", newDayPollTime);
+            LOG.error(getMessage("engine.newDayPollTime_is_not_parsed", newDayPollTime));
             return parse(NEW_DAY_POLL_TIME_DEFAULT);
         }
         

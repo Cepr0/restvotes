@@ -1,21 +1,21 @@
-package restvotes;
+package restvotes.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
-import static restvotes.AuthorizedUser.locale;
+import static restvotes.util.AuthorizedUser.locale;
 
 /**
  * @author Cepro, 2017-01-30
  */
 @Component
-public class Messages {
+public class MessageUtil {
 
     private static MessageSource source;
     
     @Autowired
-    private Messages(MessageSource messageSource) {
+    private MessageUtil(MessageSource messageSource) {
         source = messageSource;
     }
     

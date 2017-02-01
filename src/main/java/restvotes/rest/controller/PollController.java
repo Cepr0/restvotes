@@ -1,4 +1,4 @@
-package restvotes.web.controller;
+package restvotes.rest.controller;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -12,13 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import restvotes.AuthorizedUser;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.repository.PollRepo;
 import restvotes.repository.VoteRepo;
+import restvotes.rest.view.MenuView;
+import restvotes.util.AuthorizedUser;
 import restvotes.util.exception.NotFoundException;
-import restvotes.web.view.MenuView;
 
 import java.time.LocalDate;
 import java.util.Map;

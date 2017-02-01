@@ -1,4 +1,4 @@
-package restvotes;
+package restvotes.config;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

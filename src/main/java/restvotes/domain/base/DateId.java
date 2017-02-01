@@ -3,7 +3,6 @@ package restvotes.domain.base;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -16,7 +15,6 @@ import java.time.LocalDate;
  * @author Cepro, 2016-12-10
  */
 @MappedSuperclass
-@ToString
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class DateId extends BaseEntity<LocalDate> {

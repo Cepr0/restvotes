@@ -1,4 +1,4 @@
-package restvotes.web.processor;
+package restvotes.rest.processor;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -6,13 +6,13 @@ import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
-import restvotes.AuthorizedUser;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.repository.PollRepo;
 import restvotes.repository.VoteRepo;
-import restvotes.web.view.PollBriefView;
-import restvotes.web.view.PollView;
+import restvotes.rest.view.PollBriefView;
+import restvotes.rest.view.PollView;
+import restvotes.util.AuthorizedUser;
 
 import java.time.LocalDate;
 import java.util.Map;

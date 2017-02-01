@@ -5,11 +5,11 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import restvotes.AuthorizedUser;
 import restvotes.domain.entity.*;
 import restvotes.repository.PollRepo;
 import restvotes.repository.VoteRepo;
 import restvotes.service.VoteService;
+import restvotes.util.AuthorizedUser;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

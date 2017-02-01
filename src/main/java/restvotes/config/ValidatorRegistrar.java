@@ -1,4 +1,4 @@
-package restvotes;
+package restvotes.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;

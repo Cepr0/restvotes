@@ -1,4 +1,4 @@
-package restvotes;
+package restvotes.util;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;

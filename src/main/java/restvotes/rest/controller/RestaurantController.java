@@ -1,4 +1,4 @@
-package restvotes.web.controller;
+package restvotes.rest.controller;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

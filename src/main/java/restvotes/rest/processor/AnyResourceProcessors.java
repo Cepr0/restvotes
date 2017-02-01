@@ -1,5 +1,6 @@
-package restvotes.web.processor;
+package restvotes.rest.processor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 /**
  * @author Cepro, 2017-01-28
  */
+@Slf4j
 @Component
 public class AnyResourceProcessors {
     
@@ -17,6 +19,7 @@ public class AnyResourceProcessors {
     
         @Override
         public Resource<?> process(Resource<?> resource) {
+            LOG.debug("SingleResourceProcessor {}", resource.toString());
             return resource;
         }
     }
@@ -26,6 +29,7 @@ public class AnyResourceProcessors {
     
         @Override
         public Resources<Resource<?>> process(Resources<Resource<?>> resource) {
+            LOG.debug("MultiResourceProcessor {}", resource.toString());
             return resource;
         }
     }
@@ -35,6 +39,7 @@ public class AnyResourceProcessors {
     
         @Override
         public PagedResources<Resource<?>> process(PagedResources<Resource<?>> resource) {
+            LOG.debug("PagedResourceProcessor {}", resource.toString());
             return resource;
         }
     }
