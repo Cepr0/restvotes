@@ -12,7 +12,9 @@ import restvotes.service.VoteService;
 import restvotes.util.AuthorizedUser;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Cepro, 2017-01-19
@@ -42,7 +44,13 @@ public class VoteServiceImpl implements VoteService {
             // If current Poll is closed
             return null;
         }
-        
+    
+        List<Long> menuIds = poll.getMenus().stream().map(Menu::getId).collect(Collectors.toList());
+        if (!menuIds.contains(menu.getId())) {
+            // if menu does not belong to current Poll
+            return null;
+        }
+    
         User user = AuthorizedUser.get();
         Restaurant restaurant = menu.getRestaurant();
     
