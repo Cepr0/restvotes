@@ -8,8 +8,6 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import restvotes.domain.base.LongId;
 
 import javax.persistence.*;
@@ -18,6 +16,7 @@ import java.time.LocalDateTime;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 import static org.springframework.util.StringUtils.isEmpty;
+import static restvotes.config.SecurityConfig.PASSWORD_ENCODER;
 import static restvotes.domain.entity.User.Role.ROLE_USER;
 
 /**
@@ -30,9 +29,6 @@ import static restvotes.domain.entity.User.Role.ROLE_USER;
 @Entity
 @Table(name = "users")
 public class User extends LongId {
-    
-    // https://spring.io/guides/tutorials/react-and-spring-data-rest/#react-and-spring-data-rest-part-5
-    public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
     
     @NotEmpty
     @Column(nullable = false)
