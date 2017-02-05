@@ -20,7 +20,7 @@ import java.time.LocalDate;
 public class DateId extends BaseEntity<LocalDate> {
     
     @Id
-    @Column(columnDefinition = "date default now()", unique = true, nullable = false)
+    @Column(unique = true, nullable = false) //columnDefinition = "date default now()",
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
     

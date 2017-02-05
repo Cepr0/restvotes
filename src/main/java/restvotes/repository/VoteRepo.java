@@ -29,8 +29,10 @@ public interface VoteRepo extends CrudRepository<Vote, Long> {
     @Query("select v from Vote v join v.user u where u = ?1 and v.poll.date = ?2")
     Optional<Vote> getByUserAndDate(User user, LocalDate date);
     
+    // http://stackoverflow.com/a/20127110/5380322
     @RestResource(exported = false)
-    @Query("select v.menu as menu, count(v) as rank from Vote v where v.poll.date = ?1 group by v.menu order by count(v) desc")
+    // @Query("select v.menu as menu, count(v) as rank from Vote v where v.poll.date = ?1 group by v.menu order by count(v) desc")
+    @Query("select m as menu, count(v) as rank from Vote v inner join v.menu m where v.poll.date = ?1 group by m order by count(v) desc")
     List<Vote.Rank> getRanksByDate(LocalDate date);
     
     @RestResource(exported = false)

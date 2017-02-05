@@ -53,6 +53,10 @@ public class RepoRestConfig extends RepositoryRestConfigurerAdapter {
 
         // objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
+        // Hibernate5Module hibernate5Module = new Hibernate5Module();
+        // hibernate5Module.enable(Hibernate5Module.Feature.FORCE_LAZY_LOADING);
+        // objectMapper.registerModule(hibernate5Module);
+
         super.configureJacksonObjectMapper(objectMapper);
     }
     

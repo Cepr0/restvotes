@@ -46,8 +46,8 @@ public class DemoData implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
     
-        if (userRepo.findById(1L).isPresent()) {
-            LOG.info("Demo data is already present. Skipping...");
+        if (userRepo.count() > 0) {
+            LOG.info("Data is already present. Skipping...");
             return;
         }
     
