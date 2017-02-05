@@ -1,0 +1,62 @@
+entity Poll {
+	date LocalDate
+    menus Menu
+    winner Menu
+}
+
+entity Menu {
+	restaurant Restaurant
+    items MenuItem
+}
+
+entity MenuItem {
+	description String
+    cost BigDecimal
+}
+
+entity Restaurant {
+	name String
+    address String
+    url String
+    phone String
+}
+
+entity User {
+	name String
+    email String
+    password String
+    enabled Boolean
+    role Role
+    registered LocalDateTime
+}
+
+enum Role {
+    ROLE_USER, ROLE_ADMIN
+}
+
+entity Vote {
+	poll Poll
+    menu Menu
+    restaurant Restaurant
+    user User
+    registered LocalDateTime
+}
+
+relationship ManyToMany { 
+	Poll{menus}	to Menu
+}
+
+relationship ManyToOne { 
+	Menu{restaurant} to Restaurant
+}
+
+relationship OneToMany { 
+	Menu{items} to MenuItem
+}
+
+relationship ManyToOne { 
+	Vote{poll} to Poll,
+    Vote{menu} to Menu,
+	Vote{restaurant} to Restaurant,
+	Vote{user} to User
+}    
