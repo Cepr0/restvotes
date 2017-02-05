@@ -117,43 +117,43 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 
     GET [http://localhost:8080/api]()
  
-*Response body:*
+    *Response body:*
 
-    {
-      "_links": {
-        "users": {
-          "href": "http://localhost:8080/api/users{?page,size,sort}",
-          "templated": true,
-          "title": "Пользователи"
-        },
-        "menus": {
-          "href": "http://localhost:8080/api/menus{?page,size,sort,projection}",
-          "templated": true,
-          "title": "Список меню"
-        },
-        "restaurants": {
-          "href": "http://localhost:8080/api/restaurants{?page,size,sort}",
-          "templated": true,
-          "title": "Рестораны"
-        },
-        "polls": {
-          "href": "http://localhost:8080/api/polls{?page,size,sort}",
-          "templated": true,
-          "title": "Опросы"
-        },
-        "currentPoll": {
-          "href": "http://localhost:8080/api/polls/current",
-          "title": "Текущий опрос"
-        },
-        "userProfile": {
-          "href": "http://localhost:8080/api/userProfile",
-          "title": "Профиль пользователя"
-        },
-        "profile": {
-          "href": "http://localhost:8080/api/profile"
+        {
+          "_links": {
+            "users": {
+              "href": "http://localhost:8080/api/users{?page,size,sort}",
+              "templated": true,
+              "title": "Пользователи"
+            },
+            "menus": {
+              "href": "http://localhost:8080/api/menus{?page,size,sort,projection}",
+              "templated": true,
+              "title": "Список меню"
+            },
+            "restaurants": {
+              "href": "http://localhost:8080/api/restaurants{?page,size,sort}",
+              "templated": true,
+              "title": "Рестораны"
+            },
+            "polls": {
+              "href": "http://localhost:8080/api/polls{?page,size,sort}",
+              "templated": true,
+              "title": "Опросы"
+            },
+            "currentPoll": {
+              "href": "http://localhost:8080/api/polls/current",
+              "title": "Текущий опрос"
+            },
+            "userProfile": {
+              "href": "http://localhost:8080/api/userProfile",
+              "title": "Профиль пользователя"
+            },
+            "profile": {
+              "href": "http://localhost:8080/api/profile"
+            }
+          }
         }
-      }
-    }
 
 #### /api/userProfile
 
