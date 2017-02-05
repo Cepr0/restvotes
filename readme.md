@@ -275,6 +275,152 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
     *   **finished** - признак открытытого или завершенного Опроса
     *   **current** - признак текущего Опроса     
     
+*   **GET** - Получение текущего Опроса
+    
+    POST [http://localhost:8080/api/polls/current]()
+    
+        {
+          "date": "2017-02-06",
+          "finished": false,
+          "current": true,
+          "_embedded": {
+            "menus": [
+              {
+                "chosen": true,
+                "rank": 3,
+                "winner": false,
+                "restaurant": {
+                  "name": "Rest1",
+                  "address": "Address1",
+                  "url": "http://rest1.com",
+                  "phone": "1234567890"
+                },
+                "items": [
+                  {
+                    "description": "Description1 M4",
+                    "cost": 16
+                  },
+                  {
+                    "description": "Description2 M4",
+                    "cost": 21
+                  },
+                  {
+                    "description": "Description3 M4",
+                    "cost": 11
+                  }
+                ],
+                "price": 48,
+                "_links": {
+                  "self": {
+                    "href": "https://restvotes.herokuapp.com/api/menus/32"
+                  },
+                  "restaurant": {
+                    "href": "https://restvotes.herokuapp.com/api/restaurants/2",
+                    "title": "Ресторан"
+                  },
+                  "vote": {
+                    "href": "https://restvotes.herokuapp.com/api/menus/32/vote",
+                    "title": "Голосовать"
+                  }
+                }
+              },
+              {
+                "chosen": false,
+                "rank": 3,
+                "winner": false,
+                "restaurant": {
+                  "name": "Rest2",
+                  "address": "Address2",
+                  "url": "http://rest2.com",
+                  "phone": "2345678901"
+                },
+                "items": [
+                  {
+                    "description": "Description1 M5",
+                    "cost": 16.5
+                  },
+                  {
+                    "description": "Description2 M5",
+                    "cost": 21.5
+                  },
+                  {
+                    "description": "Description3 M5",
+                    "cost": 11.5
+                  }
+                ],
+                "price": 49.5,
+                "_links": {
+                  "self": {
+                    "href": "https://restvotes.herokuapp.com/api/menus/42"
+                  },
+                  "restaurant": {
+                    "href": "https://restvotes.herokuapp.com/api/restaurants/12",
+                    "title": "Ресторан"
+                  },
+                  "vote": {
+                    "href": "https://restvotes.herokuapp.com/api/menus/42/vote",
+                    "title": "Голосовать"
+                  }
+                }
+              },
+              {
+                "chosen": false,
+                "rank": 2,
+                "winner": false,
+                "restaurant": {
+                  "name": "Rest3",
+                  "address": "Address3",
+                  "url": "http://rest3.com",
+                  "phone": "3456789012"
+                },
+                "items": [
+                  {
+                    "description": "Description1 M6",
+                    "cost": 16.9
+                  },
+                  {
+                    "description": "Description2 M6",
+                    "cost": 21.9
+                  },
+                  {
+                    "description": "Description3 M6",
+                    "cost": 11.9
+                  }
+                ],
+                "price": 50.7,
+                "_links": {
+                  "self": {
+                    "href": "https://restvotes.herokuapp.com/api/menus/52"
+                  },
+                  "restaurant": {
+                    "href": "https://restvotes.herokuapp.com/api/restaurants/22",
+                    "title": "Ресторан"
+                  },
+                  "vote": {
+                    "href": "https://restvotes.herokuapp.com/api/menus/52/vote",
+                    "title": "Голосовать"
+                  }
+                }
+              }
+            ]
+          },
+          "_links": {
+            "self": {
+              "href": "https://restvotes.herokuapp.com/api/polls/2017-02-06"
+            },
+            "userChoice": {
+              "href": "https://restvotes.herokuapp.com/api/menus/32",
+              "title": "Текущий выбор пользователя"
+            }
+          }
+        }    
+
+    *   **chosen** - выбранное пользователем меню
+    *   **rank** - кол-во проголосоввывших за данное меню
+    *   **winner** - признак победителя (для завершившегося Опроса)
+    *   **vote** - ссылка для голосования за данное меню (команда PUT - см. ниже)
+    *   **userChoice** - ссылка на Меню - текущий выбор пользователя     
+
 *   **POST** - Создание нового запроса. Доступно только администраторам
 
     POST [http://localhost:8080/api/polls]()
@@ -305,7 +451,6 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
             "http://localhost:8080/api/menus/22"
             ]
         }
-
 
 #### /api/menus
 
