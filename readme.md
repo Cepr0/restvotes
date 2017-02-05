@@ -312,14 +312,14 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
                 "price": 48,
                 "_links": {
                   "self": {
-                    "href": "https://restvotes.herokuapp.com/api/menus/32"
+                    "href": "http://localhost:8080/api/menus/32"
                   },
                   "restaurant": {
-                    "href": "https://restvotes.herokuapp.com/api/restaurants/2",
+                    "href": "http://localhost:8080/api/restaurants/2",
                     "title": "Ресторан"
                   },
                   "vote": {
-                    "href": "https://restvotes.herokuapp.com/api/menus/32/vote",
+                    "href": "http://localhost:8080/api/menus/32/vote",
                     "title": "Голосовать"
                   }
                 }
@@ -351,14 +351,14 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
                 "price": 49.5,
                 "_links": {
                   "self": {
-                    "href": "https://restvotes.herokuapp.com/api/menus/42"
+                    "href": "http://localhost:8080/api/menus/42"
                   },
                   "restaurant": {
-                    "href": "https://restvotes.herokuapp.com/api/restaurants/12",
+                    "href": "http://localhost:8080/api/restaurants/12",
                     "title": "Ресторан"
                   },
                   "vote": {
-                    "href": "https://restvotes.herokuapp.com/api/menus/42/vote",
+                    "href": "http://localhost:8080/api/menus/42/vote",
                     "title": "Голосовать"
                   }
                 }
@@ -390,14 +390,14 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
                 "price": 50.7,
                 "_links": {
                   "self": {
-                    "href": "https://restvotes.herokuapp.com/api/menus/52"
+                    "href": "http://localhost:8080/api/menus/52"
                   },
                   "restaurant": {
-                    "href": "https://restvotes.herokuapp.com/api/restaurants/22",
+                    "href": "http://localhost:8080/api/restaurants/22",
                     "title": "Ресторан"
                   },
                   "vote": {
-                    "href": "https://restvotes.herokuapp.com/api/menus/52/vote",
+                    "href": "http://localhost:8080/api/menus/52/vote",
                     "title": "Голосовать"
                   }
                 }
@@ -406,10 +406,10 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
           },
           "_links": {
             "self": {
-              "href": "https://restvotes.herokuapp.com/api/polls/2017-02-06"
+              "href": "http://localhost:8080/api/polls/2017-02-06"
             },
             "userChoice": {
-              "href": "https://restvotes.herokuapp.com/api/menus/32",
+              "href": "http://localhost:8080/api/menus/32",
               "title": "Текущий выбор пользователя"
             }
           }
