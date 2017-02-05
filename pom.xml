@@ -52,10 +52,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Dev Tools-->
+        <!-- http://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <!--<optional>true</optional>-->
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -67,6 +69,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- The HAL Browser -->
+        <!-- http://docs.spring.io/spring-data/rest/docs/current/reference/html/#_the_hal_browser -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-rest-hal-browser</artifactId>
         </dependency>
 
         <!-- JDK 8 DateTime support for Jackson -->
@@ -97,7 +106,6 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>org.hibernate</groupId>
