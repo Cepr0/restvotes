@@ -39,7 +39,7 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 *   Lombok
 *   Maven
 
-Приложение разработано на основе Spring Data REST, что позволяет реализовать REST API с использованием технологии [HATEOAS](http://spring-projects.ru/understanding/hateoas/) - Hypermedia as the Engine of Application State  
+Приложение разработано на основе Spring Data REST, что позволяет реализовать REST API с использованием технологии [HATEOAS](http://spring-projects.ru/understanding/hateoas/) - Hypermedia as the Engine of Application State.  
 
 ### Структура данных
 
@@ -47,24 +47,25 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 [data-structure]: data-structure.png "Структура данных"
 
 #### Poll - Опрос
-Центральный объект сервиса - задает голосование за лучшее меню/ресторан в течение одного дня. Содержит ссылки на список объектов типа Меню (см. ниже), за которые идет голосование, и ссылку на победившее Меню (для завершенного опроса). 
+Центральный объект приложения - описывает голосование за лучшее меню/ресторан в течение одного дня. 
+Содержит ссылки на **список** объектов типа Меню (см. ниже), за которые идет голосование, и ссылку на победившее Меню (для завершенного опроса). 
 
 В течение дня может быть только один Опрос.
 Опрос не может содержать несколько Меню одного и того же Ресторана.
-Нельзя создать Опрос за прошедший день или за текущий день, если голосование уже завершилось (по умолчанию 11-00).
+Нельзя создать Опрос за прошедший день или за текущий день, если голосование уже завершилось (по умолчанию 11:00).
 Нельзя удалить или изменить опрос, в котором пользователи уже голосовали.
 
 Голосовать можно только в рамках текущего незавершенного Опроса.
-Опрос открыт до установленного времени (по умолчанию - до 11-00).
+Опрос открыт до установленного времени (по умолчанию - до 11:00).
 Текущим опросом считается первый незаврешенный либо последний завершенный Опрос. 
   
 #### Menu - Меню
-Содержит ссылку на объект Ресторан (см. ниже) и на список объектов MenuItem (пункт меню).
+Содержит ссылку на объект Ресторан (см. ниже) и на **список** объектов MenuItem (пункт меню).
 
 Одно и тоже меню может входить в разные опросы. 
 
 #### MenuItem - Пункт меню
-Описывает блюдо и его цену
+Описывает блюдо и его цену.
 
 Блюда существуют только в пределах Меню, в которое они входят. 
 
@@ -78,12 +79,12 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 
 Нельзя зарегистрировать двух пользователей с одним и тем же адресом электронной почты.
 
-Администраторы могут создавать/редактировать Опросы, Меню, Блюда, Рестораны и др. пользователей.
+Администраторы могут создавать/редактировать: Опросы, Меню, Блюда, Рестораны и др. пользователей, и выполнять действия доступные обычным Пользователям.
 
-Пользователи могут только зарегистрироваться на сервисе, редактировать свой профиль и голосовать за выбранное Меню/Ресторан.
+Пользователи могут: зарегистрироваться на сервисе, редактировать свой профиль и голосовать за выбранное Меню/Ресторан.
 
 #### Vote - Голос
-Предназначен для регистрации голоса Пользователя, который он отдал за то или другое Меню/Ресторан в течение незавершенного Опроса.
+Предназначен для регистрации голоса Пользователя, который он отдал за выбранное Меню/Ресторан в течение текущего незавершенного Опроса.
 
 Голосовать можно только в течение незавершенного текущего Опроса.
 Если Пользователь голосует второй раз в течение открытого Опроса, то его предыдущий голос перезаписывается.
@@ -95,12 +96,12 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 2.  
 3.  
 
-#### Начало нового дня (по умолчанию - 9-00)
+#### Начало нового дня (по умолчанию - 9:00)
 1.  
 2.  
 3.  
 
-#### Завершение голосования (по умолчанию - 9-00)
+#### Завершение голосования (по умолчанию - 11:00)
 1.  
 2.  
 3.  
@@ -110,47 +111,49 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 #### /api
 
 Выводит список доступных объектов: Опросы, Меню, Рестораны, Пользователи
+
+Команды:
+*   **GET** - Доступно всем посетителям
+
+    GET [http://localhost:8080/api]()
  
 *Response body:*
 
     {
       "_links": {
         "users": {
-          "href": "https://restvotes.herokuapp.com/api/users{?page,size,sort}",
+          "href": "http://localhost:8080/api/users{?page,size,sort}",
           "templated": true,
           "title": "Пользователи"
         },
         "menus": {
-          "href": "https://restvotes.herokuapp.com/api/menus{?page,size,sort,projection}",
+          "href": "http://localhost:8080/api/menus{?page,size,sort,projection}",
           "templated": true,
           "title": "Список меню"
         },
         "restaurants": {
-          "href": "https://restvotes.herokuapp.com/api/restaurants{?page,size,sort}",
+          "href": "http://localhost:8080/api/restaurants{?page,size,sort}",
           "templated": true,
           "title": "Рестораны"
         },
         "polls": {
-          "href": "https://restvotes.herokuapp.com/api/polls{?page,size,sort}",
+          "href": "http://localhost:8080/api/polls{?page,size,sort}",
           "templated": true,
           "title": "Опросы"
         },
         "currentPoll": {
-          "href": "https://restvotes.herokuapp.com/api/polls/current",
+          "href": "http://localhost:8080/api/polls/current",
           "title": "Текущий опрос"
         },
         "userProfile": {
-          "href": "https://restvotes.herokuapp.com/api/userProfile",
+          "href": "http://localhost:8080/api/userProfile",
           "title": "Профиль пользователя"
         },
         "profile": {
-          "href": "https://restvotes.herokuapp.com/api/profile"
+          "href": "http://localhost:8080/api/profile"
         }
       }
     }
-
-Команды:
-*   **GET** - Доступно всем посетителям
 
 #### /api/userProfile
 
@@ -158,6 +161,8 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 
 Команды:
 *   **GET** - Получение профиля. Доступно авторизованному пользователю.
+
+    GET [http://localhost:8080/api/userProfile]()
 
     *Response body:*
 
@@ -174,6 +179,8 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
         }
 
 *   **POST** - Регистрация нового пользователя. Доступно всем посетителям
+    
+    POST [http://localhost:8080/api/userProfile]()
 
     *Request body:*
 
@@ -184,6 +191,8 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
         }
 
 *   **PUT** - Редактирование профиля. Доступно авторизованному пользователю (тело запроса аналогично POST).
+    
+    PUT [http://localhost:8080/api/userProfile]()
 
 #### /api/polls
 
@@ -192,8 +201,10 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 Команды:
 *   **GET** - Простмотр всех опросов. Доступно авторизованному пользователю.
 
-    *Response body:*
-
+    GET [http://localhost:8080/api/polls]()
+        
+        *Response body:*
+        
         {
           "_embedded": {
             "polls": [
@@ -266,7 +277,8 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
     
 *   **POST** - Создание нового запроса. Доступно только администраторам
 
-        POST: http://localhost:8080/api/polls/
+    POST [http://localhost:8080/api/polls]()
+    
     *Request body:*
 
         {
@@ -278,11 +290,12 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
             ]
         }
 
-    *   "http://localhost:8080/api/menus/{id}" - ссылка на Меню, включаемое в Опрос (см. ниже).         
+    *   "**http://localhost:8080/api/menus/{id}**" - ссылка на Меню, включаемое в Опрос (см. ниже).         
     
 *   **PUT** - Редактирование опроса. Доступно только администраторам
     
-        PUT: http://localhost:8080/api/polls/2017-02-06
+    PUT [http://localhost:8080/api/polls/2017-02-06]()
+        
     *Request body:*
 
         {
@@ -314,6 +327,11 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 
 ### Запуск приложения
 
+Для запуска приложения требуется установленные [Java](https://java.com), [Git](https://git-scm.com/) и [Maven](https://maven.apache.org/).
+В командной строке выполнить команды: 
+
+    git clone https://github.com/Cepr0/restvotes.git
+    cd restvotes
     mvn spring-boot:run
 
 ## Демо приложения на Heroku 
@@ -321,4 +339,4 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 [Demo](https://restvotes.herokuapp.com/api)
 
 Для удобства работы с приложением в браузере, в приложение добавлен [The HAL Browser](http://docs.spring.io/spring-data/rest/docs/current/reference/html/#_the_hal_browser).
-Полный фунционал приложения можно протестировать в 
+Полный фунционал приложения лучше тестировать в приложении [Postman](https://www.getpostman.com/). 

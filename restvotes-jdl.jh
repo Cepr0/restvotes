@@ -42,21 +42,16 @@ entity Vote {
     registered LocalDateTime
 }
 
-relationship ManyToMany { 
-	Poll{menus}	to Menu
-}
-
-relationship ManyToOne { 
-	Menu{restaurant} to Restaurant
-}
-
-relationship OneToMany { 
+relationship OneToMany {
 	Menu{items} to MenuItem
 }
 
-relationship ManyToOne { 
+relationship ManyToOne {
 	Vote{poll} to Poll,
     Vote{menu} to Menu,
 	Vote{restaurant} to Restaurant,
-	Vote{user} to User
-}    
+	Vote{user} to User,
+    Poll{menus}	to Menu,
+    Poll{winner} to Menu,
+    Menu{restaurant} to Restaurant
+}
