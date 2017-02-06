@@ -47,9 +47,6 @@ public class Engine {
         LocalTime newDayPollTime = properties.getNewDayPollTimeValue();
         LOG.info(getMessage("Automatic Poll creation time is set to %s", newDayPollTime));
     
-        // LOG.info(getMessage("Trying to create a new Poll by copying previous one...");
-        // pollService.copyPrevious();
-        //
         LOG.info(getMessage("Checking previous Polls if they closed..."));
     
         LocalDate today = LocalDate.now();
