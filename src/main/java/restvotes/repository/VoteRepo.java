@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
+import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.domain.entity.User;
 import restvotes.domain.entity.Vote;
@@ -42,4 +43,6 @@ public interface VoteRepo extends CrudRepository<Vote, Long> {
     
     @RestResource(exported = false)
     Integer countByPoll(Poll poll);
+    
+    Optional<Vote> findFirstByMenu(Menu menu);
 }

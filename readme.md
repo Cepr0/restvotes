@@ -57,7 +57,7 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 
 Голосовать можно только в рамках текущего незавершенного Опроса.
 Опрос открыт до установленного времени (по умолчанию - до 11:00).
-Текущим опросом считается первый незаврешенный либо последний завершенный Опрос. 
+Текущим опросом считается первый незавершенный, либо последний завершенный Опрос. 
   
 #### Menu - Меню
 Содержит ссылку на объект Ресторан (см. ниже) и на **список** объектов MenuItem (пункт меню).
@@ -272,7 +272,7 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
           }
         }
 
-    *   **finished** - признак открытытого или завершенного Опроса
+    *   **finished** - признак завершенного Опроса
     *   **current** - признак текущего Опроса     
     
 *   **GET** - Получение текущего Опроса
@@ -415,9 +415,9 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
           }
         }    
 
-    *   **chosen** - выбранное пользователем меню
-    *   **rank** - кол-во проголосоввывших за данное меню
-    *   **winner** - признак победителя (для завершившегося Опроса)
+    *   **chosen** - меню, за которое проголосовал пользователь
+    *   **rank** - кол-во проголосовавших за данное меню
+    *   **winner** - признак победившего Меню (для завершившегося Опроса)
     *   **vote** - ссылка для голосования за данное меню (команда PUT - см. ниже)
     *   **userChoice** - ссылка на Меню - текущий выбор пользователя     
 
@@ -484,4 +484,4 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 [Demo](https://restvotes.herokuapp.com/api)
 
 Для удобства работы с приложением в браузере, в приложение добавлен [The HAL Browser](http://docs.spring.io/spring-data/rest/docs/current/reference/html/#_the_hal_browser).
-Полный фунционал приложения лучше тестировать в приложении [Postman](https://www.getpostman.com/). 
+Полный функционал приложения лучше тестировать в приложении [Postman](https://www.getpostman.com/). 
