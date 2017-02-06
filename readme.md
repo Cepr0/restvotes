@@ -489,4 +489,6 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 [Demo](https://restvotes.herokuapp.com/api)
 
 Для удобства работы с приложением в браузере, в приложение добавлен [The HAL Browser](http://docs.spring.io/spring-data/rest/docs/current/reference/html/#_the_hal_browser).
-Полный функционал лучше тестировать в приложении [Postman](https://www.getpostman.com/). 
+Полный функционал лучше тестировать в приложении [Postman](https://www.getpostman.com/).
+
+Демо пользователи: Frodo Baggins (Администратор), frodo@restvotes.com, пароль: 123456 и др. (см. /api/users)
