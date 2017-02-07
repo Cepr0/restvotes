@@ -6,3 +6,9 @@ jdk: oraclejdk8
 cache:
   directories:
   - $HOME/.m2
+
+#https://docs.travis-ci.com/user/deployment/heroku/
+deploy:
+  provider: heroku
+  api_key:
+    secure: "CY1yIBfWP9YQw7fRWX4Kl9KYvZuC/eXMHJq1FshTKuuv6ePC0NlsMhiJXArL08aOyHYICm9bSn94wPpYeh73rRBEb9pd01Cmvh9zZ6qbRgv6Rz7s9qWFEAxHoraqIP5xMq3yQWD8k3s+RK2coEE6idtI0y8HN90UhQubEqc5Pm4kG0lPNxpM/2G2qvpxmSNEcvnrwUsR9je7f3NR8DQ/A7HzFZwUdiU1acAPvjCygs43SVfHMpbr6PEQcztLukMyijSZ7egXPr6FfoOOt+j8+2WdgZIGK6s8ca2l/it2AEIet2Y6PtXIap1vA6oDv3lrnRUXvDAz6jhc91FfuDEw2wHUlhTDkVSnth9YRtogK6mDW/6IQGweKcjqRiygv6kyeJhY1DSYUhaZeF4cUh6sGkW4SNvDTB/gjKaCGw4aJVIrl/PXlI0rp61sfgC5lZWIZHk5kE99qP8UrFf9mCiLlKLb0SGoWP2JUYL4oa40u08GcYfRZI/BTemy2o416pvzDdOVUKP/I5x1IZf0mRHm+fDqvN84+NnU4Hhk6NOczVy4E83EnFAZyfbyf2XKQHQQdZNCDVu5zD6bS4//se6o4ZxsygLIn2Q82EEUu6VAlOFfyZzG9Isr4GNRvXB2cenSXJJ3W3dgID0KQbMTj2lbXcuZrt/YhMKt/qXKYSz49tU="
