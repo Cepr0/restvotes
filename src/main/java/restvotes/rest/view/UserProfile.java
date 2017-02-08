@@ -18,13 +18,13 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 public class UserProfile implements Identifiable<Long> {
 
     @JsonIgnore
-    Long id;
-
-    String name;
-
-    String password;
-
-    String email;
+    private Long id;
+    
+    private String name;
+    
+    private String password;
+    
+    private String email;
 
     public UserProfile() {
     }

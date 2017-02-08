@@ -1,4 +1,4 @@
-package restvotes.rest.eventHandler;
+package restvotes.rest.handler;
 
 import lombok.AllArgsConstructor;
 import lombok.NonNull;

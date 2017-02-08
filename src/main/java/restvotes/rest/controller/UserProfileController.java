@@ -29,7 +29,7 @@ public class UserProfileController {
     private final @NonNull UserRepo userRepo;
     
     @GetMapping
-    ResponseEntity<?> get() {
+    public ResponseEntity<?> get() {
 
         return userRepo.findById(AuthorizedUser.get().getId())
                 .map(profile -> ok(new Resource<>(new UserProfile(profile), getUserProfileLink())))
@@ -38,7 +38,7 @@ public class UserProfileController {
     
     @PostMapping
     @Transactional
-    ResponseEntity<?> signUp(@RequestBody UserProfile profile) {
+    public ResponseEntity<?> signUp(@RequestBody UserProfile profile) {
         
         User user = userRepo.saveAndFlush(new User(profile.getName(), profile.getEmail(), profile.getPassword()));
         return ok(new Resource<>(new UserProfile(user), getUserProfileLink()));
@@ -46,7 +46,7 @@ public class UserProfileController {
     
     @RequestMapping(method = {PUT, PATCH})
     @Transactional
-    ResponseEntity<?> update(@RequestBody UserProfile profile) {
+    public ResponseEntity<?> update(@RequestBody UserProfile profile) {
         
         return userRepo.findById(AuthorizedUser.get().getId())
                 .map(user -> {
@@ -58,7 +58,7 @@ public class UserProfileController {
     
     @DeleteMapping
     @Transactional
-    ResponseEntity<?> delete() {
+    public ResponseEntity<?> delete() {
         if (userRepo.disable(AuthorizedUser.get().getId()) > 0) {
             
             return ok().build();

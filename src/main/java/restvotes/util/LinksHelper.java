@@ -46,7 +46,7 @@ public class LinksHelper {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private LinksHelper(RepositoryEntityLinks entityLinks, RepositoryRestConfiguration configuration) {
-        LINKS = entityLinks;
+        LinksHelper.LINKS = entityLinks;
         Assert.notNull(configuration, "RepositoryRestConfiguration must not be null!");
         LinksHelper.configuration = configuration;
     }

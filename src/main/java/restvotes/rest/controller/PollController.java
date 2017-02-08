@@ -45,14 +45,14 @@ public class PollController {
     // http://stackoverflow.com/a/21362291/5380322
 
     @GetMapping
-    ResponseEntity<PagedResources<Resource<Poll.Brief>>> getPolls(Pageable pageable) {
+    public ResponseEntity<PagedResources<Resource<Poll.Brief>>> getPolls(Pageable pageable) {
 
         PagedResources<Resource<Poll.Brief>> resource = assembler.toResource(pollRepo.getAll(pageable));
         return ResponseEntity.ok(resource);
     }
 
     @GetMapping("/{date}/menus/{id}")
-    ResponseEntity<?> getPollMenu(@PathVariable("date") Poll poll, @PathVariable("id") Menu menu) {
+    public ResponseEntity<?> getPollMenu(@PathVariable("date") Poll poll, @PathVariable("id") Menu menu) {
     
         if (poll == null) {
             throw new NotFoundException("poll.not_found");

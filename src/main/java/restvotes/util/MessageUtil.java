@@ -16,7 +16,7 @@ public class MessageUtil {
     
     @Autowired
     private MessageUtil(MessageSource messageSource) {
-        source = messageSource;
+        MessageUtil.source = messageSource;
     }
     
     public static MessageSource getSource() {

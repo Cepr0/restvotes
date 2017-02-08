@@ -37,7 +37,7 @@ public class RestaurantController {
     private final @NonNull MenuRepo menuRepo;
     
     @GetMapping("/menus")
-    ResponseEntity<?> getMenus(@PathVariable("id")Restaurant restaurant, Pageable pageable) {
+    public ResponseEntity<?> getMenus(@PathVariable("id")Restaurant restaurant, Pageable pageable) {
     
         if (restaurant == null) {
             throw new NotFoundException("restaurant.not_found");
