@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Restaurant;
 import restvotes.repository.MenuRepo;
+import restvotes.util.MessageService;
 import restvotes.util.exception.NotFoundException;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -32,6 +33,8 @@ import static restvotes.util.LinksHelper.getMenuLinks;
 @RequestMapping("/restaurants/{id}")
 public class RestaurantController {
     
+    private final @NonNull MessageService msgService;
+    
     private final @NonNull PagedResourcesAssembler<Menu> pagedResourcesAssembler;
     
     private final @NonNull MenuRepo menuRepo;
@@ -40,7 +43,7 @@ public class RestaurantController {
     public ResponseEntity<?> getMenus(@PathVariable("id")Restaurant restaurant, Pageable pageable) {
     
         if (restaurant == null) {
-            throw new NotFoundException("restaurant.not_found");
+            throw new NotFoundException(msgService.userMessage("restaurant.not_found"));
         }
         
         // TODO Make it without pages?
@@ -53,11 +56,11 @@ public class RestaurantController {
     @RequestMapping(path = "/menus", method = {POST, PUT})
     public ResponseEntity<?> putMenu(@PathVariable("id")Restaurant restaurant, @RequestBody Menu menu) {
         if (restaurant == null) {
-            throw new NotFoundException("restaurant.cannot_be_null");
+            throw new NotFoundException(msgService.userMessage("restaurant.cannot_be_null"));
         }
         
         if (menu == null) {
-            throw new NotFoundException("menu.cannot_be_null");
+            throw new NotFoundException(msgService.userMessage("menu.cannot_be_null"));
         }
         // TODO Move this to Service?
         Menu savedMenu = menuRepo.saveAndFlush(menu.setRestaurant(restaurant));

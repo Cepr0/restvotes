@@ -1,27 +1,32 @@
 package restvotes.config;
 
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import restvotes.util.MessageService;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import static java.lang.String.format;
 import static java.time.LocalTime.parse;
-import static restvotes.util.MessageUtil.getMessage;
 
 /**
  * @author Cepro, 2016-12-13
  */
+@RequiredArgsConstructor
 @Getter
 @Setter
 @Slf4j
 @Component
 @ConfigurationProperties(prefix = "restvotes")
 public class AppProperties {
+    
+    private final @NonNull MessageService msgService;
     
     private static final String END_OF_VOTING_TIME_DEFAULT = "11:00";
     private static final String NEW_DAY_POLL_TIME_DEFAULT = "9:00";
@@ -38,7 +43,7 @@ public class AppProperties {
         try {
             return parse(endOfVotingTime, DateTimeFormatter.ofPattern("H:mm"));
         } catch (Exception e) {
-            LOG.error(getMessage("engine.endOfVotingTime_is_not_parsed", endOfVotingTime));
+            LOG.error(msgService.logMessage("engine.endOfVotingTime_is_not_parsed", endOfVotingTime));
             return parse(END_OF_VOTING_TIME_DEFAULT);
         }
     }
@@ -47,7 +52,7 @@ public class AppProperties {
         try {
             return parse(newDayPollTime, DateTimeFormatter.ofPattern("H:mm"));
         } catch (Exception e) {
-            LOG.error(getMessage("engine.newDayPollTime_is_not_parsed", newDayPollTime));
+            LOG.error(msgService.logMessage("engine.newDayPollTime_is_not_parsed", newDayPollTime));
             return parse(NEW_DAY_POLL_TIME_DEFAULT);
         }
         

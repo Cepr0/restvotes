@@ -18,6 +18,7 @@ import restvotes.repository.PollRepo;
 import restvotes.repository.VoteRepo;
 import restvotes.rest.view.MenuView;
 import restvotes.util.AuthorizedUser;
+import restvotes.util.MessageService;
 import restvotes.util.exception.NotFoundException;
 
 import java.time.LocalDate;
@@ -32,7 +33,9 @@ import static restvotes.util.LinksHelper.getMenuLinks;
 @RepositoryRestController
 @RequestMapping("/polls")
 public class PollController {
-
+    
+    private final @NonNull MessageService msgService;
+    
     private final @NonNull PagedResourcesAssembler<Poll.Brief> assembler;
     
     private final @NonNull PollRepo pollRepo;
@@ -55,11 +58,11 @@ public class PollController {
     public ResponseEntity<?> getPollMenu(@PathVariable("date") Poll poll, @PathVariable("id") Menu menu) {
     
         if (poll == null) {
-            throw new NotFoundException("poll.not_found");
+            throw new NotFoundException(msgService.userMessage("poll.not_found"));
         }
         
         if (menu == null) {
-            throw new NotFoundException("menu.not_found");
+            throw new NotFoundException(msgService.userMessage("menu.not_found"));
         }
     
         LocalDate date = poll.getDate();

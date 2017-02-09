@@ -2,7 +2,6 @@ package restvotes.util.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import restvotes.util.MessageUtil;
 
 /**
  * @author Cepro, 2017-01-30
@@ -10,7 +9,7 @@ import restvotes.util.MessageUtil;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class NotFoundException extends RuntimeException {
     
-    public NotFoundException(String codeOrMessage, Object... args) {
-        super(MessageUtil.getMessage(codeOrMessage, args));
+    public NotFoundException(String message) {
+        super(message);
     }
 }

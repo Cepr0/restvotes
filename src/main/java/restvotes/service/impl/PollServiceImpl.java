@@ -1,7 +1,7 @@
 package restvotes.service.impl;
 
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,12 +11,11 @@ import restvotes.domain.entity.Vote;
 import restvotes.repository.PollRepo;
 import restvotes.repository.VoteRepo;
 import restvotes.service.PollService;
+import restvotes.util.MessageService;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
-import static restvotes.util.MessageUtil.getMessage;
 
 /**
  * Implementation of {@link PollService}
@@ -25,7 +24,7 @@ import static restvotes.util.MessageUtil.getMessage;
  */
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional
 public class PollServiceImpl implements PollService {
     
@@ -33,14 +32,16 @@ public class PollServiceImpl implements PollService {
     
     private final @NonNull VoteRepo voteRepo;
     
+    private final @NonNull MessageService msgService;
+    
     @Override
     public boolean closeAllUntil(LocalDate until) {
         try {
             int count = pollRepo.closeUntil(until);
-            LOG.debug(getMessage("poll.is_disabled", until, count));
+            LOG.debug(msgService.logMessage("poll.is_disabled", until, count));
             return true;
         } catch (Exception e) {
-            LOG.error(getMessage("poll.is_not_disabled", until, e.getMessage()));
+            LOG.error(msgService.logMessage("poll.is_not_disabled", until, e.getMessage()));
             return false;
         }
     }
@@ -62,23 +63,23 @@ public class PollServiceImpl implements PollService {
 
                 if (poll.getDate().isEqual(today)) {
 
-                    LOG.error(getMessage("poll.is_not_copied", "Last Poll", "It has current date"));
+                    LOG.error(msgService.logMessage("poll.is_not_copied", "Last Poll", "It has current date"));
                     return null;
                 } else {
 
                     List<Menu> menus = poll.getMenus();
-                    LOG.debug(getMessage("Last Poll menu size: %d", menus.size()));
+                    LOG.debug(msgService.logMessage("Last Poll menu size: %d", menus.size()));
 
                     Poll copy = pollRepo.saveAndFlush(new Poll(menus));
-                    LOG.debug(getMessage("poll.is_copied", copy));
+                    LOG.debug(msgService.logMessage("poll.is_copied", copy));
                     return copy;
                 }
             } else {
-                LOG.error(getMessage("poll.is_not_copied", "Last Poll", "Not found"));
+                LOG.error(msgService.logMessage("poll.is_not_copied", "Last Poll", "Not found"));
                 return null;
             }
         } catch (Exception e) {
-            LOG.error(getMessage("poll.is_not_copied", "Last Poll", e.getMessage()));
+            LOG.error(msgService.logMessage("poll.is_not_copied", "Last Poll", e.getMessage()));
             return null;
         }
     }
@@ -101,9 +102,9 @@ public class PollServiceImpl implements PollService {
                 try {
                     poll.setWinner(menu);
                     Poll savedPoll = pollRepo.save(poll);
-                    LOG.debug(getMessage( "Placed a winner [id: %d] to Poll %s", menuId, savedPoll));
+                    LOG.debug(msgService.logMessage( "Placed a winner [id: %d] to Poll %s", menuId, savedPoll));
                 } catch (Exception e) {
-                    LOG.error(getMessage("A winner [id: %d] is not placed to Poll %s. Cause: ", menuId, poll, e.getMessage()));
+                    LOG.error(msgService.logMessage("A winner [id: %d] is not placed to Poll %s. Cause: ", menuId, poll, e.getMessage()));
                 }
             }
         }
@@ -116,11 +117,11 @@ public class PollServiceImpl implements PollService {
             pollRepo.unlinkMenusFromFinishedAndWithoutVotes();
             int count = pollRepo.deleteFinishedAndWithoutVotes();
             if (count > 0) {
-                LOG.debug(getMessage( "%d 'empty' Polls is deleted.", count));
+                LOG.debug(msgService.logMessage( "%d 'empty' Polls is deleted.", count));
             }
             return count;
         } catch (Exception e) {
-            LOG.error(getMessage("Failed to delete 'empty' Polls. Cause: %s", e.getMessage()));
+            LOG.error(msgService.logMessage("Failed to delete 'empty' Polls. Cause: %s", e.getMessage()));
             return 0;
         }
     }

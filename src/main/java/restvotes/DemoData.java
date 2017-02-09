@@ -1,5 +1,6 @@
 package restvotes;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import restvotes.domain.entity.*;
 import restvotes.repository.*;
+import restvotes.util.MessageService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +19,6 @@ import static java.math.BigDecimal.valueOf;
 import static java.util.Arrays.asList;
 import static restvotes.domain.entity.User.Role.ROLE_ADMIN;
 import static restvotes.domain.entity.User.Role.ROLE_USER;
-import static restvotes.util.MessageUtil.getMessage;
 
 /**
  * @author Cepro, 2017-01-02
@@ -27,16 +28,18 @@ import static restvotes.util.MessageUtil.getMessage;
 @Component
 @RequiredArgsConstructor
 public class DemoData implements ApplicationRunner {
-
-    private final PollRepo pollRepo;
     
-    private final MenuRepo menuRepo;
+    private final @NonNull MessageService msgService;
     
-    private final RestRepo restRepo;
+    private final @NonNull PollRepo pollRepo;
     
-    private final UserRepo userRepo;
+    private final @NonNull MenuRepo menuRepo;
     
-    private final VoteRepo voteRepo;
+    private final @NonNull RestRepo restRepo;
+    
+    private final @NonNull UserRepo userRepo;
+    
+    private final @NonNull VoteRepo voteRepo;
 
     private Restaurant r1, r2, r3;
     private Menu m1, m2, m3, m4, m5, m6;
@@ -75,7 +78,7 @@ public class DemoData implements ApplicationRunner {
     @Transactional
     private void Step0() {
     
-        LOG.info(getMessage("Inserting demo restaurants..."));
+        LOG.info(msgService.logMessage("Inserting demo restaurants..."));
 
         r1 = new Restaurant("Rest1", "Address1", "http://rest1.com", "1234567890");
         r2 = new Restaurant("Rest2", "Address2", "http://rest2.com", "2345678901");
@@ -87,7 +90,7 @@ public class DemoData implements ApplicationRunner {
     @Transactional
     private void Step1() {
 
-        LOG.info(getMessage("Inserting demo menus..."));
+        LOG.info(msgService.logMessage("Inserting demo menus..."));
 
         m1 = new Menu(r1, asList(
                 new MenuItem("Description1 M1", valueOf(15.0)),
@@ -131,7 +134,7 @@ public class DemoData implements ApplicationRunner {
     @Transactional
     private void Step2() {
 
-        LOG.info(getMessage("Inserting demo polls..."));
+        LOG.info(msgService.logMessage("Inserting demo polls..."));
 
         p1 = new Poll(LocalDate.now().minusDays(2), asList(m1, m2, m3)).setFinished(true);
         p2 = new Poll(LocalDate.now().minusDays(1), asList(m4, m5, m6));
@@ -142,7 +145,7 @@ public class DemoData implements ApplicationRunner {
     @Transactional
     private void Step3() {
 
-        LOG.info(getMessage("Inserting demo users..."));
+        LOG.info(msgService.logMessage("Inserting demo users..."));
 
         u1 = new User("Frodo Baggins", "frodo@restvotes.com", "123456", ROLE_ADMIN);
         u2 = new User("Gandalf the Grey", "gandalf@restvotes.com", "123456", ROLE_ADMIN);
@@ -159,7 +162,7 @@ public class DemoData implements ApplicationRunner {
     @Transactional
     private void Step4() {
 
-        LOG.info(getMessage("Inserting demo votes..."));
+        LOG.info(msgService.logMessage("Inserting demo votes..."));
 
         voteRepo.save(asList(
                 // new Vote(p1, p1.getMenus().get(0), p1.getMenus().get(0).getRestaurant(), u1),

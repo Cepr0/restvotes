@@ -1,6 +1,7 @@
 # Voting System for Restaurant lunches
 #### Тестовый проект
 [![Build Status](https://travis-ci.org/Cepr0/restvotes.svg?branch=master)](https://travis-ci.org/Cepr0/restvotes)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6893de10620c4c779d5659949b55bb82)](https://www.codacy.com/app/Cepr0/restvotes)
 ## Задание
 Design and implement a JSON API using Hibernate/Spring/SpringMVC (or Spring-Boot) **without frontend**.
 

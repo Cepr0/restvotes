@@ -1,8 +1,7 @@
 package restvotes.service.impl;
 
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import restvotes.domain.entity.*;
@@ -19,8 +18,7 @@ import java.util.stream.Collectors;
 /**
  * @author Cepro, 2017-01-19
  */
-@Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 @Transactional
 public class VoteServiceImpl implements VoteService {

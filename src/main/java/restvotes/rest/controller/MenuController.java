@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Vote;
 import restvotes.service.VoteService;
+import restvotes.util.MessageService;
 import restvotes.util.exception.NotFoundException;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -24,13 +25,15 @@ import static restvotes.util.LinksHelper.*;
 @RequestMapping("/menus/{id}")
 public class MenuController {
     
+    private final @NonNull MessageService msgService;
+    
     private final @NonNull VoteService voteService;
 
     @PutMapping("/vote")
     public ResponseEntity<?> submitVote(@PathVariable("id") Menu menu) {
         
         if (menu == null) {
-            throw new NotFoundException("menu.not_found");
+            throw new NotFoundException(msgService.userMessage("menu.not_found"));
         }
         
         Vote vote = voteService.submitVote(menu);
@@ -47,7 +50,7 @@ public class MenuController {
                     ), OK);
             
         } else { // If current unfinished Poll is not found
-            throw new NotFoundException("poll.current_not_found");
+            throw new NotFoundException(msgService.userMessage("poll.current_not_found"));
         }
     }
 }

@@ -3,6 +3,7 @@ package restvotes.service;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,8 +11,10 @@ import org.springframework.stereotype.Service;
 import restvotes.domain.entity.User;
 import restvotes.repository.UserRepo;
 import restvotes.util.AuthorizedUser;
+import restvotes.util.MessageService;
 import restvotes.util.exception.NotFoundException;
 
+import java.util.Locale;
 import java.util.Optional;
 
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
@@ -25,6 +28,8 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 @Service
 public class UserService implements UserDetailsService {
     
+    private final @NonNull MessageService msgService;
+    
     private @NonNull UserRepo userRepo;
     
     @Override
@@ -34,7 +39,7 @@ public class UserService implements UserDetailsService {
         if(user.isPresent()) {
             return new AuthorizedUser(user.get());
         } else {
-            throw new NotFoundException("users.with_email_not_found", email);
+            throw new NotFoundException(msgService.userMessage("users.with_email_not_found", email));
         }
     }
     
@@ -49,4 +54,15 @@ public class UserService implements UserDetailsService {
                                 user.getAuthorities()));
     }
     
+    @Profile("test")
+    public void runAs(String email, Locale locale) {
+        AuthorizedUser user = loadUserByUsername(email);
+        LocaleContextHolder.setLocale(locale);
+        getContext()
+                .setAuthentication(
+                        new UsernamePasswordAuthenticationToken(
+                                user,
+                                null,
+                                user.getAuthorities()));
+    }
 }
