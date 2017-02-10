@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
@@ -13,7 +14,6 @@ import restvotes.domain.entity.Poll;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Cepro, 2017-01-11
@@ -25,10 +25,11 @@ public class PollView extends Poll implements Poll.Detailed {
     // To get embedded Menu array in json output
     // "_embedded"
     @JsonUnwrapped
+    @Getter
     @Setter
     private Resources<Resource<Menu.Detailed>> menuResources;
     
-    public PollView(Poll poll, Long chosenMenuId, Map<Long, Integer> ranks, LocalDate curPollDate) {
+    public PollView(Poll poll, LocalDate curPollDate) {
     
         super.setId(poll.getDate());
         super.setFinished(poll.getFinished());
@@ -63,9 +64,5 @@ public class PollView extends Poll implements Poll.Detailed {
     @Override
     public List<Menu> getMenus() {
         return super.getMenus();
-    }
-    
-    public Resources<Resource<Menu.Detailed>> getMenuResources() {
-        return this.menuResources;
     }
 }

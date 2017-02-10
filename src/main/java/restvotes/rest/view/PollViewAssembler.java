@@ -30,7 +30,7 @@ public class PollViewAssembler {
         List<Menu> menus = poll.getMenus();
         Menu winner = poll.getWinner();
         
-        PollView pollView = new PollView(poll, chosenMenuId, ranks, curPollDate);
+        PollView pollView = new PollView(poll, curPollDate);
     
         List<Resource<Menu.Detailed>> content = new ArrayList<>();
         for (Menu menu : menus) {
