@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Restaurant;
 import restvotes.repository.MenuRepo;
-import restvotes.util.MessageService;
+import restvotes.util.LinksHelper;
+import restvotes.util.MessageHelper;
 import restvotes.util.exception.NotFoundException;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
-import static restvotes.util.LinksHelper.getMenuLinks;
 
 /**
  * @author Cepro, 2017-01-22
@@ -33,7 +33,9 @@ import static restvotes.util.LinksHelper.getMenuLinks;
 @RequestMapping("/restaurants/{id}")
 public class RestaurantController {
     
-    private final @NonNull MessageService msgService;
+    private final @NonNull LinksHelper links;
+    
+    private final @NonNull MessageHelper msgHelper;
     
     private final @NonNull PagedResourcesAssembler<Menu> pagedResourcesAssembler;
     
@@ -43,27 +45,27 @@ public class RestaurantController {
     public ResponseEntity<?> getMenus(@PathVariable("id")Restaurant restaurant, Pageable pageable) {
     
         if (restaurant == null) {
-            throw new NotFoundException(msgService.userMessage("restaurant.not_found"));
+            throw new NotFoundException(msgHelper.userMessage("restaurant.not_found"));
         }
         
         // TODO Make it without pages?
         Page<Menu> menus = menuRepo.findByRestaurantOrderByIdDesc(restaurant, pageable);
         return ResponseEntity.ok(pagedResourcesAssembler.toResource(menus,
-                menu -> new Resource<>(menu, getMenuLinks(menu, true))));
+                menu -> new Resource<>(menu, links.getMenuLinks(menu, true))));
     }
     
     @Transactional
     @RequestMapping(path = "/menus", method = {POST, PUT})
     public ResponseEntity<?> putMenu(@PathVariable("id")Restaurant restaurant, @RequestBody Menu menu) {
         if (restaurant == null) {
-            throw new NotFoundException(msgService.userMessage("restaurant.cannot_be_null"));
+            throw new NotFoundException(msgHelper.userMessage("restaurant.cannot_be_null"));
         }
         
         if (menu == null) {
-            throw new NotFoundException(msgService.userMessage("menu.cannot_be_null"));
+            throw new NotFoundException(msgHelper.userMessage("menu.cannot_be_null"));
         }
         // TODO Move this to Service?
         Menu savedMenu = menuRepo.saveAndFlush(menu.setRestaurant(restaurant));
-        return ResponseEntity.ok(new Resource<>(savedMenu, getMenuLinks(savedMenu, true)));
+        return ResponseEntity.ok(new Resource<>(savedMenu, links.getMenuLinks(savedMenu, true)));
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 import restvotes.domain.entity.User;
-import restvotes.util.MessageService;
+import restvotes.util.MessageHelper;
 import restvotes.util.exception.ForbiddenException;
 import restvotes.util.exception.NotFoundException;
 
@@ -24,7 +24,7 @@ import static restvotes.util.AuthorizedUser.get;
 @RepositoryEventHandler(User.class)
 public class UserEventHandler {
     
-    private final @NonNull MessageService msgService;
+    private final @NonNull MessageHelper msgHelper;
     
     
     @HandleBeforeCreate
@@ -42,15 +42,15 @@ public class UserEventHandler {
     private void checkUser(User user) {
         User u = get();
         if (u == null) {
-            throw new NotFoundException(msgService.userMessage("users.not_found"));
+            throw new NotFoundException(msgHelper.userMessage("users.not_found"));
         }
         
         if (u.getRole() != ROLE_ADMIN && !Objects.equals(u.getId(), user.getId())) {
-            throw new ForbiddenException(msgService.userMessage("users.cannot_edit_another_user"));
+            throw new ForbiddenException(msgHelper.userMessage("users.cannot_edit_another_user"));
         }
 
         if (u.getRole() != ROLE_ADMIN && user.getRole() == ROLE_ADMIN) {
-            throw new ForbiddenException(msgService.userMessage("users.cannot_use_role_admin"));
+            throw new ForbiddenException(msgHelper.userMessage("users.cannot_use_role_admin"));
         }
     }
 }

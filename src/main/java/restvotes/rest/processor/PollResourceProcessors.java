@@ -11,14 +11,13 @@ import restvotes.domain.entity.Poll;
 import restvotes.repository.PollRepo;
 import restvotes.repository.VoteRepo;
 import restvotes.rest.view.PollBriefView;
-import restvotes.rest.view.PollView;
+import restvotes.rest.view.PollViewAssembler;
 import restvotes.util.AuthorizedUser;
+import restvotes.util.LinksHelper;
 
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
-
-import static restvotes.util.LinksHelper.*;
 
 /**
  * @author Cepro, 2017-01-13
@@ -26,6 +25,8 @@ import static restvotes.util.LinksHelper.*;
 @RequiredArgsConstructor
 @Component
 public class PollResourceProcessors {
+    
+    private final @NonNull LinksHelper links;
     
     private final @NonNull PollRepo pollRepo;
     
@@ -38,9 +39,9 @@ public class PollResourceProcessors {
         public PagedResources<Resource<Poll.Brief>> process(PagedResources<Resource<Poll.Brief>> pagedResources) {
     
             pollRepo.getCurrent()
-                    .ifPresent(poll -> pagedResources.add(getCurrentPollLink()));
+                    .ifPresent(poll -> pagedResources.add(links.getCurrentPollLink()));
             
-            pagedResources.add(getPollProfileLink(), getPollSearchLink());
+            pagedResources.add(links.getPollProfileLink(), links.getPollSearchLink());
             return pagedResources;
         }
     }
@@ -56,22 +57,25 @@ public class PollResourceProcessors {
             LocalDate curPollDate = pollOptional.isPresent() ? pollOptional.get().getDate() : null;
     
             PollBriefView pollBriefView = new PollBriefView(poll, curPollDate);
-            Resource<Poll.Brief> viewResource = new Resource<>(pollBriefView, getPollSelfLink(poll.getDate()));
+            Resource<Poll.Brief> viewResource = new Resource<>(pollBriefView, links.getPollSelfLink(poll.getDate()));
             
             if (poll.getFinished()) {
 
                 // Determining the winner
                 Menu winner = poll.getWinner();
                 if (winner != null) {
-                    viewResource.add(getWinnerLink(poll, winner));
+                    viewResource.add(links.getWinnerLink(poll, winner));
                 }
             }
             return viewResource;
         }
     }
     
+    @RequiredArgsConstructor
     @Component
     public class PollResourceProcessor implements ResourceProcessor<Resource<Poll>> {
+    
+        private final @NonNull PollViewAssembler assembler;
         
         @Override
         public Resource<Poll> process(Resource<Poll> resource) {
@@ -87,8 +91,8 @@ public class PollResourceProcessors {
     
             Optional<Poll> pollOptional = pollRepo.getCurrent();
             LocalDate curPollDate = pollOptional.isPresent() ? pollOptional.get().getDate() : null;
-    
-            return new Resource<>(new PollView(poll, chosenMenuId, ranks, curPollDate));
+            
+            return new Resource<>(assembler.makePollView(poll, chosenMenuId, ranks, curPollDate));
         }
     }
 }

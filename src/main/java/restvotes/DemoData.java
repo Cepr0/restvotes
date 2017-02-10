@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import restvotes.domain.entity.*;
 import restvotes.repository.*;
-import restvotes.util.MessageService;
+import restvotes.util.MessageHelper;
 
 import java.time.LocalDate;
 
@@ -28,7 +28,7 @@ import static restvotes.domain.entity.User.Role.ROLE_USER;
 @RequiredArgsConstructor
 public class DemoData implements ApplicationRunner {
     
-    private final @NonNull MessageService msgService;
+    private final @NonNull MessageHelper msgHelper;
     
     private final @NonNull PollRepo pollRepo;
     
@@ -61,7 +61,7 @@ public class DemoData implements ApplicationRunner {
             addVotes();
             // copyLastPoll();
         } catch (Exception e) {
-            LOG.error(msgService.logMessage("Adding demo data failed! Cause: %s", e.getMessage()));
+            LOG.error(msgHelper.logMessage("Adding demo data failed! Cause: %s", e.getMessage()));
         }
     }
 
@@ -81,7 +81,7 @@ public class DemoData implements ApplicationRunner {
     @Transactional
     private void addRestaurants() {
     
-        LOG.info(msgService.logMessage("Inserting demo restaurants..."));
+        LOG.info(msgHelper.logMessage("Inserting demo restaurants..."));
 
         r1 = new Restaurant("Rest1", "Address1", "http://rest1.com", "1234567890");
         r2 = new Restaurant("Rest2", "Address2", "http://rest2.com", "2345678901");
@@ -93,7 +93,7 @@ public class DemoData implements ApplicationRunner {
     @Transactional
     private void addMenus() {
 
-        LOG.info(msgService.logMessage("Inserting demo menus..."));
+        LOG.info(msgHelper.logMessage("Inserting demo menus..."));
 
         m1 = new Menu(r1, asList(
                 new MenuItem("Description1 M1", valueOf(15.0)),
@@ -137,7 +137,7 @@ public class DemoData implements ApplicationRunner {
     @Transactional
     private void addPolls() {
 
-        LOG.info(msgService.logMessage("Inserting demo polls..."));
+        LOG.info(msgHelper.logMessage("Inserting demo polls..."));
 
         p1 = new Poll(LocalDate.now().minusDays(2), asList(m1, m2, m3)).setFinished(true);
         p2 = new Poll(LocalDate.now().minusDays(1), asList(m4, m5, m6));
@@ -148,7 +148,7 @@ public class DemoData implements ApplicationRunner {
     @Transactional
     private void addUsers() {
 
-        LOG.info(msgService.logMessage("Inserting demo users..."));
+        LOG.info(msgHelper.logMessage("Inserting demo users..."));
 
         u1 = new User("Frodo Baggins", "frodo@restvotes.com", "123456", ROLE_ADMIN);
         u2 = new User("Gandalf the Grey", "gandalf@restvotes.com", "123456", ROLE_ADMIN);
@@ -165,7 +165,7 @@ public class DemoData implements ApplicationRunner {
     @Transactional
     private void addVotes() {
 
-        LOG.info(msgService.logMessage("Inserting demo votes..."));
+        LOG.info(msgHelper.logMessage("Inserting demo votes..."));
 
         voteRepo.save(asList(
                 // new Vote(p1, p1.getMenus().get(0), p1.getMenus().get(0).getRestaurant(), u1),

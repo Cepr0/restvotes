@@ -18,13 +18,12 @@ import restvotes.repository.PollRepo;
 import restvotes.repository.VoteRepo;
 import restvotes.rest.view.MenuView;
 import restvotes.util.AuthorizedUser;
-import restvotes.util.MessageService;
+import restvotes.util.LinksHelper;
+import restvotes.util.MessageHelper;
 import restvotes.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.util.Map;
-
-import static restvotes.util.LinksHelper.getMenuLinks;
 
 /**
  * @author Cepro, 2017-01-07
@@ -34,7 +33,9 @@ import static restvotes.util.LinksHelper.getMenuLinks;
 @RequestMapping("/polls")
 public class PollController {
     
-    private final @NonNull MessageService msgService;
+    private final @NonNull LinksHelper links;
+    
+    private final @NonNull MessageHelper msgHelper;
     
     private final @NonNull PagedResourcesAssembler<Poll.Brief> assembler;
     
@@ -58,11 +59,11 @@ public class PollController {
     public ResponseEntity<?> getPollMenu(@PathVariable("date") Poll poll, @PathVariable("id") Menu menu) {
     
         if (poll == null) {
-            throw new NotFoundException(msgService.userMessage("poll.not_found"));
+            throw new NotFoundException(msgHelper.userMessage("poll.not_found"));
         }
         
         if (menu == null) {
-            throw new NotFoundException(msgService.userMessage("menu.not_found"));
+            throw new NotFoundException(msgHelper.userMessage("menu.not_found"));
         }
     
         LocalDate date = poll.getDate();
@@ -76,7 +77,7 @@ public class PollController {
         Map<Long, Integer> ranks = voteRepo.getMenuAndRankParesByDate(date);
     
         MenuView menuView = new MenuView(menu, chosenMenuId, ranks, winnerId);
-        return ResponseEntity.ok(new Resource<>(menuView, getMenuLinks(menuView, null)));
+        return ResponseEntity.ok(new Resource<>(menuView, links.getMenuLinks(menuView, null)));
     }
     
     @GetMapping("/current")

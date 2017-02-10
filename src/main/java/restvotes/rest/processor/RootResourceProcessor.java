@@ -6,9 +6,7 @@ import org.springframework.data.rest.webmvc.RepositoryLinksResource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
 import restvotes.repository.PollRepo;
-
-import static restvotes.util.LinksHelper.getCurrentPollLink;
-import static restvotes.util.LinksHelper.getUserProfileLink;
+import restvotes.util.LinksHelper;
 
 /**
  * @author Cepro, 2017-01-13
@@ -17,12 +15,14 @@ import static restvotes.util.LinksHelper.getUserProfileLink;
 @RequiredArgsConstructor
 public class RootResourceProcessor implements ResourceProcessor<RepositoryLinksResource> {
     
+    private final @NonNull LinksHelper links;
+    
     private final @NonNull PollRepo pollRepo;
     
     @Override
     public RepositoryLinksResource process(RepositoryLinksResource resource) {
         pollRepo.getCurrent()
-                .ifPresent(poll -> resource.add(getCurrentPollLink(), getUserProfileLink()));
+                .ifPresent(poll -> resource.add(links.getCurrentPollLink(), links.getUserProfileLink()));
         return resource;
     }
 }

@@ -11,7 +11,7 @@ import restvotes.domain.entity.Vote;
 import restvotes.repository.PollRepo;
 import restvotes.repository.VoteRepo;
 import restvotes.service.PollService;
-import restvotes.util.MessageService;
+import restvotes.util.MessageHelper;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,16 +32,16 @@ public class PollServiceImpl implements PollService {
     
     private final @NonNull VoteRepo voteRepo;
     
-    private final @NonNull MessageService msgService;
+    private final @NonNull MessageHelper msgHelper;
     
     @Override
     public boolean closeAllUntil(LocalDate until) {
         try {
             int count = pollRepo.closeUntil(until);
-            LOG.debug(msgService.logMessage("poll.is_disabled", until, count));
+            LOG.debug(msgHelper.logMessage("poll.is_disabled", until, count));
             return true;
         } catch (Exception e) {
-            LOG.error(msgService.logMessage("poll.is_not_disabled", until, e.getMessage()));
+            LOG.error(msgHelper.logMessage("poll.is_not_disabled", until, e.getMessage()));
             return false;
         }
     }
@@ -63,23 +63,23 @@ public class PollServiceImpl implements PollService {
 
                 if (poll.getDate().isEqual(today)) {
 
-                    LOG.error(msgService.logMessage("poll.is_not_copied", "Last Poll", "It has current date"));
+                    LOG.error(msgHelper.logMessage("poll.is_not_copied", "Last Poll", "It has current date"));
                     return null;
                 } else {
 
                     List<Menu> menus = poll.getMenus();
-                    LOG.debug(msgService.logMessage("Last Poll menu size: %d", menus.size()));
+                    LOG.debug(msgHelper.logMessage("Last Poll menu size: %d", menus.size()));
 
                     Poll copy = pollRepo.saveAndFlush(new Poll(menus));
-                    LOG.debug(msgService.logMessage("poll.is_copied", copy));
+                    LOG.debug(msgHelper.logMessage("poll.is_copied", copy));
                     return copy;
                 }
             } else {
-                LOG.error(msgService.logMessage("poll.is_not_copied", "Last Poll", "Not found"));
+                LOG.error(msgHelper.logMessage("poll.is_not_copied", "Last Poll", "Not found"));
                 return null;
             }
         } catch (Exception e) {
-            LOG.error(msgService.logMessage("poll.is_not_copied", "Last Poll", e.getMessage()));
+            LOG.error(msgHelper.logMessage("poll.is_not_copied", "Last Poll", e.getMessage()));
             return null;
         }
     }
@@ -102,9 +102,9 @@ public class PollServiceImpl implements PollService {
                 try {
                     poll.setWinner(menu);
                     Poll savedPoll = pollRepo.save(poll);
-                    LOG.debug(msgService.logMessage( "Placed a winner [id: %d] to Poll %s", menuId, savedPoll));
+                    LOG.debug(msgHelper.logMessage( "Placed a winner [id: %d] to Poll %s", menuId, savedPoll));
                 } catch (Exception e) {
-                    LOG.error(msgService.logMessage("A winner [id: %d] is not placed to Poll %s. Cause: ", menuId, poll, e.getMessage()));
+                    LOG.error(msgHelper.logMessage("A winner [id: %d] is not placed to Poll %s. Cause: ", menuId, poll, e.getMessage()));
                 }
             }
         }
@@ -117,11 +117,11 @@ public class PollServiceImpl implements PollService {
             pollRepo.unlinkMenusFromFinishedAndWithoutVotes();
             int count = pollRepo.deleteFinishedAndWithoutVotes();
             if (count > 0) {
-                LOG.debug(msgService.logMessage( "%d 'empty' Polls is deleted.", count));
+                LOG.debug(msgHelper.logMessage( "%d 'empty' Polls is deleted.", count));
             }
             return count;
         } catch (Exception e) {
-            LOG.error(msgService.logMessage("Failed to delete 'empty' Polls. Cause: %s", e.getMessage()));
+            LOG.error(msgHelper.logMessage("Failed to delete 'empty' Polls. Cause: %s", e.getMessage()));
             return 0;
         }
     }

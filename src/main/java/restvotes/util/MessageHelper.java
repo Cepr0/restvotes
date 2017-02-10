@@ -18,11 +18,10 @@ import static java.util.Objects.requireNonNull;
  */
 @RequiredArgsConstructor
 @Component
-public class MessageServiceImpl implements MessageService {
+public class MessageHelper {
     
     private final @NonNull MessageSource messageSource;
     
-    @Override
     public String userMessage(String codeOrMessage, Object... args) {
         return messageSource.getMessage(
                 codeOrMessage,
@@ -32,7 +31,6 @@ public class MessageServiceImpl implements MessageService {
         );
     }
     
-    @Override
     public String logMessage(String codeOrMessage, Object... args) {
         return messageSource.getMessage(
                 codeOrMessage,

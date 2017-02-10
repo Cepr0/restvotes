@@ -1,5 +1,6 @@
 package restvotes.rest.processor;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
@@ -14,9 +15,11 @@ import restvotes.util.LinksHelper;
 @RequiredArgsConstructor
 public class RestaurantResourceProcessor implements ResourceProcessor<Resource<Restaurant>> {
     
+    private final @NonNull LinksHelper links;
+        
     @Override
     public Resource<Restaurant> process(Resource<Restaurant> resource) {
-        resource.add(LinksHelper.getRestauranMenustLink(resource.getContent()));
+        resource.add(links.getRestaurantMenusLink(resource.getContent()));
         return resource;
     }
 }

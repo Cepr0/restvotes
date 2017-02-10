@@ -14,10 +14,10 @@ import static org.junit.Assert.assertThat;
  * @author Cepro, 2017-02-09
  */
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
-public class MessageServiceTest extends BaseTest {
+public class MessageHelperTest extends BaseTest {
     
     @Autowired
-    private MessageService service;
+    private MessageHelper msgHelper;
     
     @Autowired
     private UserService userService;
@@ -26,15 +26,15 @@ public class MessageServiceTest extends BaseTest {
     public void userMessage() throws Exception {
         
         userService.runAs("frodo@restvotes.com", new Locale("ru"));
-        String message = service.userMessage("test.message_service_test");
+        String message = msgHelper.userMessage("test.message_service_test");
         assertThat(message, is("MessageService тест"));
 
         userService.runAs("frodo@restvotes.com", new Locale("en"));
-        message = service.userMessage("test.message_service_test");
+        message = msgHelper.userMessage("test.message_service_test");
         assertThat(message, is("MessageService test"));
     
         userService.runAs("frodo@restvotes.com", new Locale("de"));
-        message = service.userMessage("test.message_service_test");
+        message = msgHelper.userMessage("test.message_service_test");
         assertThat(message, is("MessageService test"));
     }
     
@@ -43,7 +43,7 @@ public class MessageServiceTest extends BaseTest {
     
         Locale defaultLocale = Locale.getDefault();
         Locale.setDefault(new Locale("ru"));
-        String message = service.logMessage("test.message_service_test");
+        String message = msgHelper.logMessage("test.message_service_test");
         assertThat(message, is("MessageService тест"));
         Locale.setDefault(defaultLocale);
     }

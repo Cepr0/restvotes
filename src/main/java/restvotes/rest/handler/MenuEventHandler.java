@@ -7,7 +7,7 @@ import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 import restvotes.domain.entity.Menu;
 import restvotes.repository.VoteRepo;
-import restvotes.util.MessageService;
+import restvotes.util.MessageHelper;
 import restvotes.util.exception.ForbiddenException;
 
 /**
@@ -18,7 +18,7 @@ import restvotes.util.exception.ForbiddenException;
 @RepositoryEventHandler(Menu.class)
 public class MenuEventHandler {
     
-    private final @NonNull MessageService msgService;
+    private final @NonNull MessageHelper msgHelper;
     
     private final @NonNull VoteRepo voteRepo;
     
@@ -27,7 +27,7 @@ public class MenuEventHandler {
         
         // Updating Menu that was already in use is not allowed
         if (voteRepo.findFirstByMenu(menu).isPresent()) {
-            throw new ForbiddenException(msgService.userMessage("menu.already_in_use"));
+            throw new ForbiddenException(msgHelper.userMessage("menu.already_in_use"));
         }
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import restvotes.domain.entity.User;
 import restvotes.repository.UserRepo;
 import restvotes.util.AuthorizedUser;
-import restvotes.util.MessageService;
+import restvotes.util.MessageHelper;
 import restvotes.util.exception.NotFoundException;
 
 import java.util.Locale;
@@ -28,7 +28,7 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 @Service
 public class UserService implements UserDetailsService {
     
-    private final @NonNull MessageService msgService;
+    private final @NonNull MessageHelper msgHelper;
     
     private @NonNull UserRepo userRepo;
     
@@ -39,7 +39,7 @@ public class UserService implements UserDetailsService {
         if(user.isPresent()) {
             return new AuthorizedUser(user.get());
         } else {
-            throw new NotFoundException(msgService.userMessage("users.with_email_not_found", email));
+            throw new NotFoundException(msgHelper.userMessage("users.with_email_not_found", email));
         }
     }
     

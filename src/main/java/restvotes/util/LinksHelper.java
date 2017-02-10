@@ -1,13 +1,13 @@
 package restvotes.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.BaseUri;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.domain.entity.Restaurant;
@@ -22,6 +22,7 @@ import static org.springframework.data.rest.webmvc.ProfileController.getRootPath
 /**
  * @author Cepro, 2017-01-14
  */
+@RequiredArgsConstructor
 @Component
 public class LinksHelper {
     
@@ -39,23 +40,23 @@ public class LinksHelper {
     private static final String SLASH = "/";
     private static final String CURRENT = "current";
     
-    private static RepositoryEntityLinks links;
+    private final @NonNull RepositoryEntityLinks entityLinks;
     
-    private static RepositoryRestConfiguration configuration;
+    private final @NonNull RepositoryRestConfiguration configuration;
     
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Autowired
-    private LinksHelper(RepositoryEntityLinks entityLinks, RepositoryRestConfiguration configuration) {
-        LinksHelper.links = entityLinks;
-        Assert.notNull(configuration, "RepositoryRestConfiguration must not be null!");
-        LinksHelper.configuration = configuration;
-    }
+    // @SuppressWarnings("SpringJavaAutowiringInspection")
+    // @Autowired
+    // private LinksHelper(RepositoryEntityLinks entityLinks, RepositoryRestConfiguration configuration) {
+    //     LinksHelper.entityLinks = entityLinks;
+    //     Assert.notNull(configuration, "RepositoryRestConfiguration must not be null!");
+    //     LinksHelper.configuration = configuration;
+    // }
+    //
     
-    
-    public static Iterable<Link> getMenuLinks(Menu menu, Boolean finished) {
+    public Iterable<Link> getMenuLinks(Menu menu, Boolean finished) {
         
-        LinkBuilder menuLinkBuilder = links.linkForSingleResource(Menu.class, menu.getId());
-        Link restaurantLink = links.linkForSingleResource(Restaurant.class, menu.getRestaurant().getId()).withRel(RESTAURANT);
+        LinkBuilder menuLinkBuilder = entityLinks.linkForSingleResource(Menu.class, menu.getId());
+        Link restaurantLink = entityLinks.linkForSingleResource(Restaurant.class, menu.getRestaurant().getId()).withRel(RESTAURANT);
 
         if (finished != null && !finished) {
             return Arrays.asList(
@@ -71,86 +72,84 @@ public class LinksHelper {
         }
     }
     
-    public static Iterable<Link> getPollViewLinks(LocalDate pollDate, Long chosenMenuId, Menu winner) {
+    public Iterable<Link> getPollViewLinks(LocalDate pollDate, Long chosenMenuId, Menu winner) {
         
         List<Link> links = new ArrayList<>();
         
         links.add(getPollSelfLink(pollDate));
         
         if (chosenMenuId != null) {
-            links.add(LinksHelper.links.linkForSingleResource(Menu.class, chosenMenuId).withRel("userChoice"));
+            links.add(entityLinks.linkForSingleResource(Menu.class, chosenMenuId).withRel("userChoice"));
         }
         
         if (winner != null) {
-            links.add(LinksHelper.links.linkForSingleResource(Poll.class, pollDate).slash(MENUS).slash(winner).withRel(WINNER));
+            links.add(entityLinks.linkForSingleResource(Poll.class, pollDate).slash(MENUS).slash(winner).withRel(WINNER));
         }
         
         return links;
     }
     
-    public static Link getPollLink(Poll poll) {
-        return links.linkForSingleResource(poll).withRel(POLL);
+    public Link getPollLink(Poll poll) {
+        return entityLinks.linkForSingleResource(poll).withRel(POLL);
     }
     
-    public static Link getPollLink(LocalDate date) {
-        return links.linkForSingleResource(Poll.class, date).withRel(POLL);
+    public Link getPollLink(LocalDate date) {
+        return entityLinks.linkForSingleResource(Poll.class, date).withRel(POLL);
     }
     
-    public static Link getCurrentPollLink() {
-        return links.linkFor(Poll.class).slash(CURRENT).withRel(CURRENT_POLL);
+    public Link getCurrentPollLink() {
+        return entityLinks.linkFor(Poll.class).slash(CURRENT).withRel(CURRENT_POLL);
     }
     
-    public static Link getCurrentPollLink(Poll poll) {
-        return links.linkForSingleResource(poll).withRel(CURRENT_POLL);
+    public Link getCurrentPollLink(Poll poll) {
+        return entityLinks.linkForSingleResource(poll).withRel(CURRENT_POLL);
     }
     
-    public static Link getCurrentPollLink(LocalDate date) {
-        return links.linkForSingleResource(Poll.class, date).withRel(CURRENT_POLL);
+    public Link getCurrentPollLink(LocalDate date) {
+        return entityLinks.linkForSingleResource(Poll.class, date).withRel(CURRENT_POLL);
     }
     
-    public static Link getPollSelfLink(Poll poll) {
-        return links.linkForSingleResource(poll).withSelfRel();
+    public Link getPollSelfLink(Poll poll) {
+        return entityLinks.linkForSingleResource(poll).withSelfRel();
     }
     
-    public static Link getPollSelfLink(LocalDate date) {
-        return links.linkForSingleResource(Poll.class, date).withSelfRel();
+    public Link getPollSelfLink(LocalDate date) {
+        return entityLinks.linkForSingleResource(Poll.class, date).withSelfRel();
     }
     
-    public static Link getRestaurantLink(Restaurant restaurant) {
-        return links.linkForSingleResource(restaurant).withRel(RESTAURANT);
+    public Link getRestaurantLink(Restaurant restaurant) {
+        return entityLinks.linkForSingleResource(restaurant).withRel(RESTAURANT);
     }
     
-    public static Link getRestauranMenustLink(Restaurant restaurant) {
-        return links.linkForSingleResource(restaurant).slash(MENUS).withRel(MENUS);
+    public Link getRestaurantMenusLink(Restaurant restaurant) {
+        return entityLinks.linkForSingleResource(restaurant).slash(MENUS).withRel(MENUS);
     }
     
-    public static Link getMenuLink(Menu menu) {
-        return links.linkForSingleResource(menu).withRel(MENU);
+    public Link getMenuLink(Menu menu) {
+        return entityLinks.linkForSingleResource(menu).withRel(MENU);
     }
     
-    public static Link getWinnerLink(Poll.Brief poll, Menu winner) {
-        return links.linkForSingleResource(Poll.class, poll.getDate()).slash(MENUS).slash(winner).withRel(WINNER);
+    public Link getWinnerLink(Poll.Brief poll, Menu winner) {
+        return entityLinks.linkForSingleResource(Poll.class, poll.getDate()).slash(MENUS).slash(winner).withRel(WINNER);
     }
     
-    public static Link getMenuSelfLink(Menu.Detailed menu) {
-        return links.linkForSingleResource(Menu.class, menu.getId()).withSelfRel();
+    public Link getMenuSelfLink(Menu.Detailed menu) {
+        return entityLinks.linkForSingleResource(Menu.class, menu.getId()).withSelfRel();
     }
     
-    public static Link getPollSearchLink() {
-        return links.linkFor(Poll.class).slash(SEARCH).withRel(SEARCH);
+    public Link getPollSearchLink() {
+        return entityLinks.linkFor(Poll.class).slash(SEARCH).withRel(SEARCH);
     }
     
-    public static Link getPollProfileLink() {
-        // Link link = links.linkFor(Poll.class).withRel(PROFILE);
-        // return new Link(link.getHref().replace("/"+ POLLS, "/"+ PROFILE + "/"+ POLLS), PROFILE);
+    public Link getPollProfileLink() {
         return new Link(getRootPath(configuration) + SLASH + POLLS, PROFILE);
     }
     
-    public static Link getUserProfileLink() {
+    public Link getUserProfileLink() {
         return new Link(getBasePath() + SLASH + USER_PROFILE, USER_PROFILE);
     }
     
-    private static String getBasePath() {
+    private String getBasePath() {
         BaseUri baseUri = new BaseUri(configuration.getBaseUri());
         return baseUri.getUriComponentsBuilder().build().toString();
     }
