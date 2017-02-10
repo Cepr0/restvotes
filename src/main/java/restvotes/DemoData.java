@@ -13,7 +13,6 @@ import restvotes.repository.*;
 import restvotes.util.MessageService;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static java.math.BigDecimal.valueOf;
 import static java.util.Arrays.asList;
@@ -54,29 +53,33 @@ public class DemoData implements ApplicationRunner {
             return;
         }
     
-        Step0();
-        Step1();
-        Step2();
-        Step3();
-        Step4();
-        // Step5();
+        try {
+            addRestaurants();
+            addMenus();
+            addPolls();
+            addUsers();
+            addVotes();
+            // copyLastPoll();
+        } catch (Exception e) {
+            LOG.error(msgService.logMessage("Adding demo data failed! Cause: %s", e.getMessage()));
+        }
     }
 
-    @Transactional()
-    private void Step5() {
-        // http://stackoverflow.com/q/27115639/5380322
-        // http://stackoverflow.com/q/26611173/5380322
-        // http://stackoverflow.com/a/10466591/5380322
-    
-        pollRepo.findByDate(p2.getDate()).ifPresent( p -> {
-            List<Menu> menus = p.getMenus();
-            Poll p3 = new Poll(menus);
-            pollRepo.save(p3);
-        });
-    }
+    // @Transactional()
+    // private void copyLastPoll() {
+    //     // http://stackoverflow.com/q/27115639/5380322
+    //     // http://stackoverflow.com/q/26611173/5380322
+    //     // http://stackoverflow.com/a/10466591/5380322
+    //
+    //     pollRepo.findByDate(p2.getDate()).ifPresent( p -> {
+    //         List<Menu> menus = p.getMenus();
+    //         Poll p3 = new Poll(menus);
+    //         pollRepo.save(p3);
+    //     });
+    // }
 
     @Transactional
-    private void Step0() {
+    private void addRestaurants() {
     
         LOG.info(msgService.logMessage("Inserting demo restaurants..."));
 
@@ -88,7 +91,7 @@ public class DemoData implements ApplicationRunner {
     }
 
     @Transactional
-    private void Step1() {
+    private void addMenus() {
 
         LOG.info(msgService.logMessage("Inserting demo menus..."));
 
@@ -132,7 +135,7 @@ public class DemoData implements ApplicationRunner {
     }
 
     @Transactional
-    private void Step2() {
+    private void addPolls() {
 
         LOG.info(msgService.logMessage("Inserting demo polls..."));
 
@@ -143,7 +146,7 @@ public class DemoData implements ApplicationRunner {
     }
 
     @Transactional
-    private void Step3() {
+    private void addUsers() {
 
         LOG.info(msgService.logMessage("Inserting demo users..."));
 
@@ -160,7 +163,7 @@ public class DemoData implements ApplicationRunner {
     }
 
     @Transactional
-    private void Step4() {
+    private void addVotes() {
 
         LOG.info(msgService.logMessage("Inserting demo votes..."));
 

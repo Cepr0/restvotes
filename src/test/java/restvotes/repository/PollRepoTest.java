@@ -24,7 +24,6 @@ public class PollRepoTest extends BaseTest {
     @Autowired private PollRepo pollRepo;
     
     private LocalDate pollDate1 = LocalDate.now().minusDays(1);
-    private LocalDate pollDate2 = LocalDate.now().minusDays(2);
     
     @Test
     public void getLast() throws Exception {

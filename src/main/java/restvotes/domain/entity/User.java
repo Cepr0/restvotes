@@ -98,13 +98,14 @@ public class User extends LongId {
      * Defines user roles
      */
     public enum Role implements GrantedAuthority {
+
         ROLE_USER("User"), ROLE_ADMIN("Admin");
+    
+        private String title;
         
         Role(String title) {
             this.title = title;
         }
-        
-        private String title;
             
         @Override
         public String toString() {
