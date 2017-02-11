@@ -51,7 +51,7 @@
     <title>RESTVotes</title>
 </head>
 <body>
-<script>document.body.className = navigator.language || navigator.languages[0];</script>
+<script>document.body.className = (navigator.language || navigator.languages[0]).substring(0, 2) || 'en';</script>
 
 <span class="lang">
     <a class="rus" href="javascript:setLang('ru');">RU</a> | <a class="eng" href="javascript:setLang('en');">EN</a>
