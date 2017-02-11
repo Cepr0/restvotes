@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            /*color: dimgrey;*/
+            color: #333;
+            margin: 2em;
+            line-height: 1.5em;
+            font-size: 1em;
+        }
+        
+        body.en .ru {
+            display: none;
+        }
+        
+        body.ru .en {
+            display: none;
+        }
+        
+        .lang {
+            font-size: 0.8em;
+        }
+        
+        body.en a.eng {
+            font-weight: bold;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        body.ru a.rus {
+            font-weight: bold;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        a {
+            color: #4078c0;
+        }
+        
+        h1 {
+            padding-bottom: 0.3em;
+            border-bottom: 1px solid #eee;
+        }
+    
+    </style>
+    <title>RESTVotes</title>
+</head>
+<body>
+<script>document.body.className = navigator.language || navigator.languages[0];</script>
+
+<span class="lang">
+    <a class="rus" href="javascript:setLang('ru');">RU</a> | <a class="eng" href="javascript:setLang('en');">EN</a>
+</span>
+
+<h1>RESTVotes</h1>
+<h3 class="en">REST Application: Voting System for Restaurant lunches</h3>
+<h3 class="ru">REST приложение: Выбор ресторана для обеда</h3>
+<div class="en">
+    <p>The app description is on the <a href="https://github.com/Cepr0/restvotes" target="_blank">project page</a></p>
+    <p>To work with the demo follow this link: <a href="/app">/api</a></p>
+    <p>Username: <b>frodo@restvotes.com</b>, password: <b>123456</b></p>
+    <p><a href="https://github.com/Cepr0/restvotes/issues" target="_blank">Feedback</a></p>
+</div>
+<div class="ru">
+    <p>Описание приложения см. на <a href="https://github.com/Cepr0/restvotes" target="_blank">странице проекта</a>.</p>
+    <p>Для работы с приложением перейдите по ссылке: <a href="/api" target="_blank">/api</a></p>
+    <p>Логин: <b>frodo@restvotes.com</b>, пароль: <b>123456</b></p>
+    <p><a href="https://github.com/Cepr0/restvotes/issues" target="_blank">Обратная связь</a></p>
+</div>
+
+<script>
+    function setLang(lang) {
+        document.body.className = lang;
+    }
+</script>
+</body>
+</html>

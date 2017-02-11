@@ -3,7 +3,6 @@ package restvotes;
 import org.h2.tools.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -20,7 +19,7 @@ import java.sql.SQLException;
 @SpringBootApplication
 @EnableAsync
 @EnableScheduling
-@EnableCaching
+// @EnableCaching
 public class RestVotes {
 
     public static void main(String[] args) {
