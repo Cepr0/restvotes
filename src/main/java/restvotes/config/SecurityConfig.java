@@ -45,8 +45,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         String[] USER_PROFILE = {BASE + "/userProfile", BASE + "/userProfile/"};
         String[] COMMON_ELEMENTS = {BASE + "/polls/**", BASE + "/menus/**", BASE + "/restaurants/**", BASE + "/userProfile/**"};
         String VOTE = BASE + "/menus/*/vote";
+        String HAL_BROWSER = BASE + "/browser/**";
     
+        // http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        
         http.httpBasic().realmName("restvotes").and().csrf().disable().authorizeRequests()
+            .antMatchers(HAL_BROWSER).authenticated()
             .antMatchers(GET, ROOT_BASE_AND_PROFILE).permitAll()
             .antMatchers(POST, USER_PROFILE).permitAll()
             .antMatchers(GET, COMMON_ELEMENTS).authenticated()
