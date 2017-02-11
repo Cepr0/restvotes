@@ -3,7 +3,6 @@ package restvotes.util;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import restvotes.BaseTest;
-import restvotes.service.UserService;
 
 import java.util.Locale;
 

@@ -17,7 +17,7 @@ import static restvotes.domain.entity.User.Role.ROLE_USER;
  */
 public class AuthorizedUser extends org.springframework.security.core.userdetails.User {
     
-    private User user;
+    private final User user;
     
     public AuthorizedUser(User user) {
         super(

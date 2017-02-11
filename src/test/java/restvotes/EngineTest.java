@@ -6,8 +6,8 @@ import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.repository.PollRepo;
 import restvotes.service.PollService;
-import restvotes.service.UserService;
 import restvotes.service.VoteService;
+import restvotes.util.UserService;
 
 import java.time.LocalDate;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package restvotes.service;
+package restvotes.util;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import restvotes.domain.entity.User;
 import restvotes.repository.UserRepo;
-import restvotes.util.AuthorizedUser;
-import restvotes.util.MessageHelper;
 import restvotes.util.exception.NotFoundException;
 
 import java.util.Locale;
@@ -30,7 +28,7 @@ public class UserService implements UserDetailsService {
     
     private final @NonNull MessageHelper msgHelper;
     
-    private @NonNull UserRepo userRepo;
+    private final @NonNull UserRepo userRepo;
     
     @Override
     public AuthorizedUser loadUserByUsername(String email) throws UsernameNotFoundException {

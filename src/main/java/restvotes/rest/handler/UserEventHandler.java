@@ -26,7 +26,6 @@ public class UserEventHandler {
     
     private final @NonNull MessageHelper msgHelper;
     
-    
     @HandleBeforeCreate
     public void handleBeforeCreate(User user) {
         
