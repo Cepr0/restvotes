@@ -2,6 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <script>
+        function setLang(lang) {
+            window.localStorage.setItem('lang', lang);
+            document.body.className = lang;
+        }
+    </script>
+
     <style>
         @import url('https://fonts.googleapis.com/css?family=Open+Sans');
         
@@ -48,10 +58,17 @@
         }
     
     </style>
+    
     <title>RESTVotes</title>
 </head>
 <body>
-<script>document.body.className = (navigator.language || navigator.languages[0]).substring(0, 2) || 'en';</script>
+
+<script>
+    var lang = window.localStorage.getItem('lang') || (navigator.language || navigator.languages[0]).substring(0, 2);
+    lang = (lang != 'en' && lang != 'ru') ? 'en' : lang;
+    window.localStorage.setItem('lang', lang);
+    document.body.className = lang;
+</script>
 
 <span class="lang">
     <a class="rus" href="javascript:setLang('ru');">RU</a> | <a class="eng" href="javascript:setLang('en');">EN</a>
@@ -63,7 +80,11 @@
 <div class="en">
     <p>The app description is on the <a href="https://github.com/Cepr0/restvotes" target="_blank">project page</a></p>
     <p>To work with the demo follow this link: <a href="/api">/api</a></p>
-    <p>Username: <b>frodo@restvotes.com</b>, password: <b>123456</b></p>
+    <p>Demo users:</p>
+    <ul>
+        <li>ADMIN: <b>frodo@restvotes.com</b>, password: <b>123456</b></li>
+        <li>USER: <b>sam@restvotes.com</b>, password: <b>123456</b></li>
+    </ul>
     <p><a href="https://github.com/Cepr0/restvotes/issues" target="_blank">Feedback</a></p>
 </div>
 <div class="ru">
@@ -76,11 +97,5 @@
     </ul>
     <p><a href="https://github.com/Cepr0/restvotes/issues" target="_blank">Обратная связь</a></p>
 </div>
-
-<script>
-    function setLang(lang) {
-        document.body.className = lang;
-    }
-</script>
 </body>
 </html>
