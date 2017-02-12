@@ -1,13 +1,11 @@
 package restvotes.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import restvotes.domain.entity.User;
 
 import java.util.List;
@@ -51,13 +49,13 @@ public interface UserRepo extends JpaRepository<User, Long> {
     @Query("select u from User u where u.id = ?1")
     Optional<User> findById(Long id);
     
-    @Modifying(clearAutomatically = true)
-    @Query("update User u set u.enabled = false where u.id = ?1")
-    @Transactional
-    int disable(Long id);
-    
-    @Modifying(clearAutomatically = true)
-    @Query("update User u set u.enabled = true where u.id = ?1")
-    @Transactional
-    int enable(Long id);
+    // @Modifying(clearAutomatically = true)
+    // @Query("update User u set u.enabled = false where u.id = ?1")
+    // @Transactional
+    // int disable(Long id);
+    //
+    // @Modifying(clearAutomatically = true)
+    // @Query("update User u set u.enabled = true where u.id = ?1")
+    // @Transactional
+    // int enable(Long id);
 }

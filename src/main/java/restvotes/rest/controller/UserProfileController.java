@@ -6,7 +6,10 @@ import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import restvotes.domain.entity.User;
 import restvotes.repository.UserRepo;
 import restvotes.rest.view.UserProfile;
@@ -58,14 +61,14 @@ public class UserProfileController {
                 .orElse(notFound().build());
     }
     
-    @DeleteMapping
-    @Transactional
-    public ResponseEntity<?> delete() {
-        if (userRepo.disable(AuthorizedUser.get().getId()) > 0) {
-            
-            return ok().build();
-        } else {
-            return notFound().build();
-        }
-    }
+    // @DeleteMapping
+    // @Transactional
+    // public ResponseEntity<?> delete() {
+    //     if (userRepo.disable(AuthorizedUser.get().getId()) > 0) {
+    //
+    //         return ok().build();
+    //     } else {
+    //         return notFound().build();
+    //     }
+    // }
 }

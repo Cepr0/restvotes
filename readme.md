@@ -1,5 +1,6 @@
-# Voting System for Restaurant lunches
-#### Тестовый проект
+# RESTVotes
+### Voting System for Restaurant lunches
+##### Тестовый проект
 [![Build Status](https://travis-ci.org/Cepr0/restvotes.svg?branch=master)](https://travis-ci.org/Cepr0/restvotes)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6893de10620c4c779d5659949b55bb82)](https://www.codacy.com/app/Cepr0/restvotes)
 ## Задание
@@ -15,7 +16,7 @@ Build a voting system for deciding where to have lunch.
  * Users can vote on which restaurant they want to have lunch at
  * Only one vote counted per user
  * If user votes again the same day:
-    - If it is before 11:00 we asume that he changed his mind.
+    - If it is before 11:00 we assume that he changed his mind.
     - If it is after 11:00 then it is too late, vote can't be changed
 
 Each restaurant provides new menu each day.
@@ -24,7 +25,7 @@ As a result, provide a link to github repository. It should contain the code, RE
 
 P.S.: Make sure everything works with latest version that is on github :)
 
-P.P.S.: Asume that your API will be used by a frontend developer to build frontend on top of that.
+P.P.S.: Assume that your API will be used by a frontend developer to build frontend on top of that.
 
 ## Реализация
 
@@ -40,7 +41,7 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 *   Lombok
 *   Maven
 
-Приложение разработано на основе Spring Data REST, что позволило реализовать REST API с использованием технологии [HATEOAS](http://spring-projects.ru/understanding/hateoas/) - Hypermedia as the Engine of Application State.  
+Применение [Spring Data REST](http://projects.spring.io/spring-data-rest/) позволило реализовать REST API с использованием технологии [HATEOAS](http://spring-projects.ru/understanding/hateoas/) - Hypermedia as the Engine of Application State.  
 
 ### Структура данных
 
@@ -91,25 +92,33 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 Голосовать можно только в течение незавершенного текущего Опроса.
 Если Пользователь голосует второй раз в течение открытого Опроса, то его предыдущий голос перезаписывается.
 
+### Настройки приложения
+
+#### application.properties
+- **restvotes.new_day_poll_time**=9:00 - время начала опроса в текущем (новом) дне. 
+Если до этого момента Администратор не создал опрос, приложение сделает это автоматически на основе предыдущего 
+завершенного запроса - скопирует его список Меню. 
+      
+- **restvotes.end_of_voting_time**=11:00 - время завершения опроса. 
+Программа автоматически завершает опрос и определяет победителя. 
+
 ### Поведение
 
 #### Старт приложения
-1.  Программа проверяет если сейчас время после окончания Опроса, то закрывает все незавершенные Опросы на текущий момент. Иначе - завершает все Опросы до начала сегодняшнего дня.  
+1.  Программа проверяет: если сейчас время после окончания Опроса, то закрывает все незавершенные Опросы на текущий момент. Иначе - завершает все Опросы до начала сегодняшнего дня.  
 2.  Проверяет во всех ли закрытых Опросах проставлены победители. Проставляет, если не проставлены.  
-3.  Ищет "пустые" Опросы, которые не содержат голосов Пользователей, и удаляет их. 
-4.  Если сейчас время после "начала голосования", но до "завершения голосования" (см. ниже), программа автоматически создает новый Опрос 
-(если Опрос не был сделан ранее Администратором) - копирует предыдущий завершенный Опрос вместе с его списком Меню 
-(предполагается, что сегодня может быть такое же Меню как и вчера). До времени "начала голосования" Администратор может создать Опрос вручную.    
+3.  Ищет "пустые" Опросы, которые не содержат голосов Пользователей, и удаляет найденные опросы. 
+4.  Если сейчас время после "начала опроса", но до "завершения опроса", программа автоматически создает новый Опрос (если Опрос не был сделан ранее Администратором) - копирует список меню последнего завершенного Опроса (предполагается, что сегодня может быть такое же Меню как и вчера). До времени "начала голосования" Администратор может создать Опрос вручную.
 
-#### Начало нового дня (по умолчанию - 0:00:01)
-1.  Программа проверяет проставлены ли победители в завершенных Опросах, если нет - проставляет.   
+#### Начало нового дня (0:00:01)
+1.  Программа проверяет: проставлены ли победители в завершенных Опросах, если нет - проставляет.   
 2.  Удаляет "пустые" Опросы 
 
 #### Начало голосования (по умолчанию - 9:00)
-1.  Если Опрос еще не создан за сегодня, программа автоматически создает новый Опрос - копирует предыдущий закрытый Опрос, вместе с его списком Меню. 
+1.  Если Опрос еще не создан за сегодня, программа автоматически создает новый Опрос - копирует список Меню последнего закрытого Опроса. 
 
 #### Завершение голосования (по умолчанию - 11:00)
-1.  Завершает все незаврешенные Опросы на текущий момент.
+1.  Завершает все незавершенные Опросы на текущий момент.
 2.  Проставляет победителя в завершенных Опросах.
 
 ### Описание интерфейса (API)
@@ -119,7 +128,7 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 Выводит список доступных объектов: Опросы, Меню, Рестораны, Пользователи
 
 Команды:
-*   **GET** - Получение списка объектов приложения. Доступно всем посетителям.
+*   **GET** - Получение списка объектов приложения. Доступна всем посетителям.
 
     GET [http://localhost:8080/api](http://localhost:8080/api)
  
@@ -163,10 +172,10 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 
 #### /api/userProfile
 
-Работа с профилем рядового пользователя.
+Работа с профилем обычного пользователя.
 
 Команды:
-*   **GET** - Получение профиля. Доступно авторизованному пользователю.
+*   **GET** - Получение профиля. Доступна авторизованному пользователю.
 
     GET [http://localhost:8080/api/userProfile](http://localhost:8080/api/userProfile)
 
@@ -184,7 +193,7 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
           }
         }
 
-*   **POST** - Регистрация нового пользователя. Доступно всем посетителям
+*   **POST** - Регистрация нового пользователя. Доступна всем посетителям
     
     POST [http://localhost:8080/api/userProfile](http://localhost:8080/api/userProfile)
 
@@ -196,7 +205,7 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
           "email": "givi@restvotes.com",
         }
 
-*   **PUT** - Редактирование профиля. Доступно авторизованному пользователю (тело запроса аналогично POST).
+*   **PUT** - Редактирование профиля. Доступна авторизованному пользователю (тело запроса аналогично команде POST).
     
     PUT [http://localhost:8080/api/userProfile](http://localhost:8080/api/userProfile)
 
@@ -205,7 +214,7 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 Работа с Опросами.
 
 Команды:
-*   **GET** - Простмотр всех опросов. Доступно авторизованному пользователю.
+*   **GET** - Просмотр всех опросов. Доступна авторизованному пользователю.
 
     GET [http://localhost:8080/api/polls](http://localhost:8080/api/polls)
         
@@ -281,7 +290,7 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
     *   **finished** - признак завершенного Опроса
     *   **current** - признак текущего Опроса     
     
-*   **GET** - Получение текущего Опроса. Доступно авторизованному пользователю.
+*   **GET** - Получение текущего Опроса. Доступна авторизованному пользователю.
     
     POST [http://localhost:8080/api/polls/current](http://localhost:8080/api/polls/current)
     
@@ -421,13 +430,13 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
           }
         }    
 
-    *   **chosen** - меню, за которое проголосовал пользователь
+    *   **chosen** - меню, за которое проголосовал текущий пользователь
     *   **rank** - кол-во проголосовавших за данное меню
     *   **winner** - признак победившего Меню (для завершившегося Опроса)
     *   **vote** - ссылка для голосования за данное меню (команда PUT - см. ниже)
     *   **userChoice** - ссылка на Меню - текущий выбор пользователя     
 
-*   **POST** - Создание нового запроса. Доступно только администраторам
+*   **POST** - Создание нового запроса. Доступна только администраторам
 
     POST [http://localhost:8080/api/polls](http://localhost:8080/api/polls)
     
@@ -444,7 +453,7 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 
     *   "**http://localhost:8080/api/menus/{id}**" - ссылка на Меню, включаемое в Опрос (см. ниже).         
     
-*   **PUT** - Редактирование опроса. Доступно только администраторам
+*   **PUT** - Редактирование опроса. Доступна только администраторам
     
     PUT [http://localhost:8080/api/polls/2017-02-06](http://localhost:8080/api/polls/2017-02-06)
         
@@ -458,23 +467,539 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
             ]
         }
 
+    *   "**http://localhost:8080/api/menus/{id}**" - ссылка на Меню, включаемое в Опрос (см. ниже).         
+
 #### /api/menus
+
+Работа со списком Меню.
+
+Команды:
+
+* **GET** - Получение списка всех Меню. Доступна авторизованным пользователям.
+    
+    GET [http://localhost:8080/api/menus?size=3](http://localhost:8080/api/menus?size=3)
+    
+    *Response body:*
+    
+        {
+          "_embedded": {
+            "menus": [
+              {
+                "items": [
+                  {
+                    "description": "Description1 M1",
+                    "cost": 15
+                  },
+                  {
+                    "description": "Description2 M1",
+                    "cost": 20
+                  },
+                  {
+                    "description": "Description3 M1",
+                    "cost": 10
+                  }
+                ],
+                "price": 45,
+                "_links": {
+                  "self": {
+                    "href": "http://localhost:8080/api/menus/1"
+                  },
+                  "menu": {
+                    "href": "http://localhost:8080/api/menus/1{?projection}",
+                    "templated": true,
+                    "title": "Меню"
+                  },
+                  "restaurant": {
+                    "href": "http://localhost:8080/api/menus/1/restaurant",
+                    "title": "Ресторан"
+                  }
+                }
+              },
+              {
+                "items": [
+                  {
+                    "description": "Description1 M2",
+                    "cost": 15.5
+                  },
+                  {
+                    "description": "Description2 M2",
+                    "cost": 20.5
+                  },
+                  {
+                    "description": "Description3 M2",
+                    "cost": 10.5
+                  }
+                ],
+                "price": 46.5,
+                "_links": {
+                  "self": {
+                    "href": "http://localhost:8080/api/menus/2"
+                  },
+                  "menu": {
+                    "href": "http://localhost:8080/api/menus/2{?projection}",
+                    "templated": true,
+                    "title": "Меню"
+                  },
+                  "restaurant": {
+                    "href": "http://localhost:8080/api/menus/2/restaurant",
+                    "title": "Ресторан"
+                  }
+                }
+              },
+              {
+                "items": [
+                  {
+                    "description": "Description1 M3",
+                    "cost": 15.9
+                  },
+                  {
+                    "description": "Description2 M3",
+                    "cost": 20.9
+                  },
+                  {
+                    "description": "Description3 M3",
+                    "cost": 10.9
+                  }
+                ],
+                "price": 47.7,
+                "_links": {
+                  "self": {
+                    "href": "http://localhost:8080/api/menus/3"
+                  },
+                  "menu": {
+                    "href": "http://localhost:8080/api/menus/3{?projection}",
+                    "templated": true,
+                    "title": "Меню"
+                  },
+                  "restaurant": {
+                    "href": "http://localhost:8080/api/menus/3/restaurant",
+                    "title": "Ресторан"
+                  }
+                }
+              }
+            ]
+          },
+          "_links": {
+            "first": {
+              "href": "http://localhost:8080/api/menus?page=0&size=3"
+            },
+            "self": {
+              "href": "http://localhost:8080/api/menus"
+            },
+            "next": {
+              "href": "http://localhost:8080/api/menus?page=1&size=3"
+            },
+            "last": {
+              "href": "http://localhost:8080/api/menus?page=1&size=3"
+            },
+            "profile": {
+              "href": "http://localhost:8080/api/profile/menus"
+            }
+          },
+          "page": {
+            "size": 3,
+            "totalElements": 6,
+            "totalPages": 2,
+            "number": 0
+          }
+        }
+
+    * **?page**=3 - дополнительный параметр запроса, задает кол-во элементов на странице выдачи результата.
+
+* **POST** - Создание нового Меню. Доступна администраторам.
+    
+    POST [http://localhost:8080/api/menus](http://localhost:8080/api/menus)
+    
+    *Request body:*
+    
+        {
+            "items": [
+                {
+                    "description": "Description1",
+                    "cost": 15
+                },
+                {
+                    "description": "Description2",
+                    "cost": 20
+                },
+                {
+                    "description": "Description3",
+                    "cost": 10
+                }
+                ],
+                "restaurant": "http://localhost:8080/api/restaurants/1"
+        }
+    
+    *  **"http://localhost:8080/api/restaurants/1"** - ссылка на ресторан, к которому принадлежит создаваемое меню.
+    
+* **PUT** - Редактирование Меню. Доступна администраторам.
+    
+    POST [http://localhost:8080/api/menus/1](http://localhost:8080/api/menus/1)
+    
+    *Request body:*
+    
+        {
+            "items": [
+                {
+                    "description": "Description1",
+                    "cost": 15.5
+                },
+                {
+                    "description": "Description2",
+                    "cost": 20.5
+                },
+                {
+                    "description": "Description3",
+                    "cost": 10.5
+                }
+                ],
+                "restaurant": "http://localhost:8080/api/restaurants/2"
+        }
+    
+    *  **"http://localhost:8080/api/restaurants/1"** - ссылка на ресторан, к которому принадлежит создаваемое меню.
+    
+    Изменять меню можно только если оно еще не участвовало в опросах.
+    
+* **DELETE** - Удаление Меню. Доступна администраторам.  
+    
+    DELETE [http://localhost:8080/api/menus/1](http://localhost:8080/api/menus/1)
+
+    Удалять меню можно только если оно еще не участвовало в опросах.  
 
 #### /api/restaurants
 
+Работа со списком Ресторанов.
+
+Команды:
+
+* **GET** - Получение списка всех Ресторанов. Доступна авторизованным пользователям.
+    
+    GET [http://localhost:8080/api/restaurants](http://localhost:8080/api/restaurants)
+    
+    *Response body:*
+    
+        {
+          "_embedded": {
+            "restaurants": [
+              {
+                "name": "Rest1",
+                "address": "Address1",
+                "url": "http://rest1.com",
+                "phone": "1234567890",
+                "_links": {
+                  "self": {
+                    "href": "http://localhost:8080/api/restaurants/1"
+                  },
+                  "restaurant": {
+                    "href": "http://localhost:8080/api/restaurants/1",
+                    "title": "Ресторан"
+                  },
+                  "menus": {
+                    "href": "http://localhost:8080/api/restaurants/1/menus",
+                    "title": "Список меню"
+                  }
+                }
+              },
+              {
+                "name": "Rest2",
+                "address": "Address2",
+                "url": "http://rest2.com",
+                "phone": "2345678901",
+                "_links": {
+                  "self": {
+                    "href": "http://localhost:8080/api/restaurants/2"
+                  },
+                  "restaurant": {
+                    "href": "http://localhost:8080/api/restaurants/2",
+                    "title": "Ресторан"
+                  },
+                  "menus": {
+                    "href": "http://localhost:8080/api/restaurants/2/menus",
+                    "title": "Список меню"
+                  }
+                }
+              },
+              {
+                "name": "Rest3",
+                "address": "Address3",
+                "url": "http://rest3.com",
+                "phone": "3456789012",
+                "_links": {
+                  "self": {
+                    "href": "http://localhost:8080/api/restaurants/3"
+                  },
+                  "restaurant": {
+                    "href": "http://localhost:8080/api/restaurants/3",
+                    "title": "Ресторан"
+                  },
+                  "menus": {
+                    "href": "http://localhost:8080/api/restaurants/3/menus",
+                    "title": "Список меню"
+                  }
+                }
+              }
+            ]
+          },
+          "_links": {
+            "self": {
+              "href": "http://localhost:8080/api/restaurants"
+            },
+            "profile": {
+              "href": "http://localhost:8080/api/profile/restaurants"
+            },
+            "search": {
+              "href": "http://localhost:8080/api/restaurants/search",
+              "title": "Поиск"
+            }
+          },
+          "page": {
+            "size": 20,
+            "totalElements": 3,
+            "totalPages": 1,
+            "number": 0
+          }
+        }
+
+    * **"http://localhost:8080/api/restaurants/{id}/menus"** - список всех меню выбранного ресторана (см. ниже);
+    * **"http://localhost:8080/api/restaurants/search"** - поиск по списку ресторанов (см. ниже).
+    
+* **POST** - Создание нового Ресторана. Доступна администраторам.
+    
+    POST [http://localhost:8080/api/restaurants](http://localhost:8080/api/restaurants)
+    
+    *Request body:*
+    
+        {
+          "name": "Rest1",
+          "address": "Address1",
+          "url": "http://rest1.com",
+          "phone": "1234567890"
+        }    
+
+    * **name** - уникальное поле.
+    
+* **PUT** - Редактирование Ресторана. Доступна администраторам.
+    
+    POST [http://localhost:8080/api/restaurants/1](http://localhost:8080/api/restaurants/1)
+    
+    *Request body:*
+    
+        {
+          "name": "Rest1",
+          "address": "Address1",
+          "url": "http://rest1.com",
+          "phone": "0987654321"
+        }    
+
+* **DELETE** - Удаление Ресторана. Доступна администраторам. Удалить можно только не используемый ранее Ресторан.
+    
+    DELETE [http://localhost:8080/api/restaurants/1](http://localhost:8080/api/restaurants/1)
+
+* **GET** - Получить список всех меню, связанных с выбранным рестораном. Доступна авторизованным пользователям.
+
+    GET [http://localhost:8080/api/restaurants/1/menus](http://localhost:8080/api/restaurants/1/menus)
+
+* **GET** - Поиск по списку ресторанов. Доступна авторизованным пользователям.
+
+    GET [http://localhost:8080/api/restaurants/search](http://localhost:8080/api/restaurants/search)
+    
+    *Response:*
+    
+        {
+          "_links": {
+            "byAddress": {
+              "href": "http://localhost:8080/api/restaurants/search/byAddress{?address}",
+              "templated": true
+            },
+            "byName": {
+              "href": "http://localhost:8080/api/restaurants/search/byName{?name}",
+              "templated": true
+            },
+            "self": {
+              "href": "http://localhost:8080/api/restaurants/search"
+            }
+          }
+        }    
+
+    * **http://localhost:8080/api/restaurants/search/byAddress**?address=Address - поиск по адресу;
+    * **http://localhost:8080/api/restaurants/search/byName**?name=Rest - поиск по наименованию.
+
 #### /api/users
+
+Работа с пользователями. Доступ только для Администраторов.
+
+Команды:
+
+* **GET** - Получение списка всех Пользователей. 
+    
+    GET [http://localhost:8080/api/users](http://localhost:8080/api/users)
+    
+    *Response:*
+
+        {
+          "_embedded": {
+            "users": [
+              {
+                "name": "Frodo Baggins",
+                "email": "frodo@restvotes.com",
+                "enabled": true,
+                "role": "ROLE_ADMIN",
+                "registered": "2017-02-12 13:32:18",
+                "_links": {
+                  "self": {
+                    "href": "http://localhost:8080/api/users/1"
+                  },
+                  "user": {
+                    "href": "http://localhost:8080/api/users/1",
+                    "title": "Пользователь"
+                  }
+                }
+              },
+              {
+                "name": "Gandalf the Grey",
+                "email": "gandalf@restvotes.com",
+                "enabled": true,
+                "role": "ROLE_ADMIN",
+                "registered": "2017-02-12 13:32:18",
+                "_links": {
+                  "self": {
+                    "href": "http://localhost:8080/api/users/2"
+                  },
+                  "user": {
+                    "href": "http://localhost:8080/api/users/2",
+                    "title": "Пользователь"
+                  }
+                }
+              },
+              {
+                "name": "Sam Gamgee",
+                "email": "sam@restvotes.com",
+                "enabled": true,
+                "role": "ROLE_USER",
+                "registered": "2017-02-12 13:32:18",
+                "_links": {
+                  "self": {
+                    "href": "http://localhost:8080/api/users/3"
+                  },
+                  "user": {
+                    "href": "http://localhost:8080/api/users/3",
+                    "title": "Пользователь"
+                  }
+                }
+              }
+            ]
+          },
+          "_links": {
+            "first": {
+              "href": "http://localhost:8080/api/users?page=0&size=3"
+            },
+            "self": {
+              "href": "http://localhost:8080/api/users"
+            },
+            "next": {
+              "href": "http://localhost:8080/api/users?page=1&size=3"
+            },
+            "last": {
+              "href": "http://localhost:8080/api/users?page=2&size=3"
+            },
+            "profile": {
+              "href": "http://localhost:8080/api/profile/users"
+            },
+            "search": {
+              "href": "http://localhost:8080/api/users/search",
+              "title": "Поиск"
+            }
+          },
+          "page": {
+            "size": 3,
+            "totalElements": 8,
+            "totalPages": 3,
+            "number": 0
+          }
+        }
+
+* **POST** - Создание нового Пользователя.
+    
+    POST [http://localhost:8080/api/users](http://localhost:8080/api/users)
+    
+    *Request body:*
+    
+        {
+          "name": "Vasya Pupkin",
+          "password": "123456",
+          "email": "vasya@restvotes.com",
+          "role": "ROLE_ADMIN"
+          }
+
+    * **name** - не меньше 3 символов;
+    * **email** - уникальное поле;
+    * **password** - не меньше 6 символов.
+    
+    По умолчанию создается активный пользователь с ролью ROLE_USER (поля 'enabled' и 'role' можно не указывать).  
+    
+* **PUT** - Редактирование пользователя.
+    
+    PUT [http://localhost:8080/api/users/1](http://localhost:8080/api/users/1)
+    
+    *Request body:*
+    
+        {
+          "name": "Vasiliy Pupkin",
+          "password": "123456",
+          "email": "vasya@restvotes.com",
+          "role": "ROLE_USER",
+          "enabled": false
+          }
+
+* **DELETE** - Удаление пользователя. Удалить можно только еще не голосовавшего пользователя.
+    
+    DELETE [http://localhost:8080/api/users/1](http://localhost:8080/api/users/1)
+
+* **GET** - Поиск по списку пользователей.
+
+    GET [http://localhost:8080/api/users/search](http://localhost:8080/api/users/search)
+    
+    *Response:*
+
+        {
+          "_links": {
+            "enabled": {
+              "href": "http://localhost:8080/api/users/search/enabled"
+            },
+            "disabled": {
+              "href": "http://localhost:8080/api/users/search/disabled"
+            },
+            "byRole": {
+              "href": "http://localhost:8080/api/users/search/byRole{?role}",
+              "templated": true
+            },
+            "byName": {
+              "href": "http://localhost:8080/api/users/search/byName{?name}",
+              "templated": true
+            },
+            "byEmail": {
+              "href": "http://localhost:8080/api/users/search/byEmail{?email}",
+              "templated": true
+            },
+            "self": {
+              "href": "http://localhost:8080/api/users/search"
+            }
+          }
+        }
 
 ### Профили приложения
 
 Реализована поддержка 4-х профилей: dev, demo, prod и test:
 
-- dev:
+- **dev** - разработка (профиль по-умолчанию). Используется БД H2 в памяти; заполняется демо данными; настроено логирование запросов в БД и логирование результатов (см. файл 'application-dev.properties').    
 
-- demo:
+- **demo** - предназначен для деплоя на Heroku. Используется БД MySQL; заполняется демо данными; настроено логирование запросов в БД и логирование результатов (см. файл 'application-demo.properties').
 
-- prod: 
+- **prod** - предназначен для работы на продуктиве. Используется БД H2 в файле; не заполняется демо данными (см. файл 'application-prod.properties').  
 
-- test:
+- **test** - предназначен для выполнения тестов. Используется БД H2 в памяти; заполняется демо данными; настроено логирование запросов в БД и логирование результатов (см. файл 'application-test.properties').
+ 
+Для задания нужно профиля, нужно задать параметр _spring.profiles.active=dev_ в 'application.properties' либо аргумет запуска приложения _-Dspring.profiles.active=demo_ (см. файл 'Procfile').
 
 ### Запуск приложения
 
@@ -489,7 +1014,12 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 
 [Demo](https://restvotes.herokuapp.com/api)
 
-Для удобства работы с приложением в браузере, в приложение добавлен [The HAL Browser](http://docs.spring.io/spring-data/rest/docs/current/reference/html/#_the_hal_browser).
-Полный функционал лучше тестировать в приложении [Postman](https://www.getpostman.com/).
+Для удобства работы в браузере, в приложение добавлен [The HAL Browser](http://docs.spring.io/spring-data/rest/docs/current/reference/html/#_the_hal_browser).
 
-Демо пользователи: Frodo Baggins (Администратор), frodo@restvotes.com, пароль: 123456 и др. (см. /api/users)
+Рекомендуется тестировать функционал в приложении [Postman](https://www.getpostman.com/).
+
+Демо пользователи: 
+- **ADMIN**: frodo@restvotes.com, пароль: 123456
+- **USER**: sam@restvotes.com, пароль: 123456
+
+и др. (см. /api/users)
