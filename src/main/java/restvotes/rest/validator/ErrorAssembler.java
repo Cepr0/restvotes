@@ -67,12 +67,12 @@ public class ErrorAssembler {
         @Getter
         private final List<Error> errors = new ArrayList<>();
         
-        ErrorMsg addError(String object, String property, String invalidValue, String message) {
+        private ErrorMsg addError(String object, String property, String invalidValue, String message) {
             errors.add(new Error(object, property, invalidValue, message));
             return this;
         }
     
-        ErrorMsg addError(String message) {
+        private ErrorMsg addError(String message) {
             errors.add(new Error(null, null, null, message));
             return this;
         }
@@ -81,9 +81,9 @@ public class ErrorAssembler {
     @JsonInclude(NON_NULL)
     @Value
     private class Error {
-        String object;
-        String property;
-        String invalidValue;
-        String message;
+        private final String object;
+        private final String property;
+        private final String invalidValue;
+        private final String message;
     }
 }

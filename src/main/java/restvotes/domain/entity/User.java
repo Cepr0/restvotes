@@ -101,7 +101,7 @@ public class User extends LongId {
     
     @PrePersist
     private void encodePassword() {
-        this.password = (password != null) ? PASSWORD_ENCODER.encode(password) : null;
+        password = (password != null) ? PASSWORD_ENCODER.encode(password) : null;
     }
     
     // TODO Add projection for UserProfile?
