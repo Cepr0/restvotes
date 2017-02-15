@@ -3,9 +3,11 @@ package restvotes.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
 import org.springframework.validation.Validator;
+import restvotes.rest.validator.UserValidator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +31,18 @@ public class ValidatorRegistrar implements InitializingBean {
     
     private final ValidatingRepositoryEventListener listener;
     
+    // http://docs.spring.io/spring-data/rest/docs/current/reference/html/#validation
+    // http://stackoverflow.com/a/24318687/5380322
+    @Bean
+    public UserValidator beforeCreateUserValidator() {
+        return new UserValidator();
+    }
+    
+    @Bean
+    public UserValidator beforeSaveUserValidator() {
+        return new UserValidator();
+    }
+    
     private static final List<String> EVENTS = unmodifiableList(new ArrayList<>(Arrays.asList(
                 "beforeCreate",
                 "afterCreate",
@@ -42,7 +56,6 @@ public class ValidatorRegistrar implements InitializingBean {
     
     @Override
     public void afterPropertiesSet() throws Exception {
-        // TODO http://stackoverflow.com/a/38668148/5380322
         Map<String, Validator> validators = beanFactory.getBeansOfType(Validator.class);
         for (Map.Entry<String, Validator> entry : validators.entrySet()) {
             EVENTS.stream()

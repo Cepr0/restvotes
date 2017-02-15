@@ -30,9 +30,15 @@ import static restvotes.domain.entity.User.Role.ROLE_USER;
 @Table(name = "users")
 public class User extends LongId {
     
+    public static final int NAME_MIN_LEN = 3;
+    public static final int PASSWORD_MIN_LEN = 6;
+    public static final String NAME_PATTERN = "[A-zА-Яа-я .]{" + NAME_MIN_LEN + ",}";
+    public static final String PASSWORD_PATTERN = ".{" + PASSWORD_MIN_LEN + ",}";
+    public static final String EMAIL_PATTERN = "[A-z0-9._%+-]+@[A-z0-9.-]+\\.[A-z]{2,6}$";
+    
     @NotEmpty
     @Column(nullable = false)
-    @Length(min = 3)
+    @Length(min = NAME_MIN_LEN)
     private String name;
     
     @Email
@@ -43,7 +49,7 @@ public class User extends LongId {
     @JsonProperty(access = WRITE_ONLY)
     @NotEmpty
     @Column(nullable = false)
-    @Length(min = 6)
+    @Length(min = PASSWORD_MIN_LEN)
     private String password;
     
     @NotNull
@@ -89,8 +95,13 @@ public class User extends LongId {
     }
     
     public User setPassword(String password) {
-        this.password = password != null ? PASSWORD_ENCODER.encode(password) : null;
+        this.password = password;// != null ? PASSWORD_ENCODER.encode(password) : null;
         return this;
+    }
+    
+    @PrePersist
+    private void encodePassword() {
+        this.password = (password != null) ? PASSWORD_ENCODER.encode(password) : null;
     }
     
     // TODO Add projection for UserProfile?

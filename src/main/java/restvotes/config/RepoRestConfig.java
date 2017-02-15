@@ -60,8 +60,9 @@ public class RepoRestConfig extends RepositoryRestConfigurerAdapter {
     }
     
     @Override
-    public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
+    public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener v) {
         // TODO Move here the ValidatorRegistrar functionality
-        super.configureValidatingRepositoryEventListener(validatingListener);
+        
+        super.configureValidatingRepositoryEventListener(v);
     }
 }
