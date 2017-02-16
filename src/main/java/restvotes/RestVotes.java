@@ -5,7 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -50,19 +49,19 @@ public class RestVotes {
         return new ThreadPoolTaskScheduler();
     }
     
-    /**
-     * http://stackoverflow.com/a/30558018/5380322
-     * @return a ReloadableResourceBundleMessageSource instance
-     */
-    @Bean
-    public ReloadableResourceBundleMessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages");
-        messageSource.setCacheSeconds(60); //reload messages every 60 seconds
-        messageSource.setDefaultEncoding("UTF-8");
-        messageSource.setFallbackToSystemLocale(false);
-        return messageSource;
-    }
+    // /**
+    //  * http://stackoverflow.com/a/30558018/5380322
+    //  * @return a ReloadableResourceBundleMessageSource instance
+    //  */
+    // @Bean
+    // public ReloadableResourceBundleMessageSource messageSource() {
+    //     ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+    //     messageSource.setBasename("classpath:messages");
+    //     messageSource.setCacheSeconds(60); //reload messages every 60 seconds
+    //     messageSource.setDefaultEncoding("UTF-8");
+    //     messageSource.setFallbackToSystemLocale(false);
+    //     return messageSource;
+    // }
     
     // /**
     //  * http://stackoverflow.com/a/26283080/5380322

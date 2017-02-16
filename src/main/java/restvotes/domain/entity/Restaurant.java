@@ -1,12 +1,14 @@
 package restvotes.domain.entity;
 
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 import restvotes.domain.base.LongId;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Cepro, 2017-01-01
@@ -19,11 +21,17 @@ import javax.persistence.Table;
 @Table(name = "restaurants")
 public class Restaurant extends LongId {
     
+    private static final int MIN_LEN = 3;
+    
     @NonNull
+    @NotNull(message = "valid.field")
+    @Length(min = MIN_LEN, message = "valid.name")
     @Column(unique = true, nullable = false)
     private String name;
     
     @NonNull
+    @NotNull(message = "valid.field")
+    @Length(min = MIN_LEN, message = "valid.address")
     @Column(nullable = false)
     private String address;
     

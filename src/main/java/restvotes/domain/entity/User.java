@@ -5,13 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import restvotes.domain.base.LongId;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
@@ -36,20 +35,20 @@ public class User extends LongId {
     public static final String PASSWORD_PATTERN = ".{" + PASSWORD_MIN_LEN + ",}";
     public static final String EMAIL_PATTERN = "[A-z0-9._%+-]+@[A-z0-9.-]+\\.[A-z]{2,6}$";
     
-    @NotEmpty
+    @NotNull(message = "valid.field")
+    @Pattern(regexp = NAME_PATTERN, message = "valid.username")
     @Column(nullable = false)
-    @Length(min = NAME_MIN_LEN)
     private String name;
     
-    @Email
-    @NotEmpty
+    @Email(regexp = EMAIL_PATTERN, message = "valid.email")
+    @NotNull(message = "valid.field_must_not_be_null")
     @Column(unique = true)
     private String email;
     
     @JsonProperty(access = WRITE_ONLY)
-    @NotEmpty
+    @NotNull(message = "valid.field")
+    @Pattern(regexp = PASSWORD_PATTERN, message = "valid.password")
     @Column(nullable = false)
-    @Length(min = PASSWORD_MIN_LEN)
     private String password;
     
     @NotNull

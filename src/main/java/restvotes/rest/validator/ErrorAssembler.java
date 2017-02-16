@@ -8,6 +8,7 @@ import lombok.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import restvotes.util.MessageHelper;
 
@@ -29,37 +30,50 @@ public class ErrorAssembler {
     
     public ResponseEntity<?> errorMsg(BindingResult bindingResult) {
     
-        ErrorMsg errors =  new ErrorMsg();
+        ErrorMsg errorMsg =  new ErrorMsg();
         for (FieldError fe : bindingResult.getFieldErrors()) {
-            errors.addError(
+            errorMsg.addError(
                     msgHelper.userMessage(fe.getObjectName()),
                     msgHelper.userMessage(fe.getField()),
                     fe.getRejectedValue().toString(),
                     msgHelper.userMessage(fe.getDefaultMessage()));
         }
     
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity.badRequest().body(errorMsg);
     }
     
     public ResponseEntity<?> errorMsg(Set<ConstraintViolation<?>> violations) {
 
-        ErrorMsg errors =  new ErrorMsg();
+        ErrorMsg errorMsg =  new ErrorMsg();
         for (ConstraintViolation<?> v : violations) {
-            errors.addError(
-                    msgHelper.userMessage(v.getRootBeanClass().getName()),
-                    msgHelper.userMessage(v.getMessageTemplate()),
+            errorMsg.addError(
+                    msgHelper.userMessage(v.getRootBeanClass().getSimpleName()),
+                    msgHelper.userMessage(v.getPropertyPath().iterator().next().getName()),
                     msgHelper.userMessage(v.getInvalidValue().toString()),
                     msgHelper.userMessage(v.getMessage()));
         }
         
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity.badRequest().body(errorMsg);
     }
     
     public ResponseEntity<?> errorMsg(String localizedMessage) {
     
-        ErrorMsg errors =  new ErrorMsg();
-        errors.addError(localizedMessage);
-        return ResponseEntity.badRequest().body(errors);
+        ErrorMsg errorMsg =  new ErrorMsg();
+        errorMsg.addError(localizedMessage);
+        return ResponseEntity.badRequest().body(errorMsg);
+    }
+    
+    public ResponseEntity<?> errorMsg(Errors e) {
+        ErrorMsg errorMsg =  new ErrorMsg();
+        for (FieldError fe : e.getFieldErrors()) {
+            errorMsg.addError(
+                    msgHelper.userMessage(fe.getObjectName()),
+                    msgHelper.userMessage(fe.getField()),
+                    fe.getRejectedValue().toString(),
+                    msgHelper.userMessage(fe.getDefaultMessage()));
+        }
+    
+        return ResponseEntity.badRequest().body(errorMsg);
     }
     
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")

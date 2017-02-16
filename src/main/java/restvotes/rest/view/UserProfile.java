@@ -27,15 +27,15 @@ public class UserProfile implements Identifiable<Long> {
     private Long id;
     
     @NotNull
-    @Pattern(regexp = NAME_PATTERN, message = "users.check_name")
+    @Pattern(regexp = NAME_PATTERN, message = "valid.username")
     private String name;
     
     @NotNull
-    @Pattern(regexp = PASSWORD_PATTERN, message = "users.check_password")
+    @Pattern(regexp = PASSWORD_PATTERN, message = "valid.password")
     private String password;
     
     @NotNull
-    @Pattern(regexp = EMAIL_PATTERN, message = "users.check_email")
+    @Pattern(regexp = EMAIL_PATTERN, message = "valid.email")
     private String email;
 
     public UserProfile(User user) {

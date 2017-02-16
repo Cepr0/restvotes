@@ -3,9 +3,12 @@ package restvotes.rest.validator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.rest.core.RepositoryConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,8 +22,8 @@ import java.util.Set;
  * @author Cepro, 2017-02-14
  */
 @RequiredArgsConstructor
-@ControllerAdvice//(assignableTypes = UserProfileController.class)
-public class ExceptionsHandler { // TODO Implement validators for all Entity
+@ControllerAdvice
+public class ExceptionsHandler { // TODO Implement handling for Forbidden and NotFound exceptions
     
     private final @NonNull ErrorAssembler assembler;
     
@@ -36,11 +39,25 @@ public class ExceptionsHandler { // TODO Implement validators for all Entity
         Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
         return assembler.errorMsg(violations);
     }
-
+    
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(RepositoryConstraintViolationException.class)
+    public ResponseEntity<?> handleRepositoryConstraintViolationException(RepositoryConstraintViolationException ex) {
+        Errors errors = ex.getErrors();
+        return assembler.errorMsg(errors);
+    }
+    
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
         return assembler.errorMsg(bindingResult);
     }
+    
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        return assembler.errorMsg(ex.getRootCause().getMessage());
+    }
+
 }
