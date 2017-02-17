@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
-import restvotes.config.AppProperties;
+import restvotes.config.AppConfig;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Poll;
 import restvotes.repository.PollRepo;
@@ -28,7 +28,7 @@ import java.util.List;
 @RepositoryEventHandler(Poll.class)
 public class PollEventHandler {
     
-    private final @NonNull AppProperties properties;
+    private final @NonNull AppConfig config;
     
     private final @NonNull VoteRepo voteRepo;
     
@@ -66,7 +66,7 @@ public class PollEventHandler {
         }
     
         // If we are trying to create Poll after the End Of Voting Time
-        LocalTime endOfVotingTimeValue = properties.getEndOfVotingTimeValue();
+        LocalTime endOfVotingTimeValue = config.getEndOfVotingTimeValue();
         String timeStr = endOfVotingTimeValue.format(DateTimeFormatter.ofPattern("HH:mm"));
         if (poll.getDate().isEqual(LocalDate.now()) && LocalTime.now().isAfter(endOfVotingTimeValue)) {
             throw new ForbiddenException(msgHelper.logMessage("poll.creating_after_finished_time", timeStr));

@@ -9,9 +9,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import restvotes.domain.entity.User;
 import restvotes.repository.UserRepo;
-import restvotes.rest.validator.ErrorAssembler;
 import restvotes.rest.view.UserProfile;
 import restvotes.util.AuthorizedUser;
+import restvotes.util.ErrorAssembler;
 import restvotes.util.LinksHelper;
 
 import javax.validation.Valid;
@@ -41,11 +41,6 @@ public class UserProfileController {
     // http://www.baeldung.com/exception-handling-for-rest-with-spring
     // https://g00glen00b.be/validating-the-input-of-your-rest-api-with-spring/
     
-    // @InitBinder("userProfile")
-    // protected void initBinder(WebDataBinder binder) {
-    //     binder.addValidators(new UserProfileValidator());
-    // }
-    
     @GetMapping
     public ResponseEntity<?> get() {
 
@@ -59,7 +54,7 @@ public class UserProfileController {
     public ResponseEntity<?> signUp(@Valid @RequestBody UserProfile profile, BindingResult bindingResult) {
     
         if (bindingResult.hasErrors()) {
-            return assembler.errorMsg(bindingResult);
+            return ResponseEntity.badRequest().body(assembler.errorMsg(bindingResult));
         }
         
         User user = userRepo.saveAndFlush(new User(profile.getName(), profile.getEmail(), profile.getPassword()));
@@ -71,7 +66,7 @@ public class UserProfileController {
     public ResponseEntity<?> update(@Valid @RequestBody UserProfile profile, BindingResult bindingResult) {
     
         if (bindingResult.hasErrors()) {
-            return assembler.errorMsg(bindingResult);
+            return ResponseEntity.badRequest().body(assembler.errorMsg(bindingResult));
         }
     
         return userRepo.findById(AuthorizedUser.get().getId())

@@ -61,7 +61,6 @@ public class RepoRestConfig extends RepositoryRestConfigurerAdapter {
     
     @Override
     public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener v) {
-        // TODO Move here the ValidatorRegistrar functionality
         // v.addValidator("beforeCreate", new UserValidator());
         // v.addValidator("beforeSave", new UserValidator());
         super.configureValidatingRepositoryEventListener(v);

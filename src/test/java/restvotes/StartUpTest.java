@@ -20,7 +20,7 @@ import static org.junit.Assert.assertThat;
  * @author Cepro, 2017-01-29
  */
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
-public class EngineTest extends BaseTest {
+public class StartUpTest extends BaseTest {
     
     @Autowired
     private PollService pollService;

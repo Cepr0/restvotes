@@ -24,7 +24,7 @@ import static java.time.LocalTime.parse;
 @Slf4j
 @Component
 @ConfigurationProperties(prefix = "restvotes")
-public class AppProperties {
+public class AppConfig {
     
     private final @NonNull MessageHelper msgHelper;
     

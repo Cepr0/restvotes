@@ -39,7 +39,7 @@ public class RestVotes {
     
     
     /**
-     * Get one of TaskScheduler to run our tasks (see {@link Engine})
+     * Get one of TaskScheduler to run our tasks (see {@link StartUp})
      *
      * @return TaskScheduler instance
      */

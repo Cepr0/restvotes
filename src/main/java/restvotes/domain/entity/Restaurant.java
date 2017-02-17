@@ -35,7 +35,7 @@ public class Restaurant extends LongId {
     @Column(nullable = false)
     private String address;
     
-    @URL
+    @URL(message = "valid.url")
     private String url;
     
     private String phone;

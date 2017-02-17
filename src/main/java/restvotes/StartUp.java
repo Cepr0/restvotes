@@ -10,14 +10,14 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
-import restvotes.config.AppProperties;
+import restvotes.config.AppConfig;
 import restvotes.service.PollService;
 import restvotes.util.MessageHelper;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static restvotes.config.AppProperties.ScheduleType.*;
+import static restvotes.config.AppConfig.ScheduleType.*;
 
 /**
  * @author Cepro, 2017-01-15
@@ -26,11 +26,11 @@ import static restvotes.config.AppProperties.ScheduleType.*;
 @Slf4j
 @AllArgsConstructor
 @Profile(value = {"dev", "demo", "prod"})
-public class Engine {
+public class StartUp {
     
     private final @NonNull MessageHelper msgHelper;
     
-    private final @NonNull AppProperties properties;
+    private final @NonNull AppConfig config;
     
     private final @NonNull PollService pollService;
     
@@ -44,10 +44,10 @@ public class Engine {
     
         LOG.info(msgHelper.logMessage("STARTING APPLICATION..."));
     
-        LocalTime endOfVotingTime = properties.getEndOfVotingTimeValue();
+        LocalTime endOfVotingTime = config.getEndOfVotingTimeValue();
         LOG.info(msgHelper.logMessage("The end of voting time is set to %s", endOfVotingTime));
     
-        LocalTime newDayPollTime = properties.getNewDayPollTimeValue();
+        LocalTime newDayPollTime = config.getNewDayPollTimeValue();
         LOG.info(msgHelper.logMessage("Automatic Poll creation time is set to %s", newDayPollTime));
     
         LOG.info(msgHelper.logMessage("Checking previous Polls if they closed..."));
@@ -80,15 +80,15 @@ public class Engine {
     
         // Setup a scheduled end of voting task (at 11:00 by default)
         LOG.info(msgHelper.logMessage("Setting up end of voting task..."));
-        scheduler.schedule(this::endOfVotingTask, new CronTrigger(properties.getSchedule(END_OF_VOTING)));
+        scheduler.schedule(this::endOfVotingTask, new CronTrigger(config.getSchedule(END_OF_VOTING)));
     
         // Setup a scheduled new day task (at 0:00:01)
         LOG.info(msgHelper.logMessage("Setting up new day task..."));
-        scheduler.schedule(this::newDayTask, new CronTrigger(properties.getSchedule(NEW_DAY)));
+        scheduler.schedule(this::newDayTask, new CronTrigger(config.getSchedule(NEW_DAY)));
     
         // Setup a scheduled creating of a new Poll of the new day task (at 9:00 by default)
         LOG.info(msgHelper.logMessage("Setting up new Poll task..."));
-        scheduler.schedule(this::newPollTask, new CronTrigger(properties.getSchedule(NEW_DAY_POLL)));
+        scheduler.schedule(this::newPollTask, new CronTrigger(config.getSchedule(NEW_DAY_POLL)));
     }
     
     private void endOfVotingTask() {
