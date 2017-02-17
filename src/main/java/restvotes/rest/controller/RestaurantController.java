@@ -64,7 +64,7 @@ public class RestaurantController {
         if (menu == null) {
             throw new NotFoundException(msgHelper.userMessage("menu.cannot_be_null"));
         }
-        // TODO Move this to Service?
+        
         Menu savedMenu = menuRepo.saveAndFlush(menu.setRestaurant(restaurant));
         return ResponseEntity.ok(new Resource<>(savedMenu, links.getMenuLinks(savedMenu, true)));
     }

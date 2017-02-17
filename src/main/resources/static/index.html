@@ -2,14 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Language" content="en,ru">
+    
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="description" content="Demo REST Application - Voting system for restaurant lunches">
+    <meta name="keywords" content="java, spring boot, spring data rest, rest">
     
     <script>
         function setLang(lang) {
             window.localStorage.setItem('lang', lang);
             document.body.className = lang;
         }
+    </script>
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-92217518-1', 'auto');
+        ga('send', 'pageview');
+    
     </script>
 
     <style>
@@ -75,8 +91,8 @@
 </span>
 
 <h1>RESTVotes</h1>
-<h3 class="en">REST Application: Voting System for Restaurant lunches</h3>
-<h3 class="ru">REST приложение: Выбор ресторана для обеда</h3>
+<h3 class="en">Demo REST Application - Voting system for restaurant lunches</h3>
+<h3 class="ru">REST Приложение - Выбор ресторана для обеда</h3>
 <div class="en">
     <p>The app description is on the <a href="https://github.com/Cepr0/restvotes" target="_blank">project page</a></p>
     <p>To work with the demo follow this link: <a href="/api">/api</a></p>
