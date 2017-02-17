@@ -43,11 +43,13 @@ public class DemoData implements ApplicationRunner {
     private Restaurant r1, r2, r3;
     private Menu m1, m2, m3, m4, m5, m6;
     private Poll p1, p2;
-    private User u1, u2, u3, u4, u5, u6, u7, u8;
+    public static User u1, u2, u3, u4, u5, u6, u7, u8;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
     
+        prepareUserData();
+        
         if (userRepo.count() > 0) {
             LOG.info("Data is already present. Skipping...");
             return;
@@ -65,6 +67,18 @@ public class DemoData implements ApplicationRunner {
         }
     }
 
+    private void prepareUserData() {
+
+        u1 = new User("Frodo Baggins", "frodo@restvotes.com", "123456", ROLE_ADMIN);
+        u2 = new User("Gandalf the Grey", "gandalf@restvotes.com", "123456", ROLE_ADMIN);
+        u3 = new User("Sam Gamgee", "sam@restvotes.com", "123456", ROLE_USER);
+        u4 = new User("Merry Brandybuck", "marry@restvotes.com", "123456", ROLE_USER);
+        u5 = new User("Pippin Took", "pippin@restvotes.com", "123456", ROLE_USER);
+        u6 = new User("Aragorn", "aragorn@restvotes.com", "123456", ROLE_USER);
+        u7 = new User("Legolas", "legolas@restvotes.com", "123456", ROLE_USER);
+        u8 = new User("Gimli", "gimli@restvotes.com", "123456", ROLE_USER);
+    }
+    
     // @Transactional()
     // private void copyLastPoll() {
     //     // http://stackoverflow.com/q/27115639/5380322
@@ -149,16 +163,6 @@ public class DemoData implements ApplicationRunner {
     private void addUsers() {
 
         LOG.info(msgHelper.logMessage("Inserting demo users..."));
-
-        u1 = new User("Frodo Baggins", "frodo@restvotes.com", "123456", ROLE_ADMIN);
-        u2 = new User("Gandalf the Grey", "gandalf@restvotes.com", "123456", ROLE_ADMIN);
-        u3 = new User("Sam Gamgee", "sam@restvotes.com", "123456", ROLE_USER);
-        u4 = new User("Merry Brandybuck", "marry@restvotes.com", "123456", ROLE_USER);
-        u5 = new User("Pippin Took", "pippin@restvotes.com", "123456", ROLE_USER);
-        u6 = new User("Aragorn", "aragorn@restvotes.com", "123456", ROLE_USER);
-        u7 = new User("Legolas", "legolas@restvotes.com", "123456", ROLE_USER);
-        u8 = new User("Gimli", "gimli@restvotes.com", "123456", ROLE_USER);
-
         userRepo.save(asList(u1, u2, u3, u4, u5, u6, u7, u8));
     }
 

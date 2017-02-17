@@ -25,6 +25,20 @@ public class ErrorAssembler {
     
     private final @NonNull MessageHelper msgHelper;
     
+    public <T extends Errors> ErrorMsg errorMsg(T errors) {
+        
+        ErrorMsg errorMsg = new ErrorMsg();
+        for (FieldError fe : errors.getFieldErrors()) {
+            errorMsg.addError(
+                    fe.getObjectName(),
+                    fe.getField(),
+                    fe.getRejectedValue(),
+                    fe.getDefaultMessage());
+        }
+        
+        return errorMsg;
+    }
+    
     public ErrorMsg errorMsg(Set<ConstraintViolation<?>> violations) {
         
         ErrorMsg errorMsg = new ErrorMsg();
@@ -32,7 +46,7 @@ public class ErrorAssembler {
             errorMsg.addError(
                     v.getRootBeanClass().getSimpleName(),
                     v.getPropertyPath().iterator().next().getName(),
-                    v.getInvalidValue().toString(),
+                    v.getInvalidValue(),
                     v.getMessage());
         }
         
@@ -46,27 +60,13 @@ public class ErrorAssembler {
         return errorMsg;
     }
     
-    public <T extends Errors> ErrorMsg errorMsg(T errors) {
-        
-        ErrorMsg errorMsg = new ErrorMsg();
-        for (FieldError fe : errors.getFieldErrors()) {
-            errorMsg.addError(
-                    fe.getObjectName(),
-                    fe.getField(),
-                    fe.getRejectedValue().toString(),
-                    fe.getDefaultMessage());
-        }
-        
-        return errorMsg;
-    }
-    
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private class ErrorMsg {
         
         @Getter
         private final List<Error> errors = new ArrayList<>();
         
-        private ErrorMsg addError(String object, String property, String invalidValue, String message) {
+        private ErrorMsg addError(String object, String property, Object invalidValue, String message) {
         
             errors.add(new Error(
                     msgHelper.userMessage(object),
@@ -89,7 +89,7 @@ public class ErrorAssembler {
     private class Error {
         private final String object;
         private final String property;
-        private final String invalidValue;
+        private final Object invalidValue;
         private final String message;
     }
 }

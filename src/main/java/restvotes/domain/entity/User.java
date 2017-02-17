@@ -51,19 +51,19 @@ public class User extends LongId {
     @Column(nullable = false)
     private String password;
     
-    @NotNull
+    @NotNull(message = "valid.field")
     @Column(columnDefinition = "boolean default true", nullable = false)
     private boolean enabled = true;
     
     @Column(columnDefinition = "integer default '0'", nullable = false)
     @Enumerated(EnumType.ORDINAL)
-    @NotNull
+    @NotNull(message = "valid.field")
     private Role role = ROLE_USER;
     
-    @NotNull
+    @NotNull(message = "valid.field")
     @Column(columnDefinition = "timestamp default now()", updatable = false, nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private final LocalDateTime registered;
+    private LocalDateTime registered;
     
     public User(String name, String email, String password, boolean enabled, Role role, LocalDateTime registered) {
         this.name = name;
@@ -90,6 +90,24 @@ public class User extends LongId {
         if (!isEmpty(name)) setName(name);
         if (!isEmpty(email)) setEmail(email);
         if (!isEmpty(password)) setPassword(password);
+        return this;
+    }
+    
+    public User update(User user) {
+        String name = user.getName();
+        String email = user.getEmail();
+        String password = user.getPassword();
+        boolean enabled = user.isEnabled();
+        Role role = user.getRole();
+        LocalDateTime registered = user.getRegistered();
+    
+        if (!isEmpty(name)) setName(name);
+        if (!isEmpty(email)) setEmail(email);
+        if (!isEmpty(password)) setPassword(password);
+        if (!isEmpty(enabled)) setEnabled(enabled);
+        if (!isEmpty(role)) setRole(role);
+        if (!isEmpty(registered)) setRegistered(registered);
+
         return this;
     }
     
