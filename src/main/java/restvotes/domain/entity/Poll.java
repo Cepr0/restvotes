@@ -9,7 +9,10 @@ import lombok.Setter;
 import org.springframework.data.rest.core.annotation.RestResource;
 import restvotes.domain.base.DateId;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,8 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 
 /**
+ * Main entity in the project - defines the voting in the given day.
+ * <p>Only one Poll per day.</p>
  * @author Cepro, 2017-01-01
  */
 @NoArgsConstructor
@@ -29,10 +34,6 @@ import static javax.persistence.CascadeType.PERSIST;
 public class Poll extends DateId {
     
     private boolean finished = false;
-    
-    @JsonInclude(NON_NULL)
-    @Transient
-    private Boolean current = null;
     
     @ManyToMany(cascade = {PERSIST, MERGE})
     private List<Menu> menus = new ArrayList<>();
@@ -59,10 +60,6 @@ public class Poll extends DateId {
     
     public Boolean getFinished() {
         return finished;
-    }
-    
-    public Boolean getCurrent() {
-        return current;
     }
     
 //    @Projection(name = "brief", types = {Poll.class})

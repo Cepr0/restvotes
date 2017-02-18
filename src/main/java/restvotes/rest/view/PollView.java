@@ -1,9 +1,6 @@
 package restvotes.rest.view;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.Resource;
@@ -15,12 +12,20 @@ import restvotes.domain.entity.Poll;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 /**
  * @author Cepro, 2017-01-11
  */
 @Relation(value = "poll", collectionRelation = "polls")
 @JsonPropertyOrder({"date", "finished", "current", "_embedded"})
 public class PollView extends Poll implements Poll.Detailed {
+
+    @Setter
+    @Getter
+    @JsonInclude(NON_NULL)
+    @JsonProperty("current")
+    private Boolean current;
     
     // To get embedded Menu array in json output
     // "_embedded"
@@ -52,12 +57,6 @@ public class PollView extends Poll implements Poll.Detailed {
     @Override
     public Boolean getFinished() {
         return super.getFinished();
-    }
-    
-    @JsonProperty("current")
-    @Override
-    public Boolean getCurrent() {
-        return super.getCurrent();
     }
     
     @JsonIgnore
