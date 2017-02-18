@@ -25,6 +25,7 @@ import static java.math.BigDecimal.ZERO;
 import static javax.persistence.CascadeType.ALL;
 
 /**
+ * Defines menu of the specified {@link Restaurant} with its menu item list
  * @author Cepro, 2017-01-01
  */
 @NoArgsConstructor

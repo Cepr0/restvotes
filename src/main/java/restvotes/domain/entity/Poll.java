@@ -33,12 +33,21 @@ import static javax.persistence.CascadeType.PERSIST;
 @Table(name = "polls")
 public class Poll extends DateId {
     
+    /**
+     * The mark - is Poll finished or not
+     */
     private boolean finished = false;
     
+    /**
+     * Menu list of given Poll
+     */
     @ManyToMany(cascade = {PERSIST, MERGE})
     private List<Menu> menus = new ArrayList<>();
     // TODO Think about use @PreRemove to unlink Menus then deleting 'empty' Poll - http://stackoverflow.com/a/14911910/5380322
     
+    /**
+     * Winner of the Poll - only for finished Polls
+     */
     @RestResource(exported = false)
     @JsonIgnore
     @ManyToOne(optional = true)
@@ -62,6 +71,9 @@ public class Poll extends DateId {
         return finished;
     }
     
+    /**
+     * A brief view of Poll used in the Poll list
+     */
 //    @Projection(name = "brief", types = {Poll.class})
     public interface Brief {
         LocalDate getDate();
@@ -76,6 +88,9 @@ public class Poll extends DateId {
         Menu getWinner();
     }
     
+    /**
+     * A detailed view of Poll with unwrapped Menu and Restaurant data
+     */
     public interface Detailed {
         LocalDate getDate();
 

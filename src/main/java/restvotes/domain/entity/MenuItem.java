@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import static java.math.BigDecimal.ZERO;
 
 /**
+ * Defines item fore {@link Menu}
  * @author Cepro, 2017-01-01
  */
 @NoArgsConstructor

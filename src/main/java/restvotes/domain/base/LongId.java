@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 /**
- * Base class for entity with {@link Long} id.
+ * Base class for entity with {@link Long} as a primary key.
  * @author Cepro, 2016-12-10
  */
 @MappedSuperclass

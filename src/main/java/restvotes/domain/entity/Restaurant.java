@@ -11,6 +11,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
+ * Defines a restaurant object used in {@link Menu}
+ * <p>'name' is an unique field</p>
  * @author Cepro, 2017-01-01
  */
 @NoArgsConstructor

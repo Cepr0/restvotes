@@ -11,7 +11,7 @@ import javax.persistence.MappedSuperclass;
 import java.time.LocalDate;
 
 /**
- * Base class for entity with {@link LocalDate} id.
+ * Base class for entity with {@link LocalDate} as a primary key.
  * @author Cepro, 2016-12-10
  */
 @MappedSuperclass
@@ -20,7 +20,7 @@ import java.time.LocalDate;
 public class DateId extends BaseEntity<LocalDate> {
     
     @Id
-    @Column(unique = true, nullable = false) //columnDefinition = "date default now()",
+    @Column(unique = true, nullable = false) //columnDefinition = "date default now()", - unsupported in MySQL
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
     
