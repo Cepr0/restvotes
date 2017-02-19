@@ -22,6 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
+ * Controller to handle {@link UserProfile} related requests
  * @author Cepro, 2017-01-24
  */
 @RequiredArgsConstructor
@@ -41,6 +42,10 @@ public class UserProfileController {
     // http://www.baeldung.com/exception-handling-for-rest-with-spring
     // https://g00glen00b.be/validating-the-input-of-your-rest-api-with-spring/
     
+    /**
+     * Get profile of current {@link User}
+     * @return {@link UserProfile} response
+     */
     @GetMapping
     public ResponseEntity<?> get() {
 
@@ -49,6 +54,12 @@ public class UserProfileController {
                 .orElse(notFound().build());
     }
     
+    /**
+     * Sing up routine
+     * @param profile {@link UserProfile}
+     * @param bindingResult {@link BindingResult} used to validate the input
+     * @return {@link UserProfile} of a new {@link User}
+     */
     @PostMapping
     @Transactional
     public ResponseEntity<?> signUp(@Valid @RequestBody UserProfile profile, BindingResult bindingResult) {
@@ -61,6 +72,12 @@ public class UserProfileController {
         return ok(new Resource<>(new UserProfile(user), links.getUserProfileLink()));
     }
     
+    /**
+     * Updating {@link UserProfile}
+     * @param profile {@link UserProfile}
+     * @param bindingResult {@link BindingResult} used to validate the input
+     * @return updated {@link UserProfile}
+     */
     @RequestMapping(method = {PUT, PATCH})
     @Transactional
     public ResponseEntity<?> update(@Valid @RequestBody UserProfile profile, BindingResult bindingResult) {

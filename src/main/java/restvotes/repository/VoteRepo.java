@@ -39,7 +39,7 @@ public interface VoteRepo extends CrudRepository<Vote, Long> {
     List<Vote.Rank> getRanksByDate(LocalDate date);
     
     /**
-     * Transform {@link Vote.Rank} list to convenient {@code Map<Long, Integer>} ({@link Menu} id and votes count)
+     * Transform {@link Vote.Rank} list to convenient pares {@code Map<Long, Integer>} of {@link Menu} id and votes count
      * from {@link VoteRepo#getRanksByDate(LocalDate)} by specified {@link Poll} date
      *
      * @param pollDate specified {@link Poll} date

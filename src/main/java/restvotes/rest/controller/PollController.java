@@ -9,6 +9,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,8 @@ import java.time.LocalDate;
 import java.util.Map;
 
 /**
+ * Controller to handle a {@link Poll} requests
+ *
  * @author Cepro, 2017-01-07
  */
 @RequiredArgsConstructor
@@ -47,14 +50,32 @@ public class PollController {
     // http://stackoverflow.com/a/29924387/5380322
     // http://stackoverflow.com/a/31782016/5380322
     // http://stackoverflow.com/a/21362291/5380322
-
+    
+    /**
+     * Get {@link Poll} list with Polls in brief form
+     * @param pageable pageable parameter
+     * @return pageable {@link Poll} list
+     */
     @GetMapping
     public ResponseEntity<PagedResources<Resource<Poll.Brief>>> getPolls(Pageable pageable) {
 
         PagedResources<Resource<Poll.Brief>> resource = assembler.toResource(pollRepo.getAll(pageable));
         return ResponseEntity.ok(resource);
     }
-
+    
+    /**
+     * Get {@link Menu} of the specified {@link Poll} with:
+     * <p>Used to get a Menu-winner</p>
+     * @param poll specified {@link Poll}
+     * @param menu requested {@link Menu}
+     * @return {@link Menu} with additional info:
+     * <ul>
+     * <li> - mark 'chosen' by current user</li>
+     * <li> - this menu 'rank' </li>
+     * <li> - mark 'winner' if menu is winner or not</li>
+     * </ul>
+     */
+    @Transactional(readOnly = true)
     @GetMapping("/{date}/menus/{id}")
     public ResponseEntity<?> getPollMenu(@PathVariable("date") Poll poll, @PathVariable("id") Menu menu) {
     
@@ -80,6 +101,11 @@ public class PollController {
         return ResponseEntity.ok(new Resource<>(menuView, links.getMenuLinks(menuView, null)));
     }
     
+    /**
+     * Get current the {@link Poll}
+     * @param assembler {@link PersistentEntityResourceAssembler} to assemble returned Poll
+     * @return {@link Poll} in 'full' view
+     */
     @GetMapping("/current")
     public ResponseEntity<?> getCurrent(PersistentEntityResourceAssembler assembler) {
         

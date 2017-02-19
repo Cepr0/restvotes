@@ -18,6 +18,7 @@ import restvotes.util.exception.NotFoundException;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
+ * Controller to handle voting for chosen {@link Menu}
  * @author Cepro, 2017-01-08
  */
 @RequiredArgsConstructor
@@ -30,7 +31,12 @@ public class MenuController {
     private final @NonNull MessageHelper msgHelper;
     
     private final @NonNull VoteService voteService;
-
+    
+    /**
+     * Submit a vote for chosen {@link Menu}
+     * @param menu chosen {@link Menu}
+     * @return a response with the registered {@link Vote}
+     */
     @PutMapping("/vote")
     public ResponseEntity<?> submitVote(@PathVariable("id") Menu menu) {
         
