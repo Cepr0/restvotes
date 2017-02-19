@@ -17,6 +17,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toMap;
 
 /**
+ * Repository to manage {@link Vote} instances.
  * @author Cepro, 2017-01-02
  */
 @SuppressWarnings("SpringDataJpaMethodInconsistencyInspection")

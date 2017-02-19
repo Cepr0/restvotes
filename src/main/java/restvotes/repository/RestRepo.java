@@ -9,6 +9,7 @@ import restvotes.domain.entity.Restaurant;
 import java.util.List;
 
 /**
+ * Repository to manage {@link Restaurant} instances.
  * @author Cepro, 2017-01-01
  */
 @RepositoryRestResource

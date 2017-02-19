@@ -3,23 +3,28 @@ package restvotes.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Restaurant;
 
 /**
+ * Repository to manage {@link Menu} instances.
+ *
  * @author Cepro, 2017-01-01
  */
 @SuppressWarnings("SpringDataJpaMethodInconsistencyInspection")
-@RepositoryRestResource//(excerptProjection = Menu.Detailed.class)
+@RepositoryRestResource
 public interface MenuRepo extends JpaRepository<Menu, Long> {
     
-    @RestResource(exported = false)
-    @Query("select m from Menu m where m.restaurant = ?1 order by m.id desc")
-    Page<Menu.Detailed> getByRestaurant(Restaurant restaurant, Pageable pageable);
-    
+    /**
+     * Get a menu list of the given {@link Restaurant}
+     * <p>Used in {@link restvotes.rest.controller.RestaurantController}</p>
+     *
+     * @param restaurant a given {@link Restaurant}
+     * @param pageable a Pageable parameter
+     * @return a pageable {@link Menu} list of the given {@link Restaurant}
+     */
     @RestResource(exported = false)
     Page<Menu> findByRestaurantOrderByIdDesc(Restaurant restaurant, Pageable pageable);
     

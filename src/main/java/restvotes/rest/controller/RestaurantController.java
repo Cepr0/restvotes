@@ -10,10 +10,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Restaurant;
 import restvotes.repository.MenuRepo;
@@ -21,10 +18,10 @@ import restvotes.util.LinksHelper;
 import restvotes.util.MessageHelper;
 import restvotes.util.exception.NotFoundException;
 
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
-
 /**
+ * Controller to handle query for the restaurant related menus.
+ * <p>An example how to deal with related objects without specifying their relations in entities classes</p>
+ *
  * @author Cepro, 2017-01-22
  */
 @Slf4j
@@ -41,22 +38,36 @@ public class RestaurantController {
     
     private final @NonNull MenuRepo menuRepo;
     
+    /**
+     * Get {@link Menu} list of the specified Restaurant
+     * <p>(see a corresponding Menus link in output of {@code /api/restaurants/{id}})</p>
+     *
+     * @param restaurant the specified Restaurant
+     * @param pageable Pageable parameter
+     * @return Pageable Menu list
+     */
     @GetMapping("/menus")
-    public ResponseEntity<?> getMenus(@PathVariable("id")Restaurant restaurant, Pageable pageable) {
-    
+    public ResponseEntity<?> getMenus(@PathVariable("id") Restaurant restaurant, Pageable pageable) {
+        
         if (restaurant == null) {
             throw new NotFoundException(msgHelper.userMessage("restaurant.not_found"));
         }
         
-        // TODO Make it without pages?
         Page<Menu> menus = menuRepo.findByRestaurantOrderByIdDesc(restaurant, pageable);
         return ResponseEntity.ok(pagedResourcesAssembler.toResource(menus,
                 menu -> new Resource<>(menu, links.getMenuLinks(menu, true))));
     }
     
+    /**
+     * Add new {@link Menu} to specified Restaurant
+     * <p>(see a corresponding Menus link in output of {@code /api/restaurants/{id}})</p>
+     * @param restaurant the specified Restaurant
+     * @param menu a {@link Menu} to saved
+     * @return a saved {@link Menu}
+     */
     @Transactional
-    @RequestMapping(path = "/menus", method = {POST, PUT})
-    public ResponseEntity<?> putMenu(@PathVariable("id")Restaurant restaurant, @RequestBody Menu menu) {
+    @PostMapping("/menus")
+    public ResponseEntity<?> addMenu(@PathVariable("id") Restaurant restaurant, @RequestBody Menu menu) {
         if (restaurant == null) {
             throw new NotFoundException(msgHelper.userMessage("restaurant.cannot_be_null"));
         }

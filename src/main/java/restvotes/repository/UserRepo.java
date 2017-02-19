@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * Repository to manage {@link User} instances.
  * @author Cepro, 2017-01-02
  */
 @RepositoryRestResource
