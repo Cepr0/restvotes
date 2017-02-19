@@ -15,7 +15,7 @@ import java.util.List;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 /**
- * DTO for {@link Poll}
+ * Defines DTO for {@link Poll}
  *
  * @author Cepro, 2017-01-11
  */

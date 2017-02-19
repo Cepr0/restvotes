@@ -20,6 +20,7 @@ import java.util.List;
 import static org.springframework.data.rest.webmvc.ProfileController.getRootPath;
 
 /**
+ * Makes various links of resources used in the Application
  * @author Cepro, 2017-01-14
  */
 @RequiredArgsConstructor
@@ -43,15 +44,6 @@ public class LinksHelper {
     private final @NonNull RepositoryEntityLinks entityLinks;
     
     private final @NonNull RepositoryRestConfiguration configuration;
-    
-    // @SuppressWarnings("SpringJavaAutowiringInspection")
-    // @Autowired
-    // private LinksHelper(RepositoryEntityLinks entityLinks, RepositoryRestConfiguration configuration) {
-    //     LinksHelper.entityLinks = entityLinks;
-    //     Assert.notNull(configuration, "RepositoryRestConfiguration must not be null!");
-    //     LinksHelper.configuration = configuration;
-    // }
-    //
     
     public Iterable<Link> getMenuLinks(Menu menu, Boolean finished) {
         

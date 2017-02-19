@@ -2,6 +2,7 @@ package restvotes.util;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import restvotes.domain.entity.User;
 
 import java.util.Locale;
@@ -13,6 +14,7 @@ import static restvotes.domain.entity.User.Role.ROLE_ADMIN;
 import static restvotes.domain.entity.User.Role.ROLE_USER;
 
 /**
+ * Defines authorized user which used in {@link UserService}
  * @author Cepro, 2017-01-08
  */
 public class AuthorizedUser extends org.springframework.security.core.userdetails.User {
@@ -30,6 +32,11 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
         this.user = user;
     }
     
+    /**
+     * Get {@link User} instance from authorized user data in {@link SecurityContextHolder}
+     * @return {@link User}
+     * <p>(Perhaps we should move this method to {@link UserService})</p>
+     */
     public static User get() {
 
         Authentication auth = getContext().getAuthentication();
@@ -48,6 +55,10 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
         return (User) new User().setId(-1L);
      }
     
+    /**
+     * @return {@link Locale} of authorized user from {@link LocaleContextHolder}
+     * <p>(Perhaps we should move this method to {@link UserService})</p>
+     */
     // http://stackoverflow.com/a/16106304/5380322
     public static Locale locale() {
         return LocaleContextHolder.getLocale();

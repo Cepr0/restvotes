@@ -41,6 +41,10 @@ public class UserService implements UserDetailsService {
         }
     }
     
+    /**
+     * Used to simulate user authorization in tests
+     * @param email user email
+     */
     @Profile("test")
     public void runAs(String email) {
         AuthorizedUser user = loadUserByUsername(email);
@@ -52,6 +56,11 @@ public class UserService implements UserDetailsService {
                                 user.getAuthorities()));
     }
     
+    /**
+     * Used to simulate user authorization with any locales in tests
+     * @param email user email
+     * @param locale user locale
+     */
     @Profile("test")
     public void runAs(String email, Locale locale) {
         AuthorizedUser user = loadUserByUsername(email);

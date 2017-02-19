@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 /**
- * DTO for {@link Poll} in brief form (to use in Poll list)
+ * Defines DTO for {@link Poll} in brief form (to use in Poll list)
  *
  * @author Cepro, 2017-01-28
  */

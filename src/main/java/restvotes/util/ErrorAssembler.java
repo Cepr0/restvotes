@@ -16,7 +16,7 @@ import java.util.Set;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
-/**
+/** Assemble errors to convenient {@link ErrorMsg}
  * @author Cepro, 2017-02-14
  */
 @RequiredArgsConstructor
@@ -25,6 +25,12 @@ public class ErrorAssembler {
     
     private final @NonNull MessageHelper msgHelper;
     
+    /**
+     * Convert {@link Errors} and its inheritors to {@link ErrorMsg}
+     * @param errors instance of {@link Errors} or its inheritors
+     * @param <T> {@link Errors} or its inheritors
+     * @return {@link ErrorMsg}
+     */
     public <T extends Errors> ErrorMsg errorMsg(T errors) {
         
         ErrorMsg errorMsg = new ErrorMsg();
@@ -39,6 +45,11 @@ public class ErrorAssembler {
         return errorMsg;
     }
     
+    /**
+     * Convert set of {@link ConstraintViolation}s to {@link ErrorMsg}
+     * @param violations set of {@link ConstraintViolation}s
+     * @return {@link ErrorMsg}
+     */
     public ErrorMsg errorMsg(Set<ConstraintViolation<?>> violations) {
         
         ErrorMsg errorMsg = new ErrorMsg();
@@ -53,6 +64,11 @@ public class ErrorAssembler {
         return errorMsg;
     }
     
+    /**
+     * Add {@link String} message to {@link ErrorMsg}
+     * @param message {@link String} parameter
+     * @return {@link ErrorMsg}
+     */
     public ErrorMsg errorMsg(String message) {
         
         ErrorMsg errorMsg = new ErrorMsg();
@@ -60,6 +76,9 @@ public class ErrorAssembler {
         return errorMsg;
     }
     
+    /**
+     * Convenient TO
+     */
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private class ErrorMsg {
         

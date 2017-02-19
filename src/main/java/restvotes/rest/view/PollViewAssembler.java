@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Use to assemble {@link PollView} with additional data and links
  * @author Cepro, 2017-02-11
  */
 @RequiredArgsConstructor
