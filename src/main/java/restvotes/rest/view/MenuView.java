@@ -15,6 +15,8 @@ import java.util.Map;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 /**
+ * DTO for {@link Menu}
+ *
  * @author Cepro, 2017-01-11
  */
 @Getter

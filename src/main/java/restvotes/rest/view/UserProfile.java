@@ -15,6 +15,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static restvotes.domain.entity.User.*;
 
 /**
+ * DTO for {@link User}
  * @author Cepro, 2017-01-25
  */
 @Getter
