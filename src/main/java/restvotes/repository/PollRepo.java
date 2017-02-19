@@ -46,7 +46,7 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     /**
      * Return the current {@link Poll}
      * <p>Current {@link Poll} is the first unfinished Poll or last finished one</p>
-     * @return
+     * @return current {@link Poll} or not
      */
     @RestResource(path = "current", rel = "current")
     // @Cacheable("polls")

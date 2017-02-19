@@ -17,10 +17,20 @@ public interface RestRepo extends JpaRepository<Restaurant, Long> {
 
     // TODO http://stackoverflow.com/a/38652548/5380322
     // TODO Make contextual search
-
+    
+    /**
+     * Find {@link Restaurant}s by their name part
+     * @param name name part
+     * @return {@link Restaurant} list
+     */
     @RestResource(path = "byName", rel = "byName")
     List<Restaurant> findByNameIgnoreCaseContainingOrderByNameAsc(@Param("name") String name);
     
+    /**
+     * Find {@link Restaurant}s by their address part
+     * @param address address part
+     * @return {@link Restaurant} list
+     */
     @RestResource(path = "byAddress", rel = "byAddress")
-    List<Restaurant> findByAddressIgnoreCaseContainingOrderByNameAsc(@Param("address") String name);
+    List<Restaurant> findByAddressIgnoreCaseContainingOrderByNameAsc(@Param("address") String address);
 }

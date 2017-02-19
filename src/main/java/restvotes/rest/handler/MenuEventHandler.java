@@ -25,7 +25,7 @@ public class MenuEventHandler {
     @HandleBeforeSave
     public void handleBeforeSave(Menu menu) {
         
-        // Updating Menu that was already in use is not allowed
+        // Updating Menu, that was already in use, is not allowed!
         if (voteRepo.findFirstByMenu(menu).isPresent()) {
             throw new ForbiddenException(msgHelper.userMessage("menu.already_in_use"));
         }

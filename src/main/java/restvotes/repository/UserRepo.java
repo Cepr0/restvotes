@@ -38,10 +38,19 @@ public interface UserRepo extends JpaRepository<User, Long> {
     @RestResource(path = "byEmail", rel = "byEmail")
     Optional<User> findByEmail(@Param("email") String email);
     
+    /**
+     * Find {@link User}s by name part
+     * @param name name part
+     * @return {@link User} list
+     */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RestResource(path = "byName", rel = "byName")
     List<User> findByNameIgnoreCaseContainingOrderByNameAsc(@Param("name") String name);
     
+    /** Find enabled {@link User}s only by email
+     * @param email specified email
+     * @return {@link User} found or not
+     */
     @RestResource(exported = false)
     @Query("select u from User u where u.email = ?1 and u.enabled = true")
     Optional<User> findEnabledByEmail(@Param("email") String email);
