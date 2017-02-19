@@ -18,21 +18,30 @@ import static java.time.LocalTime.parse;
 import static java.time.format.DateTimeFormatter.ofPattern;
 
 /**
+ * RepositoryRest configuration
  * @author Cepro, 2016-12-24
  */
 @Configuration
 public class RepoRestConfig extends RepositoryRestConfigurerAdapter {
     
-    // To user non-HAL format:
+    // To use non-HAL format:
     // http://stackoverflow.com/a/23287265/5380322
     // config.setDefaultMediaType(…)
     
+    /**
+     * Setting up which entities must expose their id
+     * @param config
+     */
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         config.exposeIdsFor(Poll.class);
         super.configureRepositoryRestConfiguration(config);
     }
     
+    /**
+     * Adding converters for {@link LocalDate} and {@link LocalTime}
+     * @param conversionService
+     */
     @Override
     public void configureConversionService(ConfigurableConversionService conversionService) {
         conversionService.addConverter(String.class, LocalDate.class, LocalDate::parse);
@@ -63,8 +72,8 @@ public class RepoRestConfig extends RepositoryRestConfigurerAdapter {
     }
     
     /**
-     * http://stackoverflow.com/a/36814513/5380322
      * PUT and PATCH in SDR doesn't validated without this!!!
+     * <p>http://stackoverflow.com/a/36814513/5380322</p>
      * @return local validator {@link LocalValidatorFactoryBean}
      */
     @Bean
@@ -72,6 +81,12 @@ public class RepoRestConfig extends RepositoryRestConfigurerAdapter {
         return new LocalValidatorFactoryBean();
     }
     
+    /**
+     * Setting up validating for 'beforeCreate' and 'beforeSave' Repository events
+     * <p>PUT and PATCH in SDR doesn't validated without this!!!</p>
+     * <p>http://stackoverflow.com/a/36814513/5380322</p>
+     * @param v
+     */
     @Override
     public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener v) {
         // v.addValidator("beforeCreate", new UserValidator());
