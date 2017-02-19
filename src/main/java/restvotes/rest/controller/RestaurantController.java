@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import restvotes.domain.entity.Menu;
 import restvotes.domain.entity.Restaurant;
 import restvotes.repository.MenuRepo;
+import restvotes.rest.processor.RestaurantResourceProcessor;
 import restvotes.util.LinksHelper;
 import restvotes.util.MessageHelper;
 import restvotes.util.exception.NotFoundException;
@@ -60,7 +61,8 @@ public class RestaurantController {
     
     /**
      * Add new {@link Menu} to specified Restaurant
-     * <p>(see a corresponding Menus link in output of {@code /api/restaurants/{id}})</p>
+     * <p>(see a corresponding Menus link of {@code /api/restaurants/{id}} in output)</p>
+     * <p>(link added in {@link RestaurantResourceProcessor})</p>
      * @param restaurant the specified Restaurant
      * @param menu a {@link Menu} to saved
      * @return a saved {@link Menu}

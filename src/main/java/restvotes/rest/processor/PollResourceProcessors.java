@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
+ * {@link Poll} resource processors
  * @author Cepro, 2017-01-13
  */
 @RequiredArgsConstructor
@@ -32,6 +33,10 @@ public class PollResourceProcessors {
     
     private final @NonNull VoteRepo voteRepo;
     
+    /**
+     * {@link Poll} resource processor for paged resources of {@link Poll} in custom brief form
+     * <p>Adds 'current', 'profile' and 'search' links</p>
+     */
     @Component
     public class PollBriefPagedResourcesProcessor implements ResourceProcessor<PagedResources<Resource<Poll.Brief>>> {
         
@@ -45,7 +50,11 @@ public class PollResourceProcessors {
             return pagedResources;
         }
     }
-
+    
+    /**
+     * Resource processor of single {@link Poll} in custom brief form
+     * <p>Adds 'self', and 'winner' links</p>
+     */
     @Component
     public class PollBriefResourceProcessor implements ResourceProcessor<Resource<Poll.Brief>> {
 
@@ -71,6 +80,11 @@ public class PollResourceProcessors {
         }
     }
     
+    /**
+     * Resource processor of single {@link Poll} in standard form
+     * <p>Adds: 'current' mark; 'winner' link (for finished Poll);
+     * and 'userChoice' link (for unfinished Poll and if user made his choice)</p>
+     */
     @RequiredArgsConstructor
     @Component
     public class PollResourceProcessor implements ResourceProcessor<Resource<Poll>> {

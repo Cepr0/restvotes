@@ -8,6 +8,7 @@ import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Component;
 
 /**
+ * Repository REST Resource processors of any entities. Demo purposes only.
  * @author Cepro, 2017-01-28
  */
 @Slf4j
@@ -19,7 +20,7 @@ public class AnyResourceProcessors {
     
         @Override
         public Resource<?> process(Resource<?> resource) {
-            LOG.debug("SingleResourceProcessor {}", resource.toString());
+            // LOG.debug("SingleResourceProcessor {}", resource.toString());
             return resource;
         }
     }
@@ -29,7 +30,7 @@ public class AnyResourceProcessors {
     
         @Override
         public Resources<Resource<?>> process(Resources<Resource<?>> resource) {
-            LOG.debug("MultiResourceProcessor {}", resource.toString());
+            // LOG.debug("MultiResourceProcessor {}", resource.toString());
             return resource;
         }
     }
@@ -39,7 +40,7 @@ public class AnyResourceProcessors {
     
         @Override
         public PagedResources<Resource<?>> process(PagedResources<Resource<?>> resource) {
-            LOG.debug("PagedResourceProcessor {}", resource.toString());
+            // LOG.debug("PagedResourceProcessor {}", resource.toString());
             return resource;
         }
     }
