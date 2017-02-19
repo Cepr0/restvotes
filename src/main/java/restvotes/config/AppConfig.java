@@ -16,6 +16,8 @@ import static java.lang.String.format;
 import static java.time.LocalTime.parse;
 
 /**
+ * Serving the application parameters from application.properties (prefix = "restvotes")
+ *
  * @author Cepro, 2016-12-13
  */
 @RequiredArgsConstructor
@@ -33,12 +35,25 @@ public class AppConfig {
     private static final String SCHEDULE_PATTERN = "1 %s %s * * *";
     private static final String EMAIL_DELIMITERS_PATTERN = "[,;]?\\s+";
     
+    /**
+     * 'End of voting' time parameter
+     */
     private String endOfVotingTime;
     
+    /**
+     * 'New Day Poll creating' time parameter - in which time new Poll will be automatically created in new day
+     * <p>(in fact - 'Start of voting time')</p>
+     */
     private String newDayPollTime;
     
+    /**
+     * Email list of admins which have to received error info
+     */
     private String sendErrorsTo;
-
+    
+    /** Get the 'End of voting' time parameter value
+     * @return {@link LocalTime} of 'End of voting' time
+     */
     public LocalTime getEndOfVotingTimeValue() {
         try {
             return parse(endOfVotingTime, DateTimeFormatter.ofPattern("H:mm"));
@@ -48,6 +63,10 @@ public class AppConfig {
         }
     }
     
+    /**
+     * Get the 'New Day Poll creating' time parameter value
+     * @return {@link LocalTime} of 'New Day Poll creating' time
+     */
     public LocalTime getNewDayPollTimeValue() {
         try {
             return parse(newDayPollTime, DateTimeFormatter.ofPattern("H:mm"));
@@ -55,9 +74,13 @@ public class AppConfig {
             LOG.error(msgHelper.logMessage("engine.newDayPollTime_is_not_parsed", newDayPollTime));
             return parse(NEW_DAY_POLL_TIME_DEFAULT);
         }
-        
     }
     
+    /**
+     * Make crone schedule by given {@link ScheduleType} to use in {@link restvotes.StartUp}
+     * @param type {@link ScheduleType}
+     * @return
+     */
     public String getSchedule(ScheduleType type) {
     
         String result = null;
@@ -89,6 +112,14 @@ public class AppConfig {
         return sendErrorsTo.split(EMAIL_DELIMITERS_PATTERN);
     }
     
+    /**
+     * Described Application events:
+     * <ul>
+     * <li>- New day (0:00)</li>
+     * <li>- Auto-creating a Poll for new day (i.e. Start of voting) (9:00)</li>
+     * <li>- End of voting (11:00)</li>
+     * </ul>
+     */
     public enum ScheduleType {
         NEW_DAY, NEW_DAY_POLL, END_OF_VOTING
     }
