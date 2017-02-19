@@ -13,6 +13,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import java.sql.SQLException;
 
 /**
+ * Main class of the Application
+ *
  * @author Cepro, 2017-01-01
  */
 @SpringBootApplication

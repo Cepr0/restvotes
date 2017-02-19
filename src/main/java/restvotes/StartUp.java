@@ -25,6 +25,8 @@ import static restvotes.DemoData.*;
 import static restvotes.config.AppConfig.ScheduleType.*;
 
 /**
+ * Startup routine
+ *
  * @author Cepro, 2017-01-15
  */
 @Component
@@ -137,7 +139,10 @@ public class StartUp {
             restoreUser(u);
         }
     }
-
+    
+    /** Restore data of demo {@link User} by given one
+     * @param u original demo data
+     */
     @Transactional
     private void restoreUser(User u) {
         Optional<User> userOptional = userRepo.findByEmail(u.getEmail());

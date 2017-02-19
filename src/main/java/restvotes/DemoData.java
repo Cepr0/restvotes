@@ -20,6 +20,8 @@ import static restvotes.domain.entity.User.Role.ROLE_ADMIN;
 import static restvotes.domain.entity.User.Role.ROLE_USER;
 
 /**
+ * Propagate demo data for Application
+ * <p>Available in dev, demo and test Spring profiles only</p>
  * @author Cepro, 2017-01-02
  */
 @Slf4j
@@ -66,7 +68,10 @@ public class DemoData implements ApplicationRunner {
             LOG.error(msgHelper.logMessage("Adding demo data failed! Cause: %s", e.getMessage()));
         }
     }
-
+    
+    /**
+     * Prepare user data to use it also in other places of the Application
+     */
     private void prepareUserData() {
 
         u1 = new User("Frodo Baggins", "frodo@restvotes.com", "123456", ROLE_ADMIN);
@@ -172,6 +177,7 @@ public class DemoData implements ApplicationRunner {
         LOG.info(msgHelper.logMessage("Inserting demo votes..."));
 
         voteRepo.save(asList(
+                // uncomment for test purposes
                 // new Vote(p1, p1.getMenus().get(0), p1.getMenus().get(0).getRestaurant(), u1),
                 // new Vote(p1, p1.getMenus().get(0), p1.getMenus().get(0).getRestaurant(), u2),
                 new Vote(p1, p1.getMenus().get(0), p1.getMenus().get(0).getRestaurant(), u3),
@@ -180,7 +186,8 @@ public class DemoData implements ApplicationRunner {
                 new Vote(p1, p1.getMenus().get(1), p1.getMenus().get(1).getRestaurant(), u6),
                 new Vote(p1, p1.getMenus().get(1), p1.getMenus().get(1).getRestaurant(), u7),
                 new Vote(p1, p1.getMenus().get(2), p1.getMenus().get(2).getRestaurant(), u8),
-
+        
+                // uncomment for test purposes
                 // new Vote(p2, p2.getMenus().get(0), p2.getMenus().get(0).getRestaurant(), u1),
                 // new Vote(p2, p2.getMenus().get(0), p2.getMenus().get(0).getRestaurant(), u2),
                 new Vote(p2, p2.getMenus().get(1), p2.getMenus().get(1).getRestaurant(), u3),
