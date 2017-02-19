@@ -11,6 +11,7 @@ import restvotes.util.MessageHelper;
 import restvotes.util.exception.ForbiddenException;
 
 /**
+ * {@link Menu} related events handlers
  * @author Cepro, 2017-02-06
  */
 @RequiredArgsConstructor
@@ -22,6 +23,11 @@ public class MenuEventHandler {
     
     private final @NonNull VoteRepo voteRepo;
     
+    /**
+     * 'Before save' event handler
+     * <p>Restrict updating already used {@link Menu} </p>
+     * @param menu
+     */
     @HandleBeforeSave
     public void handleBeforeSave(Menu menu) {
         

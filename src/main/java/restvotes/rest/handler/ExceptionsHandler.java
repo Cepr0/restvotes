@@ -24,6 +24,7 @@ import java.util.Set;
 import static org.springframework.http.HttpStatus.*;
 
 /**
+ * The exception handlers collection
  * @author Cepro, 2017-02-14
  */
 @RequiredArgsConstructor

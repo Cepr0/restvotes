@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
+ * {@link Poll} related events handlers
  * @author Cepro, 2017-01-20
  */
 @Slf4j
