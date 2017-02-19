@@ -16,6 +16,7 @@ import restvotes.util.UserService;
 import static org.springframework.http.HttpMethod.*;
 
 /**
+ * Security configuration
  * @author Cepro, 2017-01-22
  */
 @RequiredArgsConstructor

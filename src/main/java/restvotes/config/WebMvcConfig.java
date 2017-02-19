@@ -8,13 +8,15 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
+ * WebMvc configuration
  * @author Cepro, 2017-02-16
  */
 @Configuration
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
     
     /**
-     * http://stackoverflow.com/a/30558018/5380322
+     * Setting up {@link ReloadableResourceBundleMessageSource} to auto-reload changes of messages.properties
+     * <p>Pry here: http://stackoverflow.com/a/30558018/5380322</p>
      * @return a ReloadableResourceBundleMessageSource instance
      */
     @Bean
@@ -27,7 +29,13 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         return messageSource;
     }
     
-    // http://stackoverflow.com/a/32736788/5380322
+    /**
+     * Link local Validator ({@link LocalValidatorFactoryBean}) with our {@link ReloadableResourceBundleMessageSource} -
+     * {@link WebMvcConfig#messageSource} to get reloaded constrain validation messages in our entities
+     * <p>See e.g. {@link restvotes.domain.entity.User} </p>
+     * <p>Pry here: http://stackoverflow.com/a/32736788/5380322</p>
+     * @return
+     */
     @Override
     public Validator getValidator() {
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
