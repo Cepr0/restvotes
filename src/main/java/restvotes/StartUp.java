@@ -59,24 +59,18 @@ public class StartUp {
         LocalTime newDayPollTime = config.getNewDayPollTimeValue();
         LOG.info(msgHelper.logMessage("Automatic Poll creation time is set to %s", newDayPollTime));
         
-        LOG.info(msgHelper.logMessage("Checking previous Polls if they closed..."));
-        
+        LOG.info(msgHelper.logMessage("Checking previous Polls whether they are closed..."));
         LocalDate today = LocalDate.now();
         LocalTime now = LocalTime.now();
-        
-        // If now is a time after the end of voting - disabling all Polls until now
         if (now.isAfter(endOfVotingTime)) {
-            if (pollService.closeAllUntil(today)) {
-                LOG.info(msgHelper.logMessage("All Polls until now have been closed."));
-            }
+            // If now is a time after the end of voting - disabling all Polls until now
+            pollService.closeAllUntil(today);
         } else {
             // If now is time before the end of voting, we are disabling all Polls until yesterday (exclusive)
-            if (pollService.closeAllUntil(today.minusDays(1L))) {
-                LOG.info(msgHelper.logMessage("All Polls until yesterday have been closed."));
-            }
+            pollService.closeAllUntil(today.minusDays(1L));
         }
         
-        LOG.info(msgHelper.logMessage("Checking if all finished Polls have a winner..."));
+        LOG.info(msgHelper.logMessage("Checking whether all finished Polls have a winner..."));
         pollService.placeWinners();
         
         LOG.info(msgHelper.logMessage("Searching 'empty' polls..."));

@@ -18,7 +18,7 @@ public interface PollService {
      *
      * @return true if operation is performed or false otherwise
      */
-    boolean closeAllUntil(LocalDate until);
+    Integer closeAllUntil(LocalDate until);
     
     /**
      * Make a replica of a previous {@link Poll} if its 'date' is less than now

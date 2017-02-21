@@ -120,7 +120,7 @@ public interface PollRepo extends JpaRepository<Poll, LocalDate> {
     
     /**
      * Delete {@link Menu}s related with 'empty' {@link Poll}s
-     * <p>Use before {@link PollRepo#deleteFinishedAndWithoutVotes()} only in one transaction!</p>
+     * <p>Use before {@link PollRepo#deleteFinishedAndWithoutVotes()} just in the same transaction</p>
      * <p>(Perhaps it's worth to use @PreRemove method in {@link Poll} entity...)</p>
      */
     @RestResource(exported = false)

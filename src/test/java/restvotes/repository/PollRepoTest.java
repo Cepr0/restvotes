@@ -68,4 +68,13 @@ public class PollRepoTest extends BaseTest {
         List<Poll> polls = pollRepo.getFinishedWithoutWinner();
         assertThat(polls, hasSize(2));
     }
+    
+    @Test
+    public void closeUntil() throws Exception {
+        Poll poll = pollRepo.save(new Poll());
+        assertThat(poll, is(notNullValue()));
+        assertThat(poll.getDate(), is(LocalDate.now()));
+        int count = pollRepo.closeUntil(LocalDate.now());
+        assertThat(count, is (2));
+    }
 }

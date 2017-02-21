@@ -52,20 +52,6 @@ public class RestVotes {
     }
     
     // /**
-    //  * http://stackoverflow.com/a/30558018/5380322
-    //  * @return a ReloadableResourceBundleMessageSource instance
-    //  */
-    // @Bean
-    // public ReloadableResourceBundleMessageSource messageSource() {
-    //     ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-    //     messageSource.setBasename("classpath:messages");
-    //     messageSource.setCacheSeconds(60); //reload messages every 60 seconds
-    //     messageSource.setDefaultEncoding("UTF-8");
-    //     messageSource.setFallbackToSystemLocale(false);
-    //     return messageSource;
-    // }
-    
-    // /**
     //  * http://stackoverflow.com/a/26283080/5380322
     //  * https://goo.gl/D4oDR9
     //  * @return a {@link SimpleCacheManager}

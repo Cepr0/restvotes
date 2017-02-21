@@ -18,6 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 abstract public class BaseTest {
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public ExpectedException exception = ExpectedException.none();
     
 }

@@ -35,7 +35,7 @@ public class StartUpTest extends BaseTest {
     private PollRepo pollRepo;
     
     /**
-     * Imitation of the several start App process
+     * Imitation of starting up processes
      * @throws Exception if something goes wrong
      */
     @Test
@@ -43,8 +43,8 @@ public class StartUpTest extends BaseTest {
     
         LocalDate now = LocalDate.now();
         
-        // Close all unfinished Polls until now - must one
-        assertThat(pollService.closeAllUntil(now), is(true));
+        // Close all unfinished Polls until now - must be only one
+        assertThat(pollService.closeAllUntil(now), is(1));
         assertThat(pollRepo.getFirstUnfinished().isPresent(), is(false));
     
         // Placer winners in the closed Polls - for 2 day before Poll the winner id is 2, for 1 day before - 5
@@ -57,30 +57,32 @@ public class StartUpTest extends BaseTest {
         copyPrevious(now);
         
         // Close all unfinished Polls until now - new Poll must be finished
-        assertThat(pollService.closeAllUntil(now), is(true));
+        assertThat(pollService.closeAllUntil(now), is(1));
         assertThat(pollRepo.getOne(now).getFinished(), is(true));
         
-        // Delete 'empty' Poll - must be one
+        // Delete 'empty' Poll - must be only one
         assertThat(pollService.deleteEmpty(), is(1));
         assertThat(pollRepo.findByDate(now).isPresent(), is(false));
     
         // Copy previous Poll again
         Poll poll = copyPrevious(now);
+        
+        // Get first (0th) menu
         Menu menu = poll.getMenus().get(0);
 
-        // Submit one vote fore 0th menu
+        // Submit a vote for 0th menu
         userService.runAs("frodo@restvotes.com");
         voteService.submitVote(menu);
     
-        // Close unfinished Poll - new one must be closed
-        assertThat(pollService.closeAllUntil(now), is(true));
+        // Close unfinished Poll - the new Poll must be closed
+        assertThat(pollService.closeAllUntil(now), is(1));
         assertThat(pollRepo.getOne(now).getFinished(), is(true));
     
-        // Place winner for closed Polls - last one winner is its 0th menu
+        // Place winner for closed Polls - the last Poll winner is its 0th menu
         pollService.placeWinners();
         assertThat(pollRepo.getOne(now).getWinner(), is(menu));
         
-        // Try to delete 'empty' Polls - they didn't
+        // Try to delete 'empty' Poll - it should not be deleted due to the fact of voting
         assertThat(pollService.deleteEmpty(), is(0));
         assertThat(pollRepo.findByDate(now).isPresent(), is(true));
     }

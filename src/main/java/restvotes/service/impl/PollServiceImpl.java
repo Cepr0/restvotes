@@ -35,14 +35,14 @@ public class PollServiceImpl implements PollService {
     private final @NonNull MessageHelper msgHelper;
     
     @Override
-    public boolean closeAllUntil(LocalDate until) {
+    public Integer closeAllUntil(LocalDate until) {
         try {
-            int count = pollRepo.closeUntil(until);
-            LOG.debug(msgHelper.logMessage("poll.is_disabled", until, count));
-            return true;
+            Integer count = pollRepo.closeUntil(until);
+            LOG.debug(msgHelper.logMessage("poll.is_closed", until, count));
+            return count;
         } catch (Exception e) {
             LOG.error(msgHelper.logMessage("poll.is_not_disabled", until, e.getMessage()));
-            return false;
+            return null;
         }
     }
     
