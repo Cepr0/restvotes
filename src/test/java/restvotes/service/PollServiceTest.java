@@ -29,7 +29,7 @@ public class PollServiceTest extends BaseTest {
     
     @Test
     public void closeAllUntil() throws Exception {
-        Poll poll = pollRepo.save(new Poll());
+        pollRepo.save(new Poll());
         Integer count = pollService.closeAllUntil(LocalDate.now());
         assertThat(count, is (2));
     }

@@ -9,7 +9,6 @@ import restvotes.BaseTest;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,11 +55,11 @@ public class ErrorAssemblerTest extends BaseTest {
     
         when(node.getName()).thenReturn(FLD);
         when(v.getRootBeanClass()).thenReturn(Object.class);
-        when(v.getPropertyPath()).thenReturn(() -> Arrays.asList(node, node).iterator());
+        when(v.getPropertyPath()).thenReturn(() -> asList(node, node).iterator());
         when(v.getInvalidValue()).thenReturn(null);
         when(v.getMessage()).thenReturn(MSG);
         
-        Set<ConstraintViolation<?>> violations = new HashSet<>(Arrays.asList(v));
+        Set<ConstraintViolation<?>> violations = new HashSet<>(asList(v));
         ErrorAssembler.ErrorMsg errorMsg = errorAssembler.errorMsg(violations);
         assertThat(errorMsg.getErrors(), hasSize(1));
 
