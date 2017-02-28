@@ -50,8 +50,8 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
             }
         }
         
-        // If auth is null return a dummy User with ID = -1
-        // to avoid NPE if we need to invoke get().detId(), for ex. in UserProfileController
+        // If auth is null then return a dummy User with ID = -1
+        // to avoid NPE if we need to invoke get().getId(), for ex. in UserProfileController
         return (User) new User().setId(-1L);
      }
     

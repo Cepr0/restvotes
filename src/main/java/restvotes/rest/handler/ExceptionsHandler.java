@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.rest.core.RepositoryConstraintViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -76,6 +77,12 @@ public class ExceptionsHandler {
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<?> handleForbiddenException(ForbiddenException e) {
         return new ResponseEntity<>(assembler.errorMsg(e.getMessage()), FORBIDDEN);
+    }
+    
+    @Order(Ordered.HIGHEST_PRECEDENCE + 7)
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException e) {
+        return new ResponseEntity<>(assembler.errorMsg(e.getMessage()), NOT_FOUND);
     }
     
     @Order(Ordered.LOWEST_PRECEDENCE)

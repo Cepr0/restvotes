@@ -5,13 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import restvotes.domain.entity.User;
 import restvotes.repository.UserRepo;
-import restvotes.util.exception.NotFoundException;
 
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -37,7 +38,7 @@ public class UserService implements UserDetailsService {
         if(user.isPresent()) {
             return new AuthorizedUser(user.get());
         } else {
-            throw new NotFoundException(msgHelper.userMessage("users.with_email_not_found", email));
+            throw new UsernameNotFoundException(msgHelper.userMessage("users.with_email_not_found", email));
         }
     }
     
@@ -47,13 +48,21 @@ public class UserService implements UserDetailsService {
      */
     @Profile("test")
     public void runAs(String email) {
-        AuthorizedUser user = loadUserByUsername(email);
+        AuthorizedUser user = null;
+        Collection<GrantedAuthority> authorities = null;
+        
+        try {
+            user = loadUserByUsername(email);
+            authorities = user.getAuthorities();
+        } catch (UsernameNotFoundException ignore) {
+        }
+        
         getContext()
                 .setAuthentication(
                         new UsernamePasswordAuthenticationToken(
                                 user,
                                 null,
-                                user.getAuthorities()));
+                                authorities));
     }
     
     /**
