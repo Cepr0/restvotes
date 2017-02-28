@@ -80,7 +80,7 @@ public class ErrorAssembler {
      * Convenient TO
      */
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private class ErrorMsg {
+    class ErrorMsg {
         
         @Getter
         private final List<Error> errors = new ArrayList<>();
@@ -105,7 +105,7 @@ public class ErrorAssembler {
     
     @JsonInclude(NON_NULL)
     @Value
-    private class Error {
+    class Error {
         private final String object;
         private final String property;
         private final Object invalidValue;
