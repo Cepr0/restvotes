@@ -19,9 +19,6 @@ public class AuthorizedUserTest extends BaseTest {
     @Autowired
     private UserService userService;
     
-    @Autowired
-    private MessageHelper msgHelper;
-    
     private static final String EMAIL = "frodo@restvotes.com";
     
     @Test
