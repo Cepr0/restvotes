@@ -52,6 +52,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+        </dependency>
+
         <!-- Dev Tools-->
         <!-- http://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html -->
         <dependency>

@@ -16,6 +16,7 @@ import restvotes.util.MessageHelper;
 import restvotes.util.exception.NotFoundException;
 
 import static org.springframework.http.HttpStatus.OK;
+import static restvotes.rest.controller.MenuController.MENU_PATH;
 
 /**
  * Controller to handle voting for chosen {@link Menu}
@@ -23,8 +24,12 @@ import static org.springframework.http.HttpStatus.OK;
  */
 @RequiredArgsConstructor
 @RepositoryRestController
-@RequestMapping("/menus/{id}")
+@RequestMapping(MENU_PATH + "/{id}")
 public class MenuController {
+    
+    static final String MENU_PATH = "/menus";
+    
+    static final String VOTE_PATH = "/vote";
     
     private final @NonNull LinksHelper links;
     
@@ -37,7 +42,7 @@ public class MenuController {
      * @param menu chosen {@link Menu}
      * @return a response with the registered {@link Vote}
      */
-    @PutMapping("/vote")
+    @PutMapping(VOTE_PATH)
     public ResponseEntity<?> submitVote(@PathVariable("id") Menu menu) {
         
         if (menu == null) {
