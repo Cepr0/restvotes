@@ -16,7 +16,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static restvotes.DemoData.u1;
-import static restvotes.rest.controller.MenuController.MENU_PATH;
 
 /**
  * @author Cepro, 2017-03-04

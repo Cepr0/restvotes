@@ -34,8 +34,10 @@ import static org.junit.Assert.assertThat;
 @ActiveProfiles("test")
 public class RestBaseTest {
     
+    protected static final String MENU_PATH = "/menus";
     protected static final String POLL_PATH = "/polls";
     protected static final String RESTAURANT_PATH = "/restaurants";
+    protected static final String USER_PROFILE_PATH = "/userProfile";
     protected static final String SELF_REL = "self";
     protected static final String CURRENT_POLL_REL = "currentPoll";
     protected static final String PROFILE_REL = "profile";

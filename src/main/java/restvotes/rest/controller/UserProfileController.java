@@ -19,7 +19,6 @@ import javax.validation.Valid;
 
 import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
-import static restvotes.rest.controller.UserProfileController.USER_PROFILE_PATH;
 
 /**
  * Controller to handle {@link UserProfile} related requests
@@ -28,10 +27,8 @@ import static restvotes.rest.controller.UserProfileController.USER_PROFILE_PATH;
 @RequiredArgsConstructor
 @RestController
 // @BasePathAwareController
-@RequestMapping("${spring.data.rest.basePath}" + USER_PROFILE_PATH)
+@RequestMapping("${spring.data.rest.basePath}" + "/userProfile")
 public class UserProfileController {
-    
-    protected static final String USER_PROFILE_PATH = "/userProfile";
     
     private final @NonNull LinksHelper links;
     
