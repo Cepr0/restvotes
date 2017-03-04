@@ -58,23 +58,32 @@ public class PollEventHandler {
     
         // Check if a Poll for this date is already exists
         if (pollRepo.findByDate(poll.getDate()).isPresent()) {
-            throw new ForbiddenException(msgHelper.logMessage("poll.is_already_exists"));
+    
+            String message = msgHelper.logMessage("poll.is_already_exists");
+            LOG.error(message);
+            throw new ForbiddenException(message);
         }
     
         // If we are trying to create Poll in the Past
         if (poll.getDate().isBefore(LocalDate.now())) {
-            throw new ForbiddenException(msgHelper.logMessage("poll.creating_in_the_past_are_forbidden"));
-        }
-    
-        // If we are trying to create Poll after the End Of Voting Time
-        LocalTime endOfVotingTimeValue = config.getEndOfVotingTimeValue();
-        String timeStr = endOfVotingTimeValue.format(DateTimeFormatter.ofPattern("HH:mm"));
-        if (poll.getDate().isEqual(LocalDate.now()) && LocalTime.now().isAfter(endOfVotingTimeValue)) {
-            throw new ForbiddenException(msgHelper.logMessage("poll.creating_after_finished_time", timeStr));
+            
+            String message = msgHelper.logMessage("poll.creating_in_the_past_are_forbidden");
+            LOG.error(message);
+            throw new ForbiddenException(message);
         }
     
         // If Menus has duplicate restaurants
         checkRestaurantDuplicates(poll);
+
+        // If we are trying to create Poll after the End Of Voting Time
+        LocalTime endOfVotingTimeValue = config.getEndOfVotingTimeValue();
+        String timeStr = endOfVotingTimeValue.format(DateTimeFormatter.ofPattern("HH:mm"));
+        if (poll.getDate().isEqual(LocalDate.now()) && LocalTime.now().isAfter(endOfVotingTimeValue)) {
+            
+            String message = msgHelper.logMessage("poll.creating_after_finished_time", timeStr);
+            LOG.error(message);
+            throw new ForbiddenException(message);
+        }
     }
 
     @HandleAfterCreate
@@ -87,7 +96,10 @@ public class PollEventHandler {
     
     private void checkIfPollhasVotes(Poll poll) {
         if (voteRepo.countByPoll(poll) != 0) {
-            throw new ForbiddenException(msgHelper.logMessage("poll.modifications_are_forbidden"));
+            
+            String message = msgHelper.logMessage("poll.modifications_are_forbidden");
+            LOG.error(message);
+            throw new ForbiddenException(message);
         }
     }
     
@@ -96,7 +108,10 @@ public class PollEventHandler {
         List<Menu> menus = poll.getMenus();
         boolean hasNoDuplicates = menus.stream().mapToLong(menu -> menu.getRestaurant().getId()).allMatch(new HashSet<>()::add);
         if (!hasNoDuplicates) {
-            throw new ForbiddenException(msgHelper.logMessage("poll.has_duplicates"));
+            
+            String message = msgHelper.logMessage("poll.has_duplicates");
+            LOG.error(message);
+            throw new ForbiddenException(message);
         }
     }
 }

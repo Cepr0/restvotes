@@ -47,7 +47,7 @@ public class DemoData implements ApplicationRunner {
     
     public static Restaurant r1, r2, r3;
     public static Menu m1, m2, m3, m4, m5, m6;
-    private Poll p1, p2;
+    public static Poll p1, p2;
     public static User u1, u2, u3, u4, u5, u6, u7, u8;
 
     @Override

@@ -1,7 +1,6 @@
 package restvotes.rest.handler;
 
 import org.junit.Test;
-import org.springframework.test.web.servlet.ResultActions;
 import restvotes.RestBaseTest;
 
 import static org.springframework.hateoas.MediaTypes.HAL_JSON;
@@ -27,10 +26,12 @@ public class MenuEventHandlerTest extends RestBaseTest {
     public void handleBeforeSave() throws Exception {
         
         userService.runAs(u1.getEmail());
+        
         m1.setRestaurant(r2);
-        ResultActions result = mvc.perform(put(url)
+        mvc.perform(put(url)
                 .content(mapper.writeValueAsString(m1))
                 .contentType(APPLICATION_JSON)
-                .accept(HAL_JSON)).andExpect(status().isForbidden());
+                .accept(HAL_JSON))
+           .andExpect(status().isForbidden());
     }
 }
