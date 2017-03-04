@@ -1,5 +1,6 @@
 package restvotes;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import restvotes.util.UserService;
 
@@ -28,6 +30,7 @@ import static org.junit.Assert.assertThat;
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Transactional
 @ActiveProfiles("test")
 public class RestBaseTest {
     
@@ -40,11 +43,15 @@ public class RestBaseTest {
     protected static final String USER_CHOICE_REL = "userChoice";
     protected static final String WINNER_REL = "winner";
     protected static final String RESTAURANT_REL = "restaurant";
+    protected static final String USER_PROFILE_REL = "userProfile";
     
     @Value("${spring.data.rest.basePath}")
     protected String BASE_PATH;
     
     protected MockMvc mvc;
+    
+    @Autowired
+    protected ObjectMapper mapper;
     
     @Autowired
     protected UserService userService;
@@ -59,7 +66,7 @@ public class RestBaseTest {
     public void setUp() {
         this.mvc = MockMvcBuilders.webAppContextSetup(this.context).build();
     }
-
+    
     /**
      * Creates a {@link ResultMatcher} that checks for the presence of a link with the given rel.
      *

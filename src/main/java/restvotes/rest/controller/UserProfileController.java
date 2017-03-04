@@ -3,6 +3,7 @@ package restvotes.rest.controller;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -18,8 +19,7 @@ import javax.validation.Valid;
 
 import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
-import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static restvotes.rest.controller.UserProfileController.USER_PROFILE_PATH;
 
 /**
  * Controller to handle {@link UserProfile} related requests
@@ -28,8 +28,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 @RequiredArgsConstructor
 @RestController
 // @BasePathAwareController
-@RequestMapping("${spring.data.rest.basePath}/userProfile")
+@RequestMapping("${spring.data.rest.basePath}" + USER_PROFILE_PATH)
 public class UserProfileController {
+    
+    protected static final String USER_PROFILE_PATH = "/userProfile";
     
     private final @NonNull LinksHelper links;
     
@@ -69,7 +71,7 @@ public class UserProfileController {
         }
         
         User user = userRepo.saveAndFlush(new User(profile.getName(), profile.getEmail(), profile.getPassword()));
-        return ok(new Resource<>(new UserProfile(user), links.getUserProfileLink()));
+        return new ResponseEntity<>(new Resource<>(new UserProfile(user), links.getUserProfileLink()), HttpStatus.CREATED);
     }
     
     /**
@@ -78,7 +80,7 @@ public class UserProfileController {
      * @param bindingResult {@link BindingResult} used to validate the input
      * @return updated {@link UserProfile}
      */
-    @RequestMapping(method = {PUT, PATCH})
+    @PutMapping
     @Transactional
     public ResponseEntity<?> update(@Valid @RequestBody UserProfile profile, BindingResult bindingResult) {
     

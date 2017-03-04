@@ -1,15 +1,12 @@
 package restvotes.rest.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.ResultActions;
 import restvotes.RestBaseTest;
 
-import static org.hamcrest.CoreMatchers.endsWith;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON;
@@ -29,13 +26,16 @@ public class RestaurantControllerTest extends RestBaseTest {
     
     private static final String RESTAURANT_ID = "/1";
     
-    @Autowired
-    private ObjectMapper mapper;
+    private String url;
+    
+    @Override
+    public void setUp() {
+        super.setUp();
+        url = BASE_PATH + RESTAURANT_PATH + RESTAURANT_ID + MENU_PATH;
+    }
     
     @Test
     public void getMenus() throws Exception {
-        
-        String url = BASE_PATH + RESTAURANT_PATH + RESTAURANT_ID + MENU_PATH;
         
         userService.runAs(u1.getEmail());
         
@@ -56,8 +56,6 @@ public class RestaurantControllerTest extends RestBaseTest {
     
     @Test
     public void addMenu() throws Exception {
-        
-        String url = BASE_PATH + RESTAURANT_PATH + RESTAURANT_ID + MENU_PATH;
         
         userService.runAs(u1.getEmail());
         
@@ -84,9 +82,6 @@ public class RestaurantControllerTest extends RestBaseTest {
                 .accept(HAL_JSON))
            .andExpect(status().isBadRequest())
            .andExpect(jsonPath("$.errors.*", hasSize(2)))
-           .andExpect(jsonPath("$.errors[0].property", is("description")))
-           .andExpect(jsonPath("$.errors[0].invalidValue", is("D1")))
-           .andExpect(jsonPath("$.errors[1].property", is("cost")))
-           .andExpect(jsonPath("$.errors[1].invalidValue", is(0)));
+           .andExpect(jsonPath("$.errors.*.property", hasItems("description", "cost")));
     }
 }
