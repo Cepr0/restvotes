@@ -41,6 +41,9 @@ public class DemoData implements ApplicationRunner {
     private final @NonNull UserRepo userRepo;
     
     private final @NonNull VoteRepo voteRepo;
+    
+    public static final LocalDate MINUS_2_DAYS = LocalDate.now().minusDays(2);
+    public static final LocalDate MINUS_1_DAYS = LocalDate.now().minusDays(1);
 
     private Restaurant r1, r2, r3;
     private Menu m1, m2, m3, m4, m5, m6;
@@ -157,9 +160,9 @@ public class DemoData implements ApplicationRunner {
     private void addPolls() {
 
         LOG.info(msgHelper.logMessage("Inserting demo polls..."));
-
-        p1 = new Poll(LocalDate.now().minusDays(2), asList(m1, m2, m3)).setFinished(true);
-        p2 = new Poll(LocalDate.now().minusDays(1), asList(m4, m5, m6));
+    
+        p1 = new Poll(MINUS_2_DAYS, asList(m1, m2, m3)).setFinished(true);
+        p2 = new Poll(MINUS_1_DAYS, asList(m4, m5, m6));
 
         pollRepo.save(asList(p1, p2));
     }

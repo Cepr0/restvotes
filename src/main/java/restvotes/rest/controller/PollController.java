@@ -64,7 +64,7 @@ public class PollController {
     }
     
     /**
-     * Get {@link Menu} of the specified {@link Poll} with:
+     * Get {@link Menu} of the specified {@link Poll}
      * <p>Used to get a Menu-winner</p>
      * @param poll specified {@link Poll}
      * @param menu requested {@link Menu}
@@ -102,8 +102,8 @@ public class PollController {
     }
     
     /**
-     * Get current the {@link Poll}
-     * @param assembler {@link PersistentEntityResourceAssembler} to assemble returned Poll
+     * Get the current {@link Poll}
+     * @param assembler {@link PersistentEntityResourceAssembler} injected to assemble returned Poll
      * @return {@link Poll} in 'full' view
      */
     @GetMapping("/current")
