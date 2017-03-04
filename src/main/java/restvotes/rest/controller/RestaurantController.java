@@ -19,6 +19,8 @@ import restvotes.util.LinksHelper;
 import restvotes.util.MessageHelper;
 import restvotes.util.exception.NotFoundException;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 /**
  * Controller to handle query for the restaurant related menus.
  * <p>An example how to deal with related objects without specifying their relations in entities classes</p>
@@ -79,6 +81,6 @@ public class RestaurantController {
         }
         
         Menu savedMenu = menuRepo.saveAndFlush(menu.setRestaurant(restaurant));
-        return ResponseEntity.ok(new Resource<>(savedMenu, links.getMenuLinks(savedMenu, true)));
+        return new ResponseEntity<>(new Resource<>(savedMenu, links.getMenuLinks(savedMenu, true)), CREATED);
     }
 }

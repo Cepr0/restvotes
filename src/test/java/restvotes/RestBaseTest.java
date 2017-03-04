@@ -21,6 +21,8 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
+ * Base class to derive concrete rest test classes from.
+ * Based on https://github.com/olivergierke/spring-restbucks/blob/master/src/test/java/org/springsource/restbucks/AbstractWebIntegrationTest.java
  * @author Cepro, 2017-03-03
  */
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
@@ -30,12 +32,14 @@ import static org.junit.Assert.assertThat;
 public class RestBaseTest {
     
     protected static final String POLL_PATH = "/polls";
+    protected static final String RESTAURANT_PATH = "/restaurants";
     protected static final String SELF_REL = "self";
     protected static final String CURRENT_POLL_REL = "currentPoll";
     protected static final String PROFILE_REL = "profile";
     protected static final String SEARCH_REL = "search";
     protected static final String USER_CHOICE_REL = "userChoice";
     protected static final String WINNER_REL = "winner";
+    protected static final String RESTAURANT_REL = "restaurant";
     
     @Value("${spring.data.rest.basePath}")
     protected String BASE_PATH;
