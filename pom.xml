@@ -6,7 +6,7 @@
 
     <groupId>io.github.cepr0</groupId>
     <artifactId>restvotes</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>1.0-RELEASE</version>
 
     <packaging>jar</packaging>
 
