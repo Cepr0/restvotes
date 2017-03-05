@@ -1,13 +1,13 @@
-**RU** | [EN](readme_en.md)
+[RU](readme.md) | **EN**
 
 # RESTVotes
 ### Voting System for Restaurant lunches
-##### "Выпускной" проект по Java-курсам [JavaRush](https://javarush.ru/) и [Java Online Projects](http://javaops.ru/)
+##### "Graduation" project for Java-courses [JavaRush](https://javarush.ru/) and [Java Online Projects](http://javaops.ru/)
 
 [![Build Status](https://travis-ci.org/Cepr0/restvotes.svg?branch=master)](https://travis-ci.org/Cepr0/restvotes)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6893de10620c4c779d5659949b55bb82)](https://www.codacy.com/app/Cepr0/restvotes)
 
-## Задание
+## Task
 Design and implement a JSON API using Hibernate/Spring/SpringMVC (or Spring-Boot) **without frontend**.
 
 The task is:
@@ -31,13 +31,13 @@ P.S.: Make sure everything works with latest version that is on github :)
 
 P.P.S.: Assume that your API will be used by a frontend developer to build frontend on top of that.
 
-## Реализация
+## Implementation
 
-### Используемый стек технологий
+### Technology stack
 
 *   Spring Boot 
-*   Spring Data REST
 *   Spring Data JPA
+*   Spring Data REST
 *   Spring Security
 *   H2
 *   MySQL
@@ -45,95 +45,69 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
 *   Lombok
 *   Maven
 
-Применение [Spring Data REST](http://projects.spring.io/spring-data-rest/) позволило реализовать REST API с использованием технологии [HATEOAS](http://spring-projects.ru/understanding/hateoas/) - Hypermedia as the Engine of Application State.  
+[Spring Data REST](http://projects.spring.io/spring-data-rest/) allowed to implement the REST API with [HATEOAS](http://spring-projects.ru/understanding/hateoas/) technology.
 
-### Структура данных
+### Data structure
 
-![Структура данных][data-structure]
+![Data structure][data-structure]
 [data-structure]: data-structure.png "Структура данных"
 
-#### Poll - Опрос
-Центральный объект приложения - описывает голосование за лучшее меню/ресторан в течение одного дня. 
-Содержит ссылку на **список** объектов типа Меню (см. ниже), которые участвуют в голосовании, и ссылку на Меню-победителя (для завершенного опроса). 
+#### Poll
+The central object in the Application - defines the voting for the best Menu/Restaurant during the one day.  
+It contains a link to a related **Menu** list that take part in the poll. 
 
-В течение дня может существовать только один Опрос.
-Опрос не может содержать несколько Меню одного и того же Ресторана.
-Нельзя создать Опрос за прошедший день или за текущий день, если голосование уже завершилось (по умолчанию - 11:00).
-Нельзя удалить или изменить опрос, в котором пользователи уже голосовали.
+#### Menu
+Menu contains a links to a related **Restaurant** and a **Menu item** list.    
 
-Голосовать можно только в рамках текущего незавершенного Опроса.
-Опрос открыт до установленного времени (по умолчанию - до 11:00).
-Текущим опросом считается первый незавершенный, либо последний завершенный Опрос. 
-  
-#### Menu - Меню
-Содержит ссылку на объект Ресторан (см. ниже), к которому относиться данное Меню, и на **список** объектов MenuItem (пункт меню, см. ниже).
+#### MenuItem
+Describes a dish and its price. 
 
-Одно и тоже меню может входить в разные опросы. 
-Если за какое-либо меню голосовали, то такое меню не подлежит корректировке. 
+#### Restaurant
+Describes a restaurant (name, address etc.)
 
-#### MenuItem - Пункт меню
-Описывает блюдо и его цену.
+#### User
+Describes a user of this Application. It can be Administrator or Ordinary user.
 
-Блюда существуют только в пределах Меню, в которое они входят. 
+#### Vote
+Vote is used to register the user's choice.
 
-#### Restaurant - Ресторан
-Описывает Ресторан (название, адрес и т.п.).
-
-Нельзя создать два ресторана с одним и тем же названием.
-
-#### User - Пользователь
-Описывает пользователя данного сервиса. Может быть обычным пользователем или администратором (тот же пользователь, но с расширенными правами).
-
-Нельзя зарегистрировать двух пользователей с одним и тем же адресом электронной почты.
-
-Администраторы могут создавать/редактировать: Опросы, Меню, Блюда, Рестораны др. пользователей, и выполнять действия доступные обычным Пользователям.
-
-Пользователи могут: регистрироваться на сервисе, редактировать свой профиль и голосовать за выбранное Меню/Ресторан в течение открытого Опроса.
-
-#### Vote - Голос
-Предназначен для регистрации голоса Пользователя, который он отдал за выбранное Меню/Ресторан в течение текущего незавершенного Опроса.
-
-Голосовать можно только в течение незавершенного текущего Опроса.
-Если Пользователь голосует второй раз в течение открытого Опроса, то его предыдущий голос перезаписывается.
-
-### Настройки приложения
+### Application settings
 
 #### application.properties:
-- **restvotes.new_day_poll_time**=9:00 - время начала опроса в текущем (новом) дне. 
-Если до этого момента Администратор не создал опрос, приложение сделает это автоматически на основе предыдущего 
-завершенного запроса - скопирует его список Меню. 
-      
-- **restvotes.end_of_voting_time**=11:00 - время завершения опроса. 
-Программа автоматически завершает опрос и определяет победителя. 
+- **restvotes.new_day_poll_time**=9:00 - the start of voting time. If Administrator has not created a new Poll manually  
+then Application creates it automatically by copying the previous one.
 
-### Поведение
+- **restvotes.end_of_voting_time**=11:00 - the end of voting time. Application automatically finishes Poll and 
+determines a winner. 
 
-#### Старт приложения
-1.  Программа проверяет: если сейчас время после окончания Опроса, то закрывает все незавершенные Опросы на текущий момент. Иначе - завершает все Опросы до начала сегодняшнего дня.  
-2.  Проверяет во всех ли закрытых Опросах проставлены победители. Проставляет, если не проставлены.  
-3.  Ищет "пустые" Опросы, которые не содержат голосов Пользователей, и удаляет найденные опросы. 
-4.  Если сейчас время после "начала опроса", но до "завершения опроса", программа автоматически создает новый Опрос (если Опрос не был сделан ранее Администратором) - копирует список меню последнего завершенного Опроса (предполагается, что сегодня может быть такое же Меню как и вчера). До времени "начала голосования" Администратор может создать Опрос вручную.
+### Behavior 
 
-#### Начало нового дня (0:00:01)
-1.  Программа проверяет: проставлены ли победители в завершенных Опросах, если нет - проставляет.   
-2.  Удаляет "пустые" Опросы 
+#### Application start
+1. Checks all Polls and closes unfinished ones     
+2. Determines all finished polls without winners and sets winner for such polls.    
+3. Finds 'empty' polls that doesn't have votes and deletes them.  
+4. If now it's start voting time and if Admin hasn't created poll manually than copies the previous poll.   
 
-#### Начало голосования (по умолчанию - 9:00)
-1.  Если Опрос еще не создан за сегодня, программа автоматически создает новый Опрос - копирует список Меню последнего закрытого Опроса. 
+#### New day (0:00:01)
+1. Determines all finished polls without winners and sets a winner for every such poll.
+2. Deletes 'empty' polls 
 
-#### Завершение голосования (по умолчанию - 11:00)
-1.  Завершает все незавершенные Опросы на текущий момент.
-2.  Проставляет победителя в завершенных Опросах.
+#### Start voting (by default - 9:00)
+1.  If now it's start voting time and if Admin hasn't created poll manually than copies the previous poll. 
 
-### Описание интерфейса (API)
+#### End voting (by default - 11:00)
+1.  Closes unfinished polls
+2.  Determines all finished polls without winners and sets winner for such polls.
+
+### API description
 
 #### /api
 
-Выводит список доступных объектов: Опросы, Меню, Рестораны, Пользователи, а также ссылку на текущий Опрос 
-и ссылку на профиль Пользователя. 
+Displays list of all available objects: Polls, Menus, Restaurants, Users and links to the current Poll 
+and to user Profile.
 
-Команды:
-*   **GET** - Получение списка объектов приложения. Доступна всем посетителям.
+Commands:
+*   **GET** - Getting list of objects. Public access.
 
     GET [http://localhost:8080/api](http://localhost:8080/api)
  
@@ -144,30 +118,30 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
             "users": {
               "href": "http://localhost:8080/api/users{?page,size,sort}",
               "templated": true,
-              "title": "Пользователи"
+              "title": "User list"
             },
             "menus": {
               "href": "http://localhost:8080/api/menus{?page,size,sort,projection}",
               "templated": true,
-              "title": "Список меню"
+              "title": "Menu list"
             },
             "restaurants": {
               "href": "http://localhost:8080/api/restaurants{?page,size,sort}",
               "templated": true,
-              "title": "Рестораны"
+              "title": "Restaurant list"
             },
             "polls": {
               "href": "http://localhost:8080/api/polls{?page,size,sort}",
               "templated": true,
-              "title": "Опросы"
+              "title": "Poll list"
             },
             "currentPoll": {
               "href": "http://localhost:8080/api/polls/current",
-              "title": "Текущий опрос"
+              "title": "Current Poll"
             },
             "userProfile": {
               "href": "http://localhost:8080/api/userProfile",
-              "title": "Профиль пользователя"
+              "title": "User profile"
             },
             "profile": {
               "href": "http://localhost:8080/api/profile"
@@ -177,10 +151,10 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
 
 #### /api/userProfile
 
-Работа с профилем обычного пользователя.
+Profile for ordinary user.
 
-Команды:
-*   **GET** - Получение профиля. Доступна авторизованному пользователю.
+Commands:
+*   **GET** - Getting a profile. Access is available to all authorized users.
 
     GET [http://localhost:8080/api/userProfile](http://localhost:8080/api/userProfile)
 
@@ -193,12 +167,12 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
           "_links": {
             "userProfile": {
               "href": "https://localhost:8080/api/userProfile",
-              "title": "Профиль пользователя"
+              "title": "User profile"
             }
           }
         }
 
-*   **POST** - Регистрация нового пользователя. Доступна всем посетителям
+*   **POST** - User signing up. Access is available to all users.
     
     POST [http://localhost:8080/api/userProfile](http://localhost:8080/api/userProfile)
 
@@ -210,16 +184,16 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
           "email": "givi@restvotes.com",
         }
 
-*   **PUT** - Редактирование профиля. Доступна авторизованному пользователю (тело запроса аналогично команде POST).
+*   **PUT** - Updating profile. Access is available to all authorized users.
     
     PUT [http://localhost:8080/api/userProfile](http://localhost:8080/api/userProfile)
 
 #### /api/polls
 
-Работа с Опросами.
+Working with Polls.
 
-Команды:
-*   **GET** - Просмотр всех опросов. Доступна авторизованному пользователю.
+Commands:
+*   **GET** - Getting all polls. Access is available to all authorized users.
 
     GET [http://localhost:8080/api/polls](http://localhost:8080/api/polls)
         
@@ -248,7 +222,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                   },
                   "winner": {
                     "href": "https://localhost:8080/api/polls/2017-02-04/menus/42",
-                    "title": "Победитель"
+                    "title": "Winner"
                   }
                 }
               },
@@ -262,7 +236,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                   },
                   "winner": {
                     "href": "https://localhost:8080/api/polls/2017-02-03/menus/12",
-                    "title": "Победитель"
+                    "title": "Winner"
                   }
                 }
               }
@@ -274,14 +248,14 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
             },
             "currentPoll": {
               "href": "https://localhost:8080/api/polls/current",
-              "title": "Текущий опрос"
+              "title": "Current poll"
             },
             "profile": {
               "href": "https://localhost:8080/api/profile/polls"
             },
             "search": {
               "href": "https://localhost:8080/api/polls/search",
-              "title": "Поиск"
+              "title": "Search"
             }
           },
           "page": {
@@ -292,10 +266,10 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
           }
         }
 
-    *   **finished** - признак завершенного Опроса
-    *   **current** - признак текущего Опроса     
+    *   **finished** - finished Poll mark
+    *   **current** - current poll mark     
     
-*   **GET** - Получение текущего Опроса. Доступна авторизованному пользователю.
+*   **GET** - Getting the current Poll. Access is available to all authorized users.
     
     POST [http://localhost:8080/api/polls/current](http://localhost:8080/api/polls/current)
     
@@ -336,11 +310,11 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                   },
                   "restaurant": {
                     "href": "http://localhost:8080/api/restaurants/2",
-                    "title": "Ресторан"
+                    "title": "Restaurant"
                   },
                   "vote": {
                     "href": "http://localhost:8080/api/menus/32/vote",
-                    "title": "Голосовать"
+                    "title": "Cast a vote"
                   }
                 }
               },
@@ -375,11 +349,11 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                   },
                   "restaurant": {
                     "href": "http://localhost:8080/api/restaurants/12",
-                    "title": "Ресторан"
+                    "title": "Restaurant"
                   },
                   "vote": {
                     "href": "http://localhost:8080/api/menus/42/vote",
-                    "title": "Голосовать"
+                    "title": "Cast a vote"
                   }
                 }
               },
@@ -414,11 +388,11 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                   },
                   "restaurant": {
                     "href": "http://localhost:8080/api/restaurants/22",
-                    "title": "Ресторан"
+                    "title": "Restaurant"
                   },
                   "vote": {
                     "href": "http://localhost:8080/api/menus/52/vote",
-                    "title": "Голосовать"
+                    "title": "Cast a vote"
                   }
                 }
               }
@@ -430,18 +404,18 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
             },
             "userChoice": {
               "href": "http://localhost:8080/api/menus/32",
-              "title": "Текущий выбор пользователя"
+              "title": "User's current choice"
             }
           }
         }    
 
-    *   **chosen** - меню, за которое проголосовал текущий пользователь
-    *   **rank** - кол-во проголосовавших за данное меню
-    *   **winner** - признак победившего Меню (для завершившегося Опроса)
-    *   **vote** - ссылка для голосования за данное меню (команда PUT - см. ниже)
-    *   **userChoice** - ссылка на Меню - текущий выбор пользователя     
+    *   **chosen** - mark of user's current choice
+    *   **rank** - voices count for this Menu 
+    *   **winner** - a winner Menu mark (only for finished Poll) 
+    *   **vote** - a link to Cast a vote (PUT request)
+    *   **userChoice** - a link to user's current choice     
 
-*   **POST** - Создание нового запроса. Доступна только администраторам
+*   **POST** - Creating a new Poll. Access is available to Admin only.
 
     POST [http://localhost:8080/api/polls](http://localhost:8080/api/polls)
     
@@ -456,9 +430,9 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
             ]
         }
 
-    *   "**http://localhost:8080/api/menus/{id}**" - ссылка на Меню, включаемое в Опрос (см. ниже).         
+    *   "**http://localhost:8080/api/menus/{id}**" - a link to Menu included to Poll.         
     
-*   **PUT** - Редактирование опроса. Доступна только администраторам
+*   **PUT** - Updating Poll. Access is available to Admins only.
     
     PUT [http://localhost:8080/api/polls/2017-02-06](http://localhost:8080/api/polls/2017-02-06)
         
@@ -472,15 +446,15 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
             ]
         }
 
-    *   "**http://localhost:8080/api/menus/{id}**" - ссылка на Меню, включаемое в Опрос (см. ниже).         
+    *   "**http://localhost:8080/api/menus/{id}**" - a link to Menu included to Poll.         
 
 #### /api/menus
 
-Работа со списком Меню.
+Working with Menu.
 
-Команды:
+Commands:
 
-* **GET** - Получение списка всех Меню. Доступна авторизованным пользователям.
+* **GET** - Getting a Menu list. Access is available to all authorized users.
     
     GET [http://localhost:8080/api/menus?size=3](http://localhost:8080/api/menus?size=3)
     
@@ -512,11 +486,11 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                   "menu": {
                     "href": "http://localhost:8080/api/menus/1{?projection}",
                     "templated": true,
-                    "title": "Меню"
+                    "title": "Menu"
                   },
                   "restaurant": {
                     "href": "http://localhost:8080/api/menus/1/restaurant",
-                    "title": "Ресторан"
+                    "title": "Restaurant"
                   }
                 }
               },
@@ -543,11 +517,11 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                   "menu": {
                     "href": "http://localhost:8080/api/menus/2{?projection}",
                     "templated": true,
-                    "title": "Меню"
+                    "title": "Menu"
                   },
                   "restaurant": {
                     "href": "http://localhost:8080/api/menus/2/restaurant",
-                    "title": "Ресторан"
+                    "title": "Restaurant"
                   }
                 }
               },
@@ -574,11 +548,11 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                   "menu": {
                     "href": "http://localhost:8080/api/menus/3{?projection}",
                     "templated": true,
-                    "title": "Меню"
+                    "title": "Menu"
                   },
                   "restaurant": {
                     "href": "http://localhost:8080/api/menus/3/restaurant",
-                    "title": "Ресторан"
+                    "title": "Restaurant"
                   }
                 }
               }
@@ -609,9 +583,9 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
           }
         }
 
-    * **?page**=3 - дополнительный параметр запроса, задает кол-во элементов на странице выдачи результата.
+    * **?page**=3 - an additional request parameter, sets the number of elements on one page.
 
-* **POST** - Создание нового Меню. Доступна администраторам.
+* **POST** - Creating Menu. Access is available to Admins only.
     
     POST [http://localhost:8080/api/menus](http://localhost:8080/api/menus)
     
@@ -635,9 +609,9 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                 "restaurant": "http://localhost:8080/api/restaurants/1"
         }
     
-    *  **"http://localhost:8080/api/restaurants/1"** - ссылка на ресторан, к которому принадлежит создаваемое меню.
+    *  **"http://localhost:8080/api/restaurants/1"** - a link to Restaurant related to new Menu.
     
-* **PUT** - Редактирование Меню. Доступна администраторам.
+* **PUT** - Updating Menu. Access is available to Admins only.
     
     POST [http://localhost:8080/api/menus/1](http://localhost:8080/api/menus/1)
     
@@ -660,24 +634,18 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                 ],
                 "restaurant": "http://localhost:8080/api/restaurants/2"
         }
-    
-    *  **"http://localhost:8080/api/restaurants/1"** - ссылка на ресторан, к которому принадлежит создаваемое меню.
-    
-    Изменять меню можно только если оно еще не участвовало в опросах.
-    
-* **DELETE** - Удаление Меню. Доступна администраторам.  
+        
+* **DELETE** - Deleting Menu. Access is available to Admins only.  
     
     DELETE [http://localhost:8080/api/menus/1](http://localhost:8080/api/menus/1)
 
-    Удалять меню можно только если оно еще не участвовало в опросах.  
-
 #### /api/restaurants
 
-Работа со списком Ресторанов.
+Working with Restaurants.
 
-Команды:
+Commands:
 
-* **GET** - Получение списка всех Ресторанов. Доступна авторизованным пользователям.
+* **GET** - Getting Restaurant list. Access is available to all authorized users.
     
     GET [http://localhost:8080/api/restaurants](http://localhost:8080/api/restaurants)
     
@@ -697,11 +665,11 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                   },
                   "restaurant": {
                     "href": "http://localhost:8080/api/restaurants/1",
-                    "title": "Ресторан"
+                    "title": "Restaurant"
                   },
                   "menus": {
                     "href": "http://localhost:8080/api/restaurants/1/menus",
-                    "title": "Список меню"
+                    "title": "Menu list"
                   }
                 }
               },
@@ -716,11 +684,11 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                   },
                   "restaurant": {
                     "href": "http://localhost:8080/api/restaurants/2",
-                    "title": "Ресторан"
+                    "title": "Resturant"
                   },
                   "menus": {
                     "href": "http://localhost:8080/api/restaurants/2/menus",
-                    "title": "Список меню"
+                    "title": "Menu list"
                   }
                 }
               },
@@ -735,11 +703,11 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                   },
                   "restaurant": {
                     "href": "http://localhost:8080/api/restaurants/3",
-                    "title": "Ресторан"
+                    "title": "Restaurant"
                   },
                   "menus": {
                     "href": "http://localhost:8080/api/restaurants/3/menus",
-                    "title": "Список меню"
+                    "title": "Menu list"
                   }
                 }
               }
@@ -754,7 +722,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
             },
             "search": {
               "href": "http://localhost:8080/api/restaurants/search",
-              "title": "Поиск"
+              "title": "Search"
             }
           },
           "page": {
@@ -765,10 +733,10 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
           }
         }
 
-    * **"http://localhost:8080/api/restaurants/{id}/menus"** - список всех меню выбранного ресторана (см. ниже);
-    * **"http://localhost:8080/api/restaurants/search"** - поиск по списку ресторанов (см. ниже).
+    * **"http://localhost:8080/api/restaurants/{id}/menus"** - Menu list of this Restaurant;
+    * **"http://localhost:8080/api/restaurants/search"** - a search commands list.
     
-* **POST** - Создание нового Ресторана. Доступна администраторам.
+* **POST** - Adding new Restaurant. Access is available to Admins.
     
     POST [http://localhost:8080/api/restaurants](http://localhost:8080/api/restaurants)
     
@@ -781,9 +749,9 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
           "phone": "1234567890"
         }    
 
-    * **name** - уникальное поле.
+    * **name** - is an unique field.
     
-* **PUT** - Редактирование Ресторана. Доступна администраторам.
+* **PUT** - Updating Restaurant. Access is available to Admins.
     
     POST [http://localhost:8080/api/restaurants/1](http://localhost:8080/api/restaurants/1)
     
@@ -796,15 +764,15 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
           "phone": "0987654321"
         }    
 
-* **DELETE** - Удаление Ресторана. Доступна администраторам. Удалить можно только не используемый ранее Ресторан.
+* **DELETE** - Deleting restaurants. Access is available to Admins.
     
     DELETE [http://localhost:8080/api/restaurants/1](http://localhost:8080/api/restaurants/1)
 
-* **GET** - Получить список всех меню, связанных с выбранным рестораном. Доступна авторизованным пользователям.
+* **GET** - Getting Menu list related to this Restaurant. Access is available to all authorized users.
 
     GET [http://localhost:8080/api/restaurants/1/menus](http://localhost:8080/api/restaurants/1/menus)
 
-* **GET** - Поиск по списку ресторанов. Доступна авторизованным пользователям.
+* **GET** - Restaurant searching. Access is available to all authorized users.
 
     GET [http://localhost:8080/api/restaurants/search](http://localhost:8080/api/restaurants/search)
     
@@ -826,16 +794,16 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
           }
         }    
 
-    * **http://localhost:8080/api/restaurants/search/byAddress**?address=Address - поиск по адресу;
-    * **http://localhost:8080/api/restaurants/search/byName**?name=Rest - поиск по наименованию.
+    * **http://localhost:8080/api/restaurants/search/byAddress**?address=Address - find by address;
+    * **http://localhost:8080/api/restaurants/search/byName**?name=Rest - find by name.
 
 #### /api/users
 
-Работа с пользователями. Доступ только для Администраторов.
+Users related commands. Access is available to Admins only.
 
-Команды:
+Commands:
 
-* **GET** - Получение списка всех Пользователей. 
+* **GET** - Getting User list. 
     
     GET [http://localhost:8080/api/users](http://localhost:8080/api/users)
     
@@ -856,7 +824,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                   },
                   "user": {
                     "href": "http://localhost:8080/api/users/1",
-                    "title": "Пользователь"
+                    "title": "User"
                   }
                 }
               },
@@ -872,7 +840,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                   },
                   "user": {
                     "href": "http://localhost:8080/api/users/2",
-                    "title": "Пользователь"
+                    "title": "User"
                   }
                 }
               },
@@ -888,7 +856,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
                   },
                   "user": {
                     "href": "http://localhost:8080/api/users/3",
-                    "title": "Пользователь"
+                    "title": "User"
                   }
                 }
               }
@@ -912,7 +880,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
             },
             "search": {
               "href": "http://localhost:8080/api/users/search",
-              "title": "Поиск"
+              "title": "Search"
             }
           },
           "page": {
@@ -923,7 +891,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
           }
         }
 
-* **POST** - Создание нового Пользователя.
+* **POST** - Creating a new User.
     
     POST [http://localhost:8080/api/users](http://localhost:8080/api/users)
     
@@ -936,13 +904,13 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
           "role": "ROLE_ADMIN"
         }
 
-    * **name** - не меньше 3 символов;
-    * **email** - уникальное поле;
-    * **password** - не меньше 6 символов.
+    * **name** - at least 3 letters;
+    * **email** - an unique field;
+    * **password** - at least 6 symbols.
     
-    По умолчанию создается активный пользователь с ролью ROLE_USER (поля 'enabled' и 'role' можно не указывать).  
+    By default the role of new User is ROLE_USER (can be omitted).  
     
-* **PUT** - Редактирование пользователя.
+* **PUT** - Updating User.
     
     PUT [http://localhost:8080/api/users/1](http://localhost:8080/api/users/1)
     
@@ -956,11 +924,11 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
           "enabled": false
         }
 
-* **DELETE** - Удаление пользователя. Удалить можно только еще не голосовавшего пользователя.
+* **DELETE** - Deleting User.
     
     DELETE [http://localhost:8080/api/users/1](http://localhost:8080/api/users/1)
 
-* **GET** - Поиск по списку пользователей.
+* **GET** - User searching.
 
     GET [http://localhost:8080/api/users/search](http://localhost:8080/api/users/search)
     
@@ -992,49 +960,42 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
           }
         }
 
-### Безопасность
+### Application profiles
 
-В приложении используется **BASIC authentication**. Пользователи делятся на два типа: 
-Администраторы - создают опросы, редактируют объекты приложения; пользователи - могут редактировать свой профиль
- и голосовать. 
+Application supports 4 profiles: dev, demo, prod и test:
 
-Доступ к корню API, **/api**, доступен всем посетителям.
+- **dev** - develop (default). Used H2 in memory; demo data propagation; DB requests and responses logging (see 'application-dev.properties').    
 
-### Профили приложения
+- **demo** - for deploy on Heroku. User MySQL; demo data propagation; DB requests and responses logging (see 'application-demo.properties').
 
-Реализована поддержка 4-х профилей: dev, demo, prod и test:
+- **prod** - production mode. H2 in file (см. файл 'application-prod.properties').  
 
-- **dev** - разработка (профиль по-умолчанию). Используется БД H2 в памяти; заполняется демо данными; настроено логирование запросов в БД и логирование результатов (см. файл 'application-dev.properties').    
-
-- **demo** - предназначен для деплоя на Heroku. Используется БД MySQL; заполняется демо данными; настроено логирование запросов в БД и логирование результатов (см. файл 'application-demo.properties').
-
-- **prod** - предназначен для работы на продуктиве. Используется БД H2 в файле; не заполняется демо данными (см. файл 'application-prod.properties').  
-
-- **test** - предназначен для выполнения тестов. Используется БД H2 в памяти; заполняется демо данными; настроено логирование запросов в БД и логирование результатов (см. файл 'application-test.properties').
+- **test** - testing. H2 in memory; demo data propagation; DB requests and responses logging (see 'application-test.properties').
  
-Для задания нужного профиля, необходимо указать его в параметре _spring.profiles.active_ в 'application.properties' либо как опцию JVM при запуску приложения _-Dspring.profiles.active=demo_ (см. файл 'Procfile').
+A necessary profile is setting as the _spring.profiles.active_ parameter of the 'application.properties' or 
+as the JVM option _-Dspring.profiles.active=demo_ (see 'Procfile').  
 
-### Запуск приложения
+### Launch Application
 
-Для запуска приложения требуется установленные [Java](https://java.com), [Git](https://git-scm.com/) и [Maven](https://maven.apache.org/).
-В командной строке выполнить команды: 
+Application requires: [Java](https://java.com), [Git](https://git-scm.com/) and [Maven](https://maven.apache.org/).
+To launch Application type in command line: 
 
     git clone https://github.com/Cepr0/restvotes.git
     cd restvotes
     mvn spring-boot:run
 
-Затем открыть в браузере адрес [http://localhost:8080](http://localhost:8080)
+Than open in browser [http://localhost:8080](http://localhost:8080)
 
-## Демонстрация работы приложения на Heroku 
+## Application demo on Heroku 
 
 [Demo](https://restvotes.herokuapp.com/api)
 
-Для удобства работы с приложением в браузере, в проект добавлен [The HAL Browser](http://docs.spring.io/spring-data/rest/docs/current/reference/html/#_the_hal_browser).
+For convenient work with the application in the browser, the project has been added [The HAL Browser](http://docs.spring.io/spring-data/rest/docs/current/reference/html/#_the_hal_browser).
 
-Однако рекомендуется тестировать функционал в приложении [Postman](https://www.getpostman.com/).
+But it is recommended to work with Application in [Postman](https://www.getpostman.com/).
 
-Демо пользователи: 
-- **ADMIN**: frodo@restvotes.com, пароль: 123456
-- **USER**: sam@restvotes.com, пароль: 123456
+Demo users: 
+- **ADMIN**: frodo@restvotes.com, password: 123456
+- **USER**: sam@restvotes.com, password: 123456
 
-и др. (см. /api/users)
+and others (see. /api/users).
