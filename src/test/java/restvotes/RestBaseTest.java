@@ -32,7 +32,7 @@ import static org.junit.Assert.assertThat;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class RestBaseTest {
+abstract public class RestBaseTest {
     
     protected static final String MENU_PATH = "/menus";
     protected static final String POLL_PATH = "/polls";
