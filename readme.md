@@ -1,8 +1,10 @@
 # RESTVotes
 ### Voting System for Restaurant lunches
-##### Тестовый проект
+##### "Выпускной" проект по Java-курсам [JavaRush](https://javarush.ru/) и [Java Online Projects](http://javaops.ru/)
+
 [![Build Status](https://travis-ci.org/Cepr0/restvotes.svg?branch=master)](https://travis-ci.org/Cepr0/restvotes)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6893de10620c4c779d5659949b55bb82)](https://www.codacy.com/app/Cepr0/restvotes)
+
 ## Задание
 Design and implement a JSON API using Hibernate/Spring/SpringMVC (or Spring-Boot) **without frontend**.
 
@@ -179,7 +181,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
 
     GET [http://localhost:8080/api/userProfile](http://localhost:8080/api/userProfile)
 
-    *Response body:*
+    *Response:*
 
         {
           "name": "Frodo Baggins",
@@ -218,7 +220,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
 
     GET [http://localhost:8080/api/polls](http://localhost:8080/api/polls)
         
-        *Response body:*
+    *Response:*
         
         {
           "_embedded": {
@@ -479,7 +481,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
     
     GET [http://localhost:8080/api/menus?size=3](http://localhost:8080/api/menus?size=3)
     
-    *Response body:*
+    *Response:*
     
         {
           "_embedded": {
@@ -676,7 +678,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
     
     GET [http://localhost:8080/api/restaurants](http://localhost:8080/api/restaurants)
     
-    *Response body:*
+    *Response:*
     
         {
           "_embedded": {
@@ -929,7 +931,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
           "password": "123456",
           "email": "vasya@restvotes.com",
           "role": "ROLE_ADMIN"
-          }
+        }
 
     * **name** - не меньше 3 символов;
     * **email** - уникальное поле;
@@ -949,7 +951,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
           "email": "vasya@restvotes.com",
           "role": "ROLE_USER",
           "enabled": false
-          }
+        }
 
 * **DELETE** - Удаление пользователя. Удалить можно только еще не голосовавшего пользователя.
     
@@ -1010,13 +1012,15 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
     cd restvotes
     mvn spring-boot:run
 
-## Демо приложения на Heroku 
+Затем открыть в браузере адрес [http://localhost:8080](http://localhost:8080)
+
+## Демонстрация работы приложения на Heroku 
 
 [Demo](https://restvotes.herokuapp.com/api)
 
-Для удобства работы в браузере, в приложение добавлен [The HAL Browser](http://docs.spring.io/spring-data/rest/docs/current/reference/html/#_the_hal_browser).
+Для удобства работы с приложение в браузере, в проект добавлен [The HAL Browser](http://docs.spring.io/spring-data/rest/docs/current/reference/html/#_the_hal_browser).
 
-Рекомендуется тестировать функционал в приложении [Postman](https://www.getpostman.com/).
+Однако рекомендуется тестировать функционал в приложении [Postman](https://www.getpostman.com/).
 
 Демо пользователи: 
 - **ADMIN**: frodo@restvotes.com, пароль: 123456
