@@ -9,10 +9,7 @@ import lombok.Setter;
 import org.springframework.data.rest.core.annotation.RestResource;
 import restvotes.domain.base.DateId;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +38,7 @@ public class Poll extends DateId {
     /**
      * Menu list of given Poll
      */
+    @OrderBy
     @ManyToMany(cascade = {PERSIST, MERGE})
     private List<Menu> menus = new ArrayList<>();
     // TODO Think about use @PreRemove to unlink Menus then deleting 'empty' Poll - http://stackoverflow.com/a/14911910/5380322

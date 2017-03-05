@@ -30,13 +30,14 @@ public class RestaurantControllerTest extends RestBaseTest {
     @Override
     public void setUp() {
         super.setUp();
+        
         url = BASE_PATH + RESTAURANT_PATH + RESTAURANT_ID + MENU_PATH;
+        
+        userService.runAs(u1.getEmail());
     }
     
     @Test
     public void getMenus() throws Exception {
-        
-        userService.runAs(u1.getEmail());
         
         MockHttpServletResponse response;
         response = mvc.perform(get(url))
@@ -55,8 +56,6 @@ public class RestaurantControllerTest extends RestBaseTest {
     
     @Test
     public void addMenu() throws Exception {
-        
-        userService.runAs(u1.getEmail());
         
         ResultActions action;
         action = mvc.perform(post(url)

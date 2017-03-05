@@ -62,6 +62,7 @@ public class UserProfileControllerTest extends RestBaseTest {
     public void updateProfile() throws Exception {
         
         userService.runAs(u1.getEmail());
+        
         ResultActions result = mvc.perform(put(url)
                 .content("{\"name\": \"User\", \"password\": \"123456\", \"email\": \"user@restvotes.com\"}")
                 .contentType(APPLICATION_JSON)
@@ -78,6 +79,7 @@ public class UserProfileControllerTest extends RestBaseTest {
     }
 
     private void checkUserOk(ResultActions result) throws Exception {
+        
         result.andExpect(jsonPath("$.name", is("User")))
               .andExpect(jsonPath("$.password", is("")))
               .andExpect(jsonPath("$.email", is("user@restvotes.com")))
@@ -85,6 +87,7 @@ public class UserProfileControllerTest extends RestBaseTest {
     }
 
     private void checkUserBad(ResultActions result) throws Exception {
+        
         result.andExpect(jsonPath("$.errors.*", hasSize(3)))
               .andExpect(jsonPath("$.errors.*.property", hasItems("name", "password", "email")));
     }

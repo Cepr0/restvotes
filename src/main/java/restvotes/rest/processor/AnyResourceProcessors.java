@@ -8,7 +8,7 @@ import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Component;
 
 /**
- * Repository REST Resource processors of any entities. Demo purposes only.
+ * Repository REST Resource processors of any entities. Dev purposes only.
  * @author Cepro, 2017-01-28
  */
 @Slf4j

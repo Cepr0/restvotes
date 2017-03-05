@@ -74,10 +74,10 @@ public class PollEventHandlerTest extends RestBaseTest {
            .andExpect(status().isForbidden());
     }
     
-    private String getHref(String menu1Url) throws Exception {
+    private String getHref(String url) throws Exception {
         
         MockHttpServletResponse response;
-        response = mvc.perform(get(menu1Url))
+        response = mvc.perform(get(url))
                       .andExpect(status().isOk())
                       .andReturn().getResponse();
         
