@@ -52,11 +52,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-        </dependency>
-
         <!-- Dev Tools-->
         <!-- http://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html -->
         <dependency>
@@ -100,16 +95,13 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -139,6 +131,5 @@
         </dependency>
 
     </dependencies>
-
 
 </project>

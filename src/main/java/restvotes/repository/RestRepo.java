@@ -15,8 +15,8 @@ import java.util.List;
 @RepositoryRestResource
 public interface RestRepo extends JpaRepository<Restaurant, Long> {
 
-    // TODO http://stackoverflow.com/a/38652548/5380322
-    // TODO Make contextual search
+    // TODO Make multi-params search http://stackoverflow.com/a/38652548/5380322
+    // TODO Make 'contextual' search?
     
     /**
      * Find {@link Restaurant}s by their name part

@@ -18,9 +18,8 @@ import java.util.Optional;
 @RepositoryRestResource
 public interface UserRepo extends JpaRepository<User, Long> {
     
-    // TODO Add search for Users by: role, enabled
     // TODO http://stackoverflow.com/a/38652548/5380322
-    // TODO Make contextual search
+    // TODO Make 'contextual' search?
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RestResource(path = "byRole", rel = "byRole")

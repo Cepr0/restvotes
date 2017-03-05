@@ -105,8 +105,8 @@ public class StartUp {
         LOG.info(msgHelper.logMessage("Setting a winner..."));
         pollService.placeWinners();
         
-        // TODO 3. Log voting result
-        // TODO 4. Send result to each user by email (using Queue?..)
+        // TODO Log voting result
+        // TODO Send result to each user by email (using Queue?..)
     }
     
     private void newDayTask() {
