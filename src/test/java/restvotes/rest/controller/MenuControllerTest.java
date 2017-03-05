@@ -9,8 +9,6 @@ import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static restvotes.DemoData.u1;
-import static restvotes.rest.controller.MenuController.VOTE_PATH;
-
 
 /**
  * @author Cepro, 2017-03-01

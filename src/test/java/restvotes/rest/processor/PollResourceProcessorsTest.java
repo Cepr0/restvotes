@@ -43,7 +43,7 @@ public class PollResourceProcessorsTest extends RestBaseTest {
     }
     
     @Test
-    public void PollBriefPagedAndSingleResourcesProcessor() throws Exception {
+    public void pollBriefPagedAndSingleResourcesProcessor() throws Exception {
     
         userService.runAs(u1.getEmail());
         
@@ -64,7 +64,7 @@ public class PollResourceProcessorsTest extends RestBaseTest {
     }
     
     @Test
-    public void PollResourceProcessor() throws Exception {
+    public void pollResourceProcessor() throws Exception {
     
         userService.runAs(u3.getEmail());
         

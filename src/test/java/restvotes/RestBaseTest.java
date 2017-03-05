@@ -38,6 +38,7 @@ abstract public class RestBaseTest {
     protected static final String POLL_PATH = "/polls";
     protected static final String RESTAURANT_PATH = "/restaurants";
     protected static final String USER_PROFILE_PATH = "/userProfile";
+    protected static final String VOTE_PATH = "/vote";
     protected static final String SELF_REL = "self";
     protected static final String CURRENT_POLL_REL = "currentPoll";
     protected static final String PROFILE_REL = "profile";

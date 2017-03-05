@@ -26,8 +26,6 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/menus" + "/{id}")
 public class MenuController {
     
-    static final String VOTE_PATH = "/vote";
-    
     private final @NonNull LinksHelper links;
     
     private final @NonNull MessageHelper msgHelper;
@@ -39,7 +37,7 @@ public class MenuController {
      * @param menu chosen {@link Menu}
      * @return a response with the registered {@link Vote}
      */
-    @PutMapping(VOTE_PATH)
+    @PutMapping("/vote")
     public ResponseEntity<?> submitVote(@PathVariable("id") Menu menu) {
         
         if (menu == null) {
