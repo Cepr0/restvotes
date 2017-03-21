@@ -49,8 +49,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
 
 ### Data structure
 
-![Data structure][data-structure]
-[data-structure]: data-structure.png "Структура данных"
+![Data structure](data-structure.png)
 
 #### Poll
 The central object in the Application - defines the voting for the best Menu/Restaurant during the one day.  

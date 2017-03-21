@@ -49,8 +49,7 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
 
 ### Структура данных
 
-![Структура данных][data-structure]
-[data-structure]: data-structure.png "Структура данных"
+![Структура данных](data-structure.png)
 
 #### Poll - Опрос
 Центральный объект приложения - описывает голосование за лучшее меню/ресторан в течение одного дня. 
