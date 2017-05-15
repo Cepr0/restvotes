@@ -1,14 +1,10 @@
 package restvotes.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
-import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
-import org.springframework.validation.Validator;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import restvotes.domain.entity.Poll;
 
 import java.time.LocalDate;
@@ -69,30 +65,5 @@ public class RepoRestConfig extends RepositoryRestConfigurerAdapter {
         // objectMapper.registerModule(hibernate5Module);
 
         super.configureJacksonObjectMapper(objectMapper);
-    }
-    
-    /**
-     * PUT and PATCH in SDR doesn't validated without this!!!
-     * <p>http://stackoverflow.com/a/36814513/5380322</p>
-     * @return local validator {@link LocalValidatorFactoryBean}
-     */
-    @Bean
-    public Validator validator() {
-        return new LocalValidatorFactoryBean();
-    }
-    
-    /**
-     * Setting up validating for 'beforeCreate' and 'beforeSave' Repository events
-     * <p>PUT and PATCH in SDR doesn't validated without this!!!</p>
-     * <p>http://stackoverflow.com/a/36814513/5380322</p>
-     * @param v
-     */
-    @Override
-    public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener v) {
-        // v.addValidator("beforeCreate", new UserValidator());
-        // v.addValidator("beforeSave", new UserValidator());
-        v.addValidator("beforeCreate", validator());
-        v.addValidator("beforeSave", validator());
-        super.configureValidatingRepositoryEventListener(v);
     }
 }

@@ -3,8 +3,6 @@ package restvotes.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.validation.Validator;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
@@ -27,19 +25,5 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setFallbackToSystemLocale(false);
         return messageSource;
-    }
-    
-    /**
-     * Link local Validator ({@link LocalValidatorFactoryBean}) with our {@link ReloadableResourceBundleMessageSource} -
-     * {@link WebMvcConfig#messageSource} to get reloaded constrain validation messages in our entities
-     * <p>See e.g. {@link restvotes.domain.entity.User} </p>
-     * <p>Pry here: http://stackoverflow.com/a/32736788/5380322</p>
-     * @return
-     */
-    @Override
-    public Validator getValidator() {
-        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
-        validator.setValidationMessageSource(messageSource());
-        return validator;
     }
 }
