@@ -23,6 +23,8 @@ import java.sql.SQLException;
 // @EnableCaching
 public class RestVotes {
 
+    public static final String TIME_ZONE = "Europe/Rome";
+    
     public static void main(String[] args) {
         SpringApplication.run(RestVotes.class, args);
     }

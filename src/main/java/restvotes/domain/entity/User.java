@@ -6,12 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.security.core.GrantedAuthority;
+import restvotes.RestVotes;
 import restvotes.domain.base.LongId;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 import static org.springframework.util.StringUtils.isEmpty;
@@ -62,10 +63,10 @@ public class User extends LongId {
     
     @NotNull(message = "valid.field")
     @Column(columnDefinition = "timestamp default now()", updatable = false, nullable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime registered;
+    @JsonFormat(timezone = RestVotes.TIME_ZONE, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private ZonedDateTime registered;
     
-    public User(String name, String email, String password, boolean enabled, Role role, LocalDateTime registered) {
+    public User(String name, String email, String password, boolean enabled, Role role, ZonedDateTime registered) {
         this.name = name;
         this.email = email;
         setPassword(password);
@@ -75,15 +76,15 @@ public class User extends LongId {
     }
     
     public User() {
-        this(null, null, null, true, ROLE_USER, LocalDateTime.now());
+        this(null, null, null, true, ROLE_USER, ZonedDateTime.now());
     }
     
     public User(String name, String email, String password, Role role) {
-        this(name, email, password, true, role, LocalDateTime.now());
+        this(name, email, password, true, role, ZonedDateTime.now());
     }
 
     public User(String name, String email, String password) {
-        this(name, email, password, true, ROLE_USER, LocalDateTime.now());
+        this(name, email, password, true, ROLE_USER, ZonedDateTime.now());
     }
     
     public User update(String name, String email, String password) {
@@ -99,7 +100,7 @@ public class User extends LongId {
         String password = user.getPassword();
         boolean enabled = user.isEnabled();
         Role role = user.getRole();
-        LocalDateTime registered = user.getRegistered();
+        ZonedDateTime registered = user.getRegistered();
     
         if (!isEmpty(name)) setName(name);
         if (!isEmpty(email)) setEmail(email);
